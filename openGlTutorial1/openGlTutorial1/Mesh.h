@@ -9,6 +9,9 @@ public:
 	Vertex(const glm::vec3&pos) {
 		this->pos = pos;
 	}
+	Vertex() {
+		this->pos = glm::vec3(0, 0, 0);
+	}
 protected:
 private:
 	glm::vec3 pos;

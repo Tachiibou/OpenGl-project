@@ -12,7 +12,7 @@ private:
 	glm::mat4 viewMatrix, perspectiveMatrix;
 public:
 	Camera();
-	Camera(glm::vec3& pos, glm::vec3& up, glm::vec3& forward, float fov, float aspect, float zNear, float zFar);
+	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar);
 	~Camera();
 	
 	glm::mat4 &getViewMatrix();
