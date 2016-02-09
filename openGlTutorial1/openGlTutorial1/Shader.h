@@ -3,7 +3,7 @@
 
 #include <string>
 #include "GL\glew.h"
-
+#include "Camera.h"
 class Shader
 {
 public:
@@ -12,10 +12,20 @@ public:
 
 	void Bind();
 
+	void Update(Camera&camera);
+
 private:
 
 	static const unsigned int NUM_SHADERS = 2;
 
+	enum uniform {
+		PERSPECTIVE_U,
+		VIEW_U,
+
+		NUM_UNIFORMS
+	};
+
+	GLuint m_uniforms[NUM_UNIFORMS];
 	GLuint m_program;
 	GLuint m_shaders[NUM_SHADERS];
 };

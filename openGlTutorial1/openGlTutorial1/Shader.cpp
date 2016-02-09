@@ -10,21 +10,30 @@ Shader::Shader(const std::string & fileName)
 {
 
 	m_program = glCreateProgram();
-	m_shaders[0] = CreateShader(LoadShader(fileName + ".vs"), GL_VERTEX_SHADER);
-	m_shaders[1] = CreateShader(LoadShader(fileName + ".fs"), GL_FRAGMENT_SHADER);
+	m_shaders[0] = CreateShader(LoadShader("./res/basicVertex.glsl"), GL_VERTEX_SHADER);
+	m_shaders[1] = CreateShader(LoadShader("./res/basicFragment.glsl"), GL_FRAGMENT_SHADER);
 
 	for (unsigned int i = 0; i < NUM_SHADERS; i++)
 		glAttachShader(m_program, m_shaders[i]);
 
 	glBindAttribLocation(m_program, 0, "position");
-	glBindAttribLocation(m_program, 1, "texCoord");
-	glBindAttribLocation(m_program, 2, "normal");
 
 	glLinkProgram(m_program);
 	CheckShaderError(m_program, GL_LINK_STATUS, true, "Error linking shader program");
 
 	glValidateProgram(m_program);
 	CheckShaderError(m_program, GL_LINK_STATUS, true, "Invalid shader program");
+
+	m_uniforms[uniform::PERSPECTIVE_U] = glGetUniformLocation(m_program, "perspectiveMatrix");
+	m_uniforms[uniform::VIEW_U] = glGetUniformLocation(m_program, "viewMatrix");
+	
+
+}
+
+void Shader::Update(Camera&camera) {
+
+	glUniformMatrix4fv(m_uniforms[uniform::VIEW_U], 1, GL_FALSE, &camera.getViewMatrix()[0][0]);
+	glUniformMatrix4fv(m_uniforms[uniform::PERSPECTIVE_U], 1, GL_FALSE, &camera.getPerspectiveMatrix()[0][0]);
 
 }
 
@@ -45,6 +54,7 @@ static GLuint CreateShader(const std::string& text, GLenum shaderType) {
 
 	CheckShaderError(shader, GL_COMPILE_STATUS, false, "Error: SHader COmpilation Error");
 
+	
 
 	return shader;
 }
