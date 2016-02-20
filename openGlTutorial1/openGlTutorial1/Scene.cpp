@@ -15,9 +15,11 @@ Scene::Scene()
 	this->shader = new Shader("saidnasind");
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
-	vertices[2] = Vertex(glm::vec3(0.5f, -0.5f, 0));
+	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
 
-	this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]));
+	int indices[]{ 0,1,2};
+
+	this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, 3);
 }
 
 

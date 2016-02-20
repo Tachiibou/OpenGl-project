@@ -21,7 +21,7 @@ private:
 class Mesh
 {
 public:
-	Mesh(Vertex* vertices, unsigned int numVertices);
+	Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize);
 	virtual ~Mesh();
 
 	void Draw();
@@ -29,12 +29,15 @@ private:
 
 	enum {
 		POSITION_VB,
+		INDEX_VB,
 		NUM_BUFFERS
 	};
 
 	GLuint m_vertexArrayObject;
+	GLuint indexBufferObject;
 	GLuint m_vertexArrayBuffers[NUM_BUFFERS];
 	unsigned int m_drawCount;
+	unsigned int indexArraySize;
 };
 
 #endif
