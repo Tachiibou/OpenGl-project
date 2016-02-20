@@ -18,7 +18,7 @@ private:
 	Camera* camera;
 	Shader* shader;
 	Mesh* mesh;
-	Vertex vertices[3];
+	Vertex vertices[4];
 
 
 	void eventHandler();

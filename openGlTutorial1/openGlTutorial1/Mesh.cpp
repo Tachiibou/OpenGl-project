@@ -1,9 +1,9 @@
 #include "Mesh.h"
 
-Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize)
+Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int numIndices)
 {
 	this->m_drawCount = numVertices;
-	this->indexArraySize = indexSize;
+	this->indexArraySize = numIndices;
 
 	glGenVertexArrays(1, &m_vertexArrayObject);
 	glBindVertexArray(m_vertexArrayObject);
@@ -14,7 +14,7 @@ Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexS
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,m_vertexArrayBuffers[INDEX_VB]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,indexSize * sizeof(int),indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,numIndices * sizeof(int),indices, GL_STATIC_DRAW);
 
 	//glEnableVertexAttribArray(0);
 	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);

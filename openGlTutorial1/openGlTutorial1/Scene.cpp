@@ -16,10 +16,12 @@ Scene::Scene()
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
+	vertices[3] = Vertex(glm::vec3(1.5f, 0.5f, 0));
 
-	int indices[]{ 0,1,2};
+	int indices[]{ 0,1,2,
+					1,2,3};
 
-	this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, 3);
+	this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
 }
 
 
