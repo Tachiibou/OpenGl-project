@@ -25,6 +25,9 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
@@ -33,6 +36,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ConstVariables.h" />
+    <ClInclude Include="ResourceLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />
