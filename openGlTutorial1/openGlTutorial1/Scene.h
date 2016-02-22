@@ -6,6 +6,7 @@
 #include "ConstVariables.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "ResourceLoader.h"
 
 using namespace constVar;
 

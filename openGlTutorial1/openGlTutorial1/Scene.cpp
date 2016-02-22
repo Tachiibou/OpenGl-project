@@ -8,6 +8,7 @@ void Scene::Update()
 
 Scene::Scene()
 {
+	ResourceLoader r = ResourceLoader("obj/test.obj");
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR);
@@ -21,7 +22,9 @@ Scene::Scene()
 	int indices[]{ 0,1,2,
 					1,2,3};
 
-	this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
+	//this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
+	this->mesh = r.getMesh();
+	
 }
 
 

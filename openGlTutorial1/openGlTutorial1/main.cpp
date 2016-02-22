@@ -9,6 +9,7 @@ int main(int argc, char** argv) {
 	Scene scene =  Scene();
 	ResourceLoader r = ResourceLoader("obj/box.obj");
 	r.printFile();
+	//r.getMesh().Draw();
 	scene.Start();
 	return 0;
 }
