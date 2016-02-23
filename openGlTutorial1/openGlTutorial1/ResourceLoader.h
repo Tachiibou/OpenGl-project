@@ -14,6 +14,7 @@ private:
 	std::string fileName;
 	Vertex* VertexVectorToArray(std::vector<Vertex> vertices);
 	Vertex* vertexArray;
+	void insertVertex(std::string line, std::vector<Vertex>& vertexVector);
 
 public:
 	ResourceLoader(std::string fileName);
