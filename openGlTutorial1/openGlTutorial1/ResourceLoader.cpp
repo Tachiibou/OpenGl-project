@@ -23,9 +23,9 @@ Mesh* ResourceLoader::getMesh()
 {
 	std::string line;
 	std::ifstream myfile(this->fileName);
-	std::vector<Vertex> vertexVector;
-	std::vector<UV> UVector;
-	std::vector<Vertex> normalVector;
+	std::vector<glm::vec3> vertexVector;
+	std::vector<glm::vec2> UVector;
+	std::vector<glm::vec3> normalVector;
 
 	int vertexAmount = 0, indexAmount = 0;
 
@@ -48,15 +48,22 @@ Mesh* ResourceLoader::getMesh()
 			{
 				this->insertNormal(line, normalVector);
 			}
+
+			else if (line.substr(0, 2) == "f ") // normal
+			{
+				this->createVerticesFromLine(line,vertexVector,normalVector,UVector);
+			}
 		}
 		myfile.close();
 	}
 	vertexAmount = vertexVector.size();
 	indexAmount = 6;
 	int indexArr[] = { 0,1,2,2,1,3 };
-	Vertex* vertices2 = VertexVectorToArray(vertexVector);
+	//Vertex* vertices2 = VertexVectorToArray(vertexVector);
 
-	return new Mesh(vertices2, vertexAmount, indexArr, indexAmount);
+	this->vertexArray = this->createVertices(vertexVector);
+
+	return new Mesh(this->vertexArray, vertexAmount, indexArr, indexAmount);
 }
 
 void ResourceLoader::printFile()
@@ -86,9 +93,31 @@ Vertex * ResourceLoader::VertexVectorToArray(std::vector<Vertex> vertecies)
 	return vertexArray;
 }
 
+Vertex * ResourceLoader::createVertices(std::vector<glm::vec3> pos)
+{
+	int size = pos.size();
+	Vertex* vertices = new Vertex[size];
+
+	for (size_t i = 0; i < size; i++)
+	{
+		vertices[i] = Vertex(pos.at(i));
+	}
+	return vertices;
+}
+
+Vertex * ResourceLoader::createVerticesFromLine(std::string line, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> UVs)
+{
+	std::istringstream inputString;
+	std::string scrap;
+	glm::vec3 vertexIndex, normalIndex, UVIndex;
+	inputString.str(line);
+	inputString >> scrap;
+	return nullptr;
+}
+
 // get one line with vertices, should be formated as follows "v 1 2 3" where the numbers are vertex coorinates
 // VertexVector is reference, and vertex will be added to that vector
-void ResourceLoader::insertVertex(std::string line, std::vector<Vertex>& vertexVector) 
+void ResourceLoader::insertVertex(std::string line, std::vector<glm::vec3>& vertexVector)
 {
 	std::istringstream inputString;
 	glm::vec3 vertexPos;
@@ -97,11 +126,11 @@ void ResourceLoader::insertVertex(std::string line, std::vector<Vertex>& vertexV
 	inputString.str(line);
 
 	inputString >> scrap >> vertexPos.x >> vertexPos.y >> vertexPos.z;
-	vertexVector.push_back(Vertex(vertexPos));
+	vertexVector.push_back(vertexPos);
 
 }
 
-void ResourceLoader::insertUV(std::string line, std::vector<UV>& UVector)
+void ResourceLoader::insertUV(std::string line, std::vector<glm::vec2>& UVector)
 {
 	std::istringstream inputString;
 	glm::vec2 vertexPos;
@@ -110,10 +139,10 @@ void ResourceLoader::insertUV(std::string line, std::vector<UV>& UVector)
 	inputString.str(line);
 
 	inputString >> scrap >> vertexPos.x >> vertexPos.y;
-	UVector.push_back(UV(vertexPos));
+	UVector.push_back(vertexPos);
 }
 
-void ResourceLoader::insertNormal(std::string line, std::vector<Vertex>& normalVector)
+void ResourceLoader::insertNormal(std::string line, std::vector<glm::vec3>& normalVector)
 {
 	std::istringstream inputString;
 	glm::vec3 normal;
@@ -122,5 +151,5 @@ void ResourceLoader::insertNormal(std::string line, std::vector<Vertex>& normalV
 	inputString.str(line);
 
 	inputString >> scrap >> normal.x >> normal.y >> normal.z;
-	normalVector.push_back(Vertex(normal));
+	normalVector.push_back(normal);
 }
