@@ -8,7 +8,7 @@ void Scene::Update()
 
 Scene::Scene()
 {
-	ResourceLoader r = ResourceLoader("obj/test.obj");
+	ResourceLoader r = ResourceLoader("obj/box.obj");
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR);
