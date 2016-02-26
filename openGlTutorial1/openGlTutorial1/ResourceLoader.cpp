@@ -107,11 +107,19 @@ Vertex * ResourceLoader::createVertices(std::vector<glm::vec3> pos)
 
 Vertex * ResourceLoader::createVerticesFromLine(std::string line, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> UVs)
 {
-	std::istringstream inputString;
-	std::string scrap;
+	std::stringstream inputString, numberString;
+	std::string scrap, number, indexArr[3];
 	glm::vec3 vertexIndex, normalIndex, UVIndex;
 	inputString.str(line);
-	inputString >> scrap;
+	inputString >> scrap; // scrap f
+
+	for (int i = 0; i < 3; i++) // add all numbers to one string
+	{
+		inputString >> scrap;
+		indexArr[i] += scrap;
+	}
+
+
 	return nullptr;
 }
 
