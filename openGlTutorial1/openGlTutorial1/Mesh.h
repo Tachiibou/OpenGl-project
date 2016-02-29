@@ -32,18 +32,25 @@ public:
 		this->UV = glm::vec2(0, 0);
 	}
 protected:
-private:
+public:
 	glm::vec3 pos;
 	glm::vec3 normal;
 	glm::vec2 UV;
 
 };
 
+struct TriangleVertex
+{
+	float x, y, z;
+	float u, v;
+	float xn, yn, zn;
+};
+
 class Mesh
 {
 public:
 	Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize);
-	Mesh(VertexInfo * vertexInfo, unsigned int numVertices, int indices[], int numIndices);
+	Mesh(VertexInfo * vertexInfo, unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv);
 	virtual ~Mesh();
 
 	void Draw();

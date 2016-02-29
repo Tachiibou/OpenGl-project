@@ -11,16 +11,19 @@ ResourceLoader::ResourceLoader(std::string fileName)
 	this->fileName = fileName;
 	this->vertexArray = nullptr;
 	this->vertexInfoArray = nullptr;
+	this->triangleVert = nullptr;
 }
 
 
 ResourceLoader::~ResourceLoader()
 {
 	if(this->vertexArray != nullptr)
-		delete this->vertexArray;
+		delete[] this->vertexArray;
 
 	if (this->vertexInfoArray != nullptr)
-		delete this->vertexInfoArray;
+		delete[] this->vertexInfoArray;
+	if (this->triangleVert != nullptr)
+		delete[] this->triangleVert;
 }
 
 Mesh* ResourceLoader::getMesh()
@@ -63,12 +66,14 @@ Mesh* ResourceLoader::getMesh()
 	}
 	vertexAmount = vertexVector.size();
 	indexAmount = 6;
-	int indexArr[] = { 0,1,2,2,1,3 };
+	int indexArr[] = {0,1,2,3,4,5};
 
 	this->vertexArray = this->createVertices(vertexVector);
 	this->vertexInfoArray = this->VertexInfoVectorToArray(vertexInfoVector);
 
-	return new Mesh(this->vertexArray, vertexAmount, indexArr, indexAmount);
+	this->triangleVert = this->makeStruct(vertexInfoVector);
+
+	return new Mesh(this->vertexInfoArray, vertexAmount, indexArr, indexAmount, this->triangleVert);
 }
 
 void ResourceLoader::printFile()
@@ -174,4 +179,16 @@ void ResourceLoader::insertNormal(std::string line, std::vector<glm::vec3>& norm
 
 	inputString >> scrap >> normal.x >> normal.y >> normal.z;
 	normalVector.push_back(normal);
+}
+
+TriangleVertex * ResourceLoader::makeStruct(std::vector<VertexInfo> vertexInfo)
+{
+	TriangleVertex* tv = new TriangleVertex[vertexInfo.size()];
+	for (int i = 0; i < vertexInfo.size(); i++)
+	{
+		tv[i] = { vertexInfo.at(i).pos.x,vertexInfo.at(i).pos.y,vertexInfo.at(i).pos.z,
+			vertexInfo.at(i).UV.x,vertexInfo.at(i).UV.y,
+			vertexInfo.at(i).normal.x,vertexInfo.at(i).normal.y,vertexInfo.at(i).normal.z};
+	}
+	return tv;
 }

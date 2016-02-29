@@ -17,11 +17,14 @@ private:
 	Vertex* vertexArray;
 	VertexInfo* vertexInfoArray;
 	Vertex* createVertices(std::vector<glm::vec3> pos);
+	TriangleVertex* triangleVert;
 	void createVerticesFromLine(std::string& line, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& UVs, std::vector<VertexInfo>& vertexInfoVector);
 	
 	void insertVertex(std::string line, std::vector<glm::vec3>& vertexVector);
 	void insertUV(std::string line, std::vector<glm::vec2>& UVector);
 	void insertNormal(std::string line, std::vector<glm::vec3>& normalVector); // Vertex used for normals as they both have 3 floats as values
+
+	TriangleVertex* makeStruct(std::vector<VertexInfo> vertexInfo);
 
 public:
 	ResourceLoader();
