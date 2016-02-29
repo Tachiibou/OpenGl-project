@@ -6,6 +6,7 @@
 #include "ConstVariables.h"
 #include "Shader.h"
 #include "Mesh.h"
+#include "ResourceLoader.h"
 
 using namespace constVar;
 
@@ -18,7 +19,7 @@ private:
 	Camera* camera;
 	Shader* shader;
 	Mesh* mesh;
-	Vertex vertices[3];
+	Vertex vertices[4];
 
 
 	void eventHandler();
