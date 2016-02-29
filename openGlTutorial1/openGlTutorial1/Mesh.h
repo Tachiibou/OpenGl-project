@@ -43,6 +43,7 @@ class Mesh
 {
 public:
 	Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize);
+	Mesh(VertexInfo * vertexInfo, unsigned int numVertices, int indices[], int numIndices);
 	virtual ~Mesh();
 
 	void Draw();
@@ -50,6 +51,8 @@ private:
 
 	enum {
 		POSITION_VB,
+		UV_VB,
+		NORMAL_VB,
 		INDEX_VB,
 		NUM_BUFFERS
 	};
@@ -59,6 +62,7 @@ private:
 	GLuint m_vertexArrayBuffers[NUM_BUFFERS];
 	unsigned int m_drawCount;
 	unsigned int indexArraySize;
+	bool usingVertexInfo;
 };
 
 #endif
