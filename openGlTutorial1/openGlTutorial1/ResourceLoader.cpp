@@ -10,6 +10,7 @@ ResourceLoader::ResourceLoader(std::string fileName)
 {
 	this->fileName = fileName;
 	this->vertexArray = nullptr;
+	this->vertexInfoArray = nullptr;
 }
 
 
@@ -17,6 +18,9 @@ ResourceLoader::~ResourceLoader()
 {
 	if(this->vertexArray != nullptr)
 		delete this->vertexArray;
+
+	if (this->vertexInfoArray != nullptr)
+		delete this->vertexInfoArray;
 }
 
 Mesh* ResourceLoader::getMesh()
@@ -26,6 +30,7 @@ Mesh* ResourceLoader::getMesh()
 	std::vector<glm::vec3> vertexVector;
 	std::vector<glm::vec2> UVector;
 	std::vector<glm::vec3> normalVector;
+	std::vector<VertexInfo> vertexInfoVector;
 
 	int vertexAmount = 0, indexAmount = 0;
 
@@ -51,7 +56,7 @@ Mesh* ResourceLoader::getMesh()
 
 			else if (line.substr(0, 2) == "f ") // normal
 			{
-				this->createVerticesFromLine(line,vertexVector,normalVector,UVector);
+				this->createVerticesFromLine(line,vertexVector,normalVector,UVector,vertexInfoVector);
 			}
 		}
 		myfile.close();
@@ -59,9 +64,9 @@ Mesh* ResourceLoader::getMesh()
 	vertexAmount = vertexVector.size();
 	indexAmount = 6;
 	int indexArr[] = { 0,1,2,2,1,3 };
-	//Vertex* vertices2 = VertexVectorToArray(vertexVector);
 
 	this->vertexArray = this->createVertices(vertexVector);
+	this->vertexInfoArray = this->VertexInfoVectorToArray(vertexInfoVector);
 
 	return new Mesh(this->vertexArray, vertexAmount, indexArr, indexAmount);
 }
@@ -81,16 +86,16 @@ void ResourceLoader::printFile()
 	}
 }
 
-Vertex * ResourceLoader::VertexVectorToArray(std::vector<Vertex> vertecies)
+VertexInfo* ResourceLoader::VertexInfoVectorToArray(std::vector<VertexInfo>& vertecies)
 {
 	int size = vertecies.size();
-	this->vertexArray = new Vertex[size];
+	this->vertexInfoArray = new VertexInfo[size];
 
 	for (size_t i = 0; i < size; i++)
 	{
-		vertexArray[i] = vertecies.at(i);
+		vertexInfoArray[i] = vertecies.at(i);
 	}
-	return vertexArray;
+	return vertexInfoArray;
 }
 
 Vertex * ResourceLoader::createVertices(std::vector<glm::vec3> pos)
@@ -105,22 +110,31 @@ Vertex * ResourceLoader::createVertices(std::vector<glm::vec3> pos)
 	return vertices;
 }
 
-Vertex * ResourceLoader::createVerticesFromLine(std::string line, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> UVs)
+// Read line, create vertexInfo, insert into vertexInfoVector
+void ResourceLoader::createVerticesFromLine(std::string& line, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& UVs, std::vector<VertexInfo>& vertexInfoVector)
 {
 	std::stringstream inputString, numberString;
-	std::string scrap, number, indexArr[3];
+	std::string temp, number;
 	glm::vec3 vertexIndex, normalIndex, UVIndex;
 	inputString.str(line);
-	inputString >> scrap; // scrap f
+	int index[3], k = 0;
+	inputString >> temp; // scrap f
 
-	for (int i = 0; i < 3; i++) // add all numbers to one string
+	for (int i = 0; i < 3; i++) // loop through the 3 sets of numbers
 	{
-		inputString >> scrap;
-		indexArr[i] += scrap;
+		inputString >> temp;
+
+		numberString.str(temp);
+		while (std::getline(numberString, temp, '/')) // get numbers divided by / in index arr
+		{
+			index[k] = (std::stoi(temp) - 1);
+			k++;
+		}
+		k = 0;
+		numberString.clear();
+		vertexInfoVector.push_back(VertexInfo(vertices.at(index[0]), UVs.at(index[1]), normals.at(index[2])));
+
 	}
-
-
-	return nullptr;
 }
 
 // get one line with vertices, should be formated as follows "v 1 2 3" where the numbers are vertex coorinates

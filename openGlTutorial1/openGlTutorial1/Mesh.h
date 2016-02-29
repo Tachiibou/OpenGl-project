@@ -4,7 +4,8 @@
 #include "glm\glm.hpp"
 #include "GL\glew.h"
 
-class Vertex { // Vertex class can be used for normals aswell
+// Vertex class can be used for normals aswell
+class Vertex { 
 public:
 	Vertex(const glm::vec3&pos) {
 		this->pos = pos;
@@ -17,17 +18,24 @@ private:
 	glm::vec3 pos;
 	
 };
-class UV { // UV class
+// Vertex, UV and normal
+class VertexInfo { 
 public:
-	UV(const glm::vec2&UVpos) {
-		this->UVpos = UVpos;
+	VertexInfo(const glm::vec3&pos, const glm::vec2& UV, const glm::vec3& normal) {
+		this->pos = pos;
+		this->normal = normal;
+		this->UV = UV;
 	}
-	UV() {
-		this->UVpos = glm::vec2(0, 0);
+	VertexInfo() {
+		this->pos = glm::vec3(0, 0, 0);
+		this->normal = glm::vec3(0, 0, 0);
+		this->UV = glm::vec2(0, 0);
 	}
 protected:
 private:
-	glm::vec2 UVpos;
+	glm::vec3 pos;
+	glm::vec3 normal;
+	glm::vec2 UV;
 
 };
 

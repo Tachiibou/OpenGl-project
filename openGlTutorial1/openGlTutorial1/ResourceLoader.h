@@ -13,10 +13,11 @@ class ResourceLoader
 {
 private:
 	std::string fileName;
-	Vertex* VertexVectorToArray(std::vector<Vertex> vertices);
+	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
 	Vertex* vertexArray;
+	VertexInfo* vertexInfoArray;
 	Vertex* createVertices(std::vector<glm::vec3> pos);
-	Vertex* createVerticesFromLine(std::string line, std::vector<glm::vec3> vertices, std::vector<glm::vec3> normals, std::vector<glm::vec2> UVs);
+	void createVerticesFromLine(std::string& line, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& UVs, std::vector<VertexInfo>& vertexInfoVector);
 	
 	void insertVertex(std::string line, std::vector<glm::vec3>& vertexVector);
 	void insertUV(std::string line, std::vector<glm::vec2>& UVector);
