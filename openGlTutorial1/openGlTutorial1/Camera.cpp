@@ -11,6 +11,30 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 	this->forward = forward;
 	this->viewMatrix = glm::lookAt(pos, pos + forward, up);
 	this->perspectiveMatrix = glm::perspective(fov, aspect, zNear, zFar);
+
+
+	this->pos = pos;
+	this->up = up;
+	this->forward = forward;
+	this->viewMatrix = glm::lookAt(pos, pos + forward, up);
+	this->perspectiveMatrix = glm::perspective(fov, aspect, zNear, zFar);
+
+
+	this->horizontalAngle = 3.14f;
+	this->verticalAngle = 0.0f;
+	this->mouseSpeed = 1.0f;
+	this->moveSpeed = 3.0f;
+
+	this->direction = glm::vec3(
+		cos(this->verticalAngle) * sin(this->horizontalAngle),
+		sin(this->verticalAngle),
+		cos(this->verticalAngle) * cos(this->horizontalAngle));
+
+	this->right = glm::vec3(
+		sin(this->horizontalAngle - 3.14f / 2.0f),
+		0,
+		cos(this->horizontalAngle - 3.14f / 2.0f)
+		);
 	
 }
 
@@ -26,4 +50,25 @@ glm::mat4& Camera::getViewMatrix()
 glm::mat4& Camera::getPerspectiveMatrix()
 {
 	return this->perspectiveMatrix;
+}
+
+void Camera::move(glm::vec3 dir)
+{
+	this->pos += /*glm::normalize(this->forward -*/ dir;
+	this->viewMatrix = glm::lookAt(this->pos, this->pos + this->forward, this->up);
+}
+
+void Camera::move(float x, float y, float z, float deltaTime)
+{
+	if (z > 0)
+		this->pos += this->direction * deltaTime * this->moveSpeed;
+	else if (z < 0)
+		this->pos -= this->direction * deltaTime * this->moveSpeed;
+
+	if (x > 0)
+		this->pos += this->right * deltaTime * this->moveSpeed;
+	else if (x < 0)
+		this->pos -= this->right * deltaTime * this->moveSpeed;
+
+	this->viewMatrix = glm::lookAt(this->pos, this->pos + this->direction, this->up);
 }
