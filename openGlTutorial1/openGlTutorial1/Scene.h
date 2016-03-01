@@ -21,9 +21,20 @@ private:
 	Mesh* mesh;
 	Vertex vertices[4];
 
+	glm::vec3 cameraMove;
+	bool mouseWarp;
+	bool ignoreMouseMotion;
+	float deltaTime;
+	Uint32 currentTime, lastTime;
+	float moveSpeed;
+
 
 	void eventHandler();
 	void Update();
+
+	void keyBoardCheck();
+	void mouseCheck();
+
 public:
 	Scene();
 	~Scene();

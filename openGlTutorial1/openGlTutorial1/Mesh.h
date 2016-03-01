@@ -3,6 +3,7 @@
 
 #include "glm\glm.hpp"
 #include "GL\glew.h"
+#include "Texture.h"
 
 // Vertex class can be used for normals aswell
 class Vertex { 
@@ -55,7 +56,7 @@ public:
 
 	void Draw();
 private:
-
+	Texture *texture;
 	enum {
 		POSITION_VB,
 		UV_VB,

@@ -28,6 +28,15 @@
     <ClCompile Include="ResourceLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="stb_image.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
@@ -37,6 +46,9 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ConstVariables.h" />
     <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />

@@ -65,14 +65,21 @@ Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int 
 	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindVertexArray(0);
+
+
+	this->texture = new Texture("./obj/cube_box.jpg");
 }
 
 Mesh::~Mesh()
 {
+	if (this->texture != nullptr)
+		delete this->texture;
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
 void Mesh::Draw() {
+
+	texture->Bind();
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
