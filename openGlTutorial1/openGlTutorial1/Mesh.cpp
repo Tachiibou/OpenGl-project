@@ -24,7 +24,7 @@ Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int numInd
 	glBindVertexArray(0);
 }
 
-Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv)
+Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv)
 {
 	this->usingVertexInfo = true;
 	this->m_drawCount = numVertices;
@@ -67,7 +67,7 @@ Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int 
 	glBindVertexArray(0);
 
 
-	this->texture = new Texture("./obj/cube_box.jpg");
+	this->texture = new Texture("obj/cube_box4.jpg");
 }
 
 Mesh::~Mesh()

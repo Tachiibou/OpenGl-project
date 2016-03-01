@@ -13,16 +13,20 @@ class ResourceLoader
 {
 private:
 	std::string fileName;
-	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
 	Vertex* vertexArray;
 	VertexInfo* vertexInfoArray;
-	Vertex* createVertices(std::vector<glm::vec3> pos);
 	TriangleVertex* triangleVert;
+	int* indexArr;
+
+	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
+	Vertex* createVertices(std::vector<glm::vec3> pos);
+
 	void createVerticesFromLine(std::string& line, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& UVs, std::vector<VertexInfo>& vertexInfoVector);
+	int* getIndexArr(int amount);
 	
 	void insertVertex(std::string line, std::vector<glm::vec3>& vertexVector);
 	void insertUV(std::string line, std::vector<glm::vec2>& UVector);
-	void insertNormal(std::string line, std::vector<glm::vec3>& normalVector); // Vertex used for normals as they both have 3 floats as values
+	void insertNormal(std::string line, std::vector<glm::vec3>& normalVector);
 
 	TriangleVertex* makeStruct(std::vector<VertexInfo> vertexInfo);
 

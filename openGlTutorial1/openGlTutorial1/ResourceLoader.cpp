@@ -4,6 +4,9 @@ ResourceLoader::ResourceLoader()
 {
 	this->fileName = "obj/box.obj";
 	this->vertexArray = nullptr;
+	this->vertexInfoArray = nullptr;
+	this->triangleVert = nullptr;
+	this->indexArr = nullptr;
 }
 
 ResourceLoader::ResourceLoader(std::string fileName)
@@ -12,6 +15,7 @@ ResourceLoader::ResourceLoader(std::string fileName)
 	this->vertexArray = nullptr;
 	this->vertexInfoArray = nullptr;
 	this->triangleVert = nullptr;
+	this->indexArr = nullptr;
 }
 
 
@@ -22,8 +26,12 @@ ResourceLoader::~ResourceLoader()
 
 	if (this->vertexInfoArray != nullptr)
 		delete[] this->vertexInfoArray;
+
 	if (this->triangleVert != nullptr)
 		delete[] this->triangleVert;
+
+	if (this->indexArr != nullptr)
+		delete[] this->indexArr;
 }
 
 Mesh* ResourceLoader::getMesh()
@@ -57,7 +65,7 @@ Mesh* ResourceLoader::getMesh()
 				this->insertNormal(line, normalVector);
 			}
 
-			else if (line.substr(0, 2) == "f ") // normal
+			else if (line.substr(0, 2) == "f ") //face
 			{
 				this->createVerticesFromLine(line,vertexVector,normalVector,UVector,vertexInfoVector);
 			}
@@ -65,15 +73,16 @@ Mesh* ResourceLoader::getMesh()
 		myfile.close();
 	}
 	vertexAmount = vertexVector.size();
-	indexAmount = 6;
-	int indexArr[] = {0,1,2,3,4,5};
+	indexAmount = vertexInfoVector.size();
+	vertexAmount = vertexInfoVector.size();
+	this->indexArr = this->getIndexArr(indexAmount);
 
 	this->vertexArray = this->createVertices(vertexVector);
 	this->vertexInfoArray = this->VertexInfoVectorToArray(vertexInfoVector);
 
 	this->triangleVert = this->makeStruct(vertexInfoVector);
 
-	return new Mesh(this->vertexInfoArray, vertexAmount, indexArr, indexAmount, this->triangleVert);
+	return new Mesh( vertexAmount, indexArr, indexAmount, this->triangleVert);
 }
 
 void ResourceLoader::printFile()
@@ -91,24 +100,26 @@ void ResourceLoader::printFile()
 	}
 }
 
+// convert VertexInfoVector into a pointer array
 VertexInfo* ResourceLoader::VertexInfoVectorToArray(std::vector<VertexInfo>& vertecies)
 {
 	int size = vertecies.size();
-	this->vertexInfoArray = new VertexInfo[size];
+	VertexInfo* vertexInfoArray = new VertexInfo[size];
 
-	for (size_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		vertexInfoArray[i] = vertecies.at(i);
 	}
 	return vertexInfoArray;
 }
 
+//convert vector of vec3 into Vertex array
 Vertex * ResourceLoader::createVertices(std::vector<glm::vec3> pos)
 {
 	int size = pos.size();
 	Vertex* vertices = new Vertex[size];
 
-	for (size_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		vertices[i] = Vertex(pos.at(i));
 	}
@@ -142,6 +153,17 @@ void ResourceLoader::createVerticesFromLine(std::string& line, std::vector<glm::
 	}
 }
 
+//create index array from 0-amount in numerical order: 1,2,3.....
+int * ResourceLoader::getIndexArr(int amount)
+{
+	int* indexArr = new int[amount];
+	for (int i = 0; i < amount; i++)
+	{
+		indexArr[i] = i;
+	}
+	return indexArr;
+}
+
 // get one line with vertices, should be formated as follows "v 1 2 3" where the numbers are vertex coorinates
 // VertexVector is reference, and vertex will be added to that vector
 void ResourceLoader::insertVertex(std::string line, std::vector<glm::vec3>& vertexVector)
@@ -157,18 +179,20 @@ void ResourceLoader::insertVertex(std::string line, std::vector<glm::vec3>& vert
 
 }
 
+//insert UV coordinates from line into UVector&
 void ResourceLoader::insertUV(std::string line, std::vector<glm::vec2>& UVector)
 {
 	std::istringstream inputString;
-	glm::vec2 vertexPos;
+	glm::vec2 UVPos;
 	std::string scrap; // scrap will contain the letter vt
 
 	inputString.str(line);
 
-	inputString >> scrap >> vertexPos.x >> vertexPos.y;
-	UVector.push_back(vertexPos);
+	inputString >> scrap >> UVPos.x >> UVPos.y;
+	UVector.push_back(-UVPos); // had to invert UV ?
 }
 
+//insert normal coordinates from line into normalVector&
 void ResourceLoader::insertNormal(std::string line, std::vector<glm::vec3>& normalVector)
 {
 	std::istringstream inputString;
@@ -181,6 +205,7 @@ void ResourceLoader::insertNormal(std::string line, std::vector<glm::vec3>& norm
 	normalVector.push_back(normal);
 }
 
+// Convert vector of VertexInfo into a TriangleVertex* struct
 TriangleVertex * ResourceLoader::makeStruct(std::vector<VertexInfo> vertexInfo)
 {
 	TriangleVertex* tv = new TriangleVertex[vertexInfo.size()];
