@@ -1,7 +1,5 @@
 #include "Terrain.h"
 
-
-
 Terrain::Terrain()
 {
 	this->heights = 0;
