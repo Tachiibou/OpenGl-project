@@ -12,7 +12,7 @@ Scene::Scene()
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
 
-	this->shader = new Shader("saidnasind");
+	this->shader = new Shader("basic");
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
