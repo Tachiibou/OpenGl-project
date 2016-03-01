@@ -35,10 +35,11 @@ Texture::Texture(const char* fileName) {
 void Texture::Bind() {
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, this->texture);
 }
 
 
 Texture::~Texture()
 {
+	glDeleteTextures(1, &this->texture);
 }
