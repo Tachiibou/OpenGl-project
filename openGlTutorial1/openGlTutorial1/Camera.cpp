@@ -66,9 +66,9 @@ void Camera::move(float x, float y, float z, float deltaTime)
 		this->pos -= this->direction * deltaTime * this->moveSpeed;
 
 	if (x > 0)
-		this->pos += this->right * deltaTime * this->moveSpeed;
-	else if (x < 0)
 		this->pos -= this->right * deltaTime * this->moveSpeed;
+	else if (x < 0)
+		this->pos += this->right * deltaTime * this->moveSpeed;
 
 	this->viewMatrix = glm::lookAt(this->pos, this->pos + this->direction, this->up);
 }
@@ -76,9 +76,9 @@ void Camera::move(float x, float y, float z, float deltaTime)
 void Camera::look(float x, float y, float deltaTime)
 {
 	if (x < 10)
-		this->horizontalAngle += this->mouseSpeed * deltaTime * x;
+		this->horizontalAngle -= this->mouseSpeed * deltaTime * x;
 	if (y < 10)
-		this->verticalAngle += this->mouseSpeed * deltaTime * y;
+		this->verticalAngle -= this->mouseSpeed * deltaTime * y;
 
 	this->direction = glm::vec3(
 		cos(this->verticalAngle) * sin(this->horizontalAngle),
