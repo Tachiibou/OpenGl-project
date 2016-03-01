@@ -72,6 +72,8 @@ Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int 
 
 Mesh::~Mesh()
 {
+	if (this->texture != nullptr)
+		delete this->texture;
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }
 
