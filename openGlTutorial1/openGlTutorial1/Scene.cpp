@@ -2,7 +2,7 @@
 
 Scene::Scene()
 {
-	ResourceLoader r = ResourceLoader("obj/box.obj");
+	ResourceLoader r = ResourceLoader("obj/sphere1.obj");
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 

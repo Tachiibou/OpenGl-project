@@ -2,7 +2,7 @@
 
 ResourceLoader::ResourceLoader()
 {
-	this->fileName = "obj/box.obj";
+	this->fileName = this->OBJ_DIR + "box.obj";
 	this->vertexArray = nullptr;
 	this->vertexInfoArray = nullptr;
 	this->triangleVert = nullptr;
@@ -36,43 +36,59 @@ ResourceLoader::~ResourceLoader()
 
 Mesh* ResourceLoader::getMesh()
 {
-	std::string line;
+	std::string line, mtlFileName, textureFileName;
 	std::ifstream myfile(this->fileName);
 	std::vector<glm::vec3> vertexVector;
 	std::vector<glm::vec2> UVector;
 	std::vector<glm::vec3> normalVector;
 	std::vector<VertexInfo> vertexInfoVector;
+	Texture* texture = nullptr;
 
 	int vertexAmount = 0, indexAmount = 0;
 
 	if (myfile.is_open())
 	{
-		while (getline(myfile, line))
+		while (getline(myfile, line)) // looping through obj file
 		{
 
 			if (line.substr(0, 2) == "v ") //vertex
-			{
 				this->insertVertex(line,vertexVector); // insert vertex from line into vector
-			}
+			
 
 			else if (line.substr(0, 2) == "vt") // UV
-			{
 				this->insertUV(line, UVector);
-			}
+			
 
 			else if (line.substr(0, 2) == "vn") // normal
-			{
 				this->insertNormal(line, normalVector);
-			}
+
 
 			else if (line.substr(0, 2) == "f ") //face
-			{
-				this->createVerticesFromLine(line,vertexVector,normalVector,UVector,vertexInfoVector);
-			}
+				this->createVerticesFromLine(line, vertexVector, normalVector, UVector, vertexInfoVector);
+		
+			else if (line.substr(0, 2) == "mt") // find MTL filename
+				mtlFileName = this->getSecondWord(line);
 		}
 		myfile.close();
 	}
-	vertexAmount = vertexVector.size();
+
+	if (!mtlFileName.empty()) // if we found a filename for MTL
+	{
+		std::ifstream mtlFile(this->OBJ_DIR + mtlFileName);
+
+		while (getline(mtlFile, line))  // looping through MTL file
+		{
+			if (line.substr(0, 2) == "ma") // find texture filename "map_kd"
+				textureFileName = getSecondWord(line);
+		}
+	}
+	
+	if (!textureFileName.empty())
+	{
+		textureFileName = this->OBJ_DIR + textureFileName;
+		texture = new Texture(textureFileName.c_str());
+	}
+	
 	indexAmount = vertexInfoVector.size();
 	vertexAmount = vertexInfoVector.size();
 	this->indexArr = this->getIndexArr(indexAmount);
@@ -82,7 +98,7 @@ Mesh* ResourceLoader::getMesh()
 
 	this->triangleVert = this->makeStruct(vertexInfoVector);
 
-	return new Mesh( vertexAmount, indexArr, indexAmount, this->triangleVert);
+	return new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert,texture);
 }
 
 void ResourceLoader::printFile()
@@ -203,6 +219,18 @@ void ResourceLoader::insertNormal(std::string line, std::vector<glm::vec3>& norm
 
 	inputString >> scrap >> normal.x >> normal.y >> normal.z;
 	normalVector.push_back(normal);
+}
+
+// simply returns the second word in the sentence. Works for returning texture name and mtl name
+std::string ResourceLoader::getSecondWord(std::string line)
+{
+	std::istringstream inputString;
+	std::string returnString, scrap;
+
+	inputString.str(line);
+
+	inputString >> scrap >> returnString;
+	return returnString;
 }
 
 // Convert vector of VertexInfo into a TriangleVertex* struct

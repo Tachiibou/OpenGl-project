@@ -8,6 +8,27 @@
 #include <vector>
 #include "Mesh.h"
 
+// Vertex, UV and normal
+class VertexInfo {
+public:
+	VertexInfo(const glm::vec3&pos, const glm::vec2& UV, const glm::vec3& normal) {
+		this->pos = pos;
+		this->normal = normal;
+		this->UV = UV;
+	}
+	VertexInfo() {
+		this->pos = glm::vec3(0, 0, 0);
+		this->normal = glm::vec3(0, 0, 0);
+		this->UV = glm::vec2(0, 0);
+	}
+protected:
+public:
+	glm::vec3 pos;
+	glm::vec3 normal;
+	glm::vec2 UV;
+
+};
+
 
 class ResourceLoader
 {
@@ -17,6 +38,7 @@ private:
 	VertexInfo* vertexInfoArray;
 	TriangleVertex* triangleVert;
 	int* indexArr;
+	const std::string OBJ_DIR = "obj/";
 
 	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
 	Vertex* createVertices(std::vector<glm::vec3> pos);
@@ -27,6 +49,7 @@ private:
 	void insertVertex(std::string line, std::vector<glm::vec3>& vertexVector);
 	void insertUV(std::string line, std::vector<glm::vec2>& UVector);
 	void insertNormal(std::string line, std::vector<glm::vec3>& normalVector);
+	std::string getSecondWord(std::string line);
 
 	TriangleVertex* makeStruct(std::vector<VertexInfo> vertexInfo);
 
