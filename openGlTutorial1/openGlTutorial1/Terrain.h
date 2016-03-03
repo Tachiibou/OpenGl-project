@@ -22,6 +22,8 @@ private:
 	Mesh* mesh;
 
 	void setNormals();
+
+	void printToScreen(const VertexInfo& info);
 public:
 	Terrain();
 	void loadTerrain(const char*fileName, float maxHeight);

@@ -53,6 +53,8 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 			for (int y = 0; y < t_height; y++) {
 				//Get 
 				unsigned char pixel_color = height_data[(y * t_width + x)];
+				if (x == 140)
+					int k = 0;
 				float h = maxHeight* (pixel_color/255.f);
 				setHeightAt(x, y, h);
 			}
@@ -137,14 +139,23 @@ void Terrain::calculateVertexInfo() {
 			cIndex = x*this->length + z;
 			tempNormal = this->normals[x][z];
 
-			tempVertexInfo[cIndex] = VertexInfo(glm::vec3(x, z, this->heights[x][z]), glm::vec2(0, 0), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
+			tempVertexInfo[cIndex] = VertexInfo(glm::vec3(x, this->heights[x][z], z), glm::vec2(0, 0), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
+			 
 			tempTriangleVertex[cIndex] = { tempVertexInfo[cIndex].pos.x, tempVertexInfo[cIndex].pos.y, tempVertexInfo[cIndex].pos.z,
 				0.f, 0.f,
 				tempVertexInfo[cIndex].normal.x, tempVertexInfo[cIndex].normal.y, tempVertexInfo[cIndex].normal.z };
+
+			printToScreen(tempVertexInfo[cIndex]);
 		}
 	}
 	this->mesh = new Mesh(tempVertexInfo, this->width*this->length, NULL, 6, tempTriangleVertex);
 }
+
+void Terrain::printToScreen(const VertexInfo& info) {
+	std::cout <<"|X: " << info.pos.x << "|Y: " << info.pos.y << "|Z: " << info.pos.z << std::endl;
+	std::cout << "|NX: " << info.normal.x << "|NY: " << info.normal.y << "|NZ: " << info.normal.z << std::endl<<"---------------------------------"<<std::endl;
+}
+
 Mesh* Terrain::getMesh() {
 	return this->mesh;
 }
