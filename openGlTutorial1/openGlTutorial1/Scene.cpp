@@ -2,9 +2,15 @@
 
 Scene::Scene()
 {
+
 	ResourceLoader r = ResourceLoader("obj/box.obj");
+	
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
+
+
+	this->terrain = new Terrain();
+	this->terrain->loadTerrain("./res/heightmap.png", 255);
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR);
 	this->mouseWarp = false;
@@ -45,7 +51,7 @@ void Scene::Start()
 		this->shader->Bind();
 		this->shader->Update(*this->camera);
 		this->mesh->Draw();
-		
+		this->terrain->getMesh()->DrawStrip();
 		this->display->Update();
 	}
 }

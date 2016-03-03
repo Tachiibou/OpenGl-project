@@ -18,6 +18,8 @@ private:
 	void setHeightAt(int x, int z, float y);
 	float getHeightAt(int x, int z);
 	glm::vec3 getNormalAt(int x, int z);
+	void calculateVertexInfo();
+	Mesh* mesh;
 
 	void setNormals();
 public:
@@ -25,8 +27,7 @@ public:
 	void loadTerrain(const char*fileName, float maxHeight);
 	~Terrain();
 	void Initialize(int width, int length);
-
-	void Draw();
+	Mesh*getMesh();
 };
 
 #endif

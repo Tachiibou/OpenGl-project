@@ -20,6 +20,7 @@ Terrain::~Terrain()
 		delete this->normals[i];
 	}
 	delete[]this->normals;
+	delete mesh;
 }
 
 void Terrain::Initialize(int width, int length) {
@@ -59,6 +60,7 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 		stbi_image_free(height_data);
 		
 		setNormals();
+		calculateVertexInfo();
 	}
 
 }
@@ -120,24 +122,29 @@ void Terrain::setNormals(){
 		}
 	}
 
+
+
 }
 
-void Terrain::Draw() {
-	Mesh *tempMesh;
-	VertexInfo* tempVertexInfos = new VertexInfo[this->width*this->length];;
-	TriangleVertex* tempVertexInfo = new TriangleVertex[this->width*this->length];
+void Terrain::calculateVertexInfo() {
+	VertexInfo* tempVertexInfo = new VertexInfo[this->width*this->length];;
+	TriangleVertex* tempTriangleVertex = new TriangleVertex[this->width*this->length];
 	glm::vec3 tempNormal;
 	int cIndex;
-	for (int x = 0; x < this->width- 1; x++) {
-		
+	for (int x = 0; x < this->width - 1; x++) {
+
 		for (int z = 0; z < this->length; z++) {
 			cIndex = x*this->length + z;
 			tempNormal = this->normals[x][z];
 
-			tempVertexInfos[cIndex] = VertexInfo(glm::vec3(x, z, this->heights[x][z]), glm::vec2(0, 0), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
-			tempVertexInfo[cIndex] = { tempVertexInfos[cIndex].pos.x, tempVertexInfos[cIndex].pos.y, tempVertexInfos[cIndex].pos.z,
-										0.f, 0.f,
-										tempVertexInfos[cIndex].normal.x, tempVertexInfos[cIndex].normal.y, tempVertexInfos[cIndex].normal.z};
+			tempVertexInfo[cIndex] = VertexInfo(glm::vec3(x, z, this->heights[x][z]), glm::vec2(0, 0), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
+			tempTriangleVertex[cIndex] = { tempVertexInfo[cIndex].pos.x, tempVertexInfo[cIndex].pos.y, tempVertexInfo[cIndex].pos.z,
+				0.f, 0.f,
+				tempVertexInfo[cIndex].normal.x, tempVertexInfo[cIndex].normal.y, tempVertexInfo[cIndex].normal.z };
 		}
 	}
+	this->mesh = new Mesh(tempVertexInfo, this->width*this->length, NULL, 6, tempTriangleVertex);
+}
+Mesh* Terrain::getMesh() {
+	return this->mesh;
 }
