@@ -55,6 +55,7 @@ public:
 	virtual ~Mesh();
 
 	void Draw();
+	void DrawStrip();
 private:
 	Texture *texture;
 	enum {

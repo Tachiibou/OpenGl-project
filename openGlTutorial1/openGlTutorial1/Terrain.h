@@ -6,6 +6,8 @@
 #include "stb_image.h"
 #include <string>
 #include <iostream>
+#include "Mesh.h"
+
 class Terrain
 {
 private:
@@ -23,6 +25,8 @@ public:
 	void loadTerrain(const char*fileName, float maxHeight);
 	~Terrain();
 	void Initialize(int width, int length);
+
+	void Draw();
 };
 
 #endif

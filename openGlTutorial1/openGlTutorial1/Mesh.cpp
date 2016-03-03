@@ -67,7 +67,7 @@ Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int 
 	glBindVertexArray(0);
 
 
-	this->texture = new Texture("./obj/cube_box.jpg");
+	//this->texture = new Texture("./obj/cube_box.jpg");
 }
 
 Mesh::~Mesh()
@@ -94,6 +94,26 @@ void Mesh::Draw() {
 	//glVertexAttribPointer(1, 3, GL_INT, GL_FALSE, 0, 0);
 
 	glDrawElements(GL_TRIANGLES,this->indexArraySize ,GL_UNSIGNED_INT,0);
+
+	glBindVertexArray(0);
+}
+
+void Mesh::DrawStrip() {
+	texture->Bind();
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
+
+	glBindVertexArray(m_vertexArrayObject);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[POSITION_VB]);
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexArrayBuffers[INDEX_VB]);
+	//glVertexAttribPointer(1, 3, GL_INT, GL_FALSE, 0, 0);
+
+	glDrawElements(GL_TRIANGLE_STRIP, this->indexArraySize, GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
 }

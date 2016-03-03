@@ -111,7 +111,7 @@ void Scene::keyBoardCheck()
 
 void Scene::mouseCheck()
 {
-	std::cout << "x: " << this->sdlEvent.motion.xrel << " y: " << this->sdlEvent.motion.yrel << '\n';
+	//std::cout << "x: " << this->sdlEvent.motion.xrel << " y: " << this->sdlEvent.motion.yrel << '\n';
 	this->camera->look(this->sdlEvent.motion.xrel, this->sdlEvent.motion.yrel, this->deltaTime);
 	if (this->mouseWarp)
 	{

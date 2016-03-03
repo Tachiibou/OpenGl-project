@@ -47,16 +47,11 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 		//ERROR!!!
 	}
 	else {
-
 		Initialize(t_width, t_height);
-
 		for (int x = 0; x < t_width; x++) {
 			for (int y = 0; y < t_height; y++) {
 				//Get 
-				unsigned char pixel_color =
-					height_data[(y * t_width + x)];
-				
-
+				unsigned char pixel_color = height_data[(y * t_width + x)];
 				float h = maxHeight* (pixel_color/255.f);
 				setHeightAt(x, y, h);
 			}
@@ -81,5 +76,68 @@ glm::vec3 Terrain::getNormalAt(int x, int z) {
 }
 
 void Terrain::setNormals(){
+	glm::vec3** tempNormals = new glm::vec3*[width];
+	for (int i = 0; i < this->width; i++) {
+		tempNormals[i] = new glm::vec3[length];
+	}
 
+
+	//Making a line between the current point and the points that's adjecent. When there's a potential 4 lines, we cross product
+	//Between thoose circular like a triangle.
+	glm::vec3 tempZOut, tempZIn, tempXLeft, tempXRight, tempNormalSum;
+	for (int x = 0; x < this->width; x++) {
+		for (int z = 0; z < this->length; z++) {
+
+			if (z > 0)
+				tempZOut = glm::vec3(0.f, this->heights[x][z - 1] - this->heights[x][z], -1.f);
+
+			if (z < this->length -1)
+				tempZIn = glm::vec3(0.f, this->heights[x][z + 1] - this->heights[x][z], 1.f);
+
+			if (x < this->width-1)
+				tempXRight = glm::vec3(1.f, this->heights[x+1][z] - this->heights[x][z], 0.f);
+
+			if (x > 0)
+				tempXLeft = glm::vec3(-1.f, this->heights[x-1][z] - this->heights[x][z], 0.f);
+
+			if (z > 0 && x > 0) {
+				tempNormalSum += glm::cross(tempZOut, tempXLeft);
+			}
+
+			if (x > 0 && z < this->length - 1) {
+				tempNormalSum += glm::cross(tempXLeft, tempZIn);
+			}
+
+			if (z < this->length - 1 && x < this->width - 1) {
+				tempNormalSum += glm::cross(tempZIn, tempXRight);
+			}
+
+			if (x < this->width - 1 && z > 0) {
+				tempNormalSum += glm::cross(tempXRight, tempZOut);
+			}
+
+			this->normals[x][z] = glm::normalize(tempNormalSum);
+		}
+	}
+
+}
+
+void Terrain::Draw() {
+	Mesh *tempMesh;
+	VertexInfo* tempVertexInfos = new VertexInfo[this->width*this->length];;
+	TriangleVertex* tempVertexInfo = new TriangleVertex[this->width*this->length];
+	glm::vec3 tempNormal;
+	int cIndex;
+	for (int x = 0; x < this->width- 1; x++) {
+		
+		for (int z = 0; z < this->length; z++) {
+			cIndex = x*this->length + z;
+			tempNormal = this->normals[x][z];
+
+			tempVertexInfos[cIndex] = VertexInfo(glm::vec3(x, z, this->heights[x][z]), glm::vec2(0, 0), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
+			tempVertexInfo[cIndex] = { tempVertexInfos[cIndex].pos.x, tempVertexInfos[cIndex].pos.y, tempVertexInfos[cIndex].pos.z,
+										0.f, 0.f,
+										tempVertexInfos[cIndex].normal.x, tempVertexInfos[cIndex].normal.y, tempVertexInfos[cIndex].normal.z};
+		}
+	}
 }
