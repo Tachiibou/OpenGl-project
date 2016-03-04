@@ -16,12 +16,14 @@ private:
 	int length;
 	float** heights;
 	glm::vec3**normals;
+	float scaleSize;
 	void setHeightAt(int x, int z, float y);
 	float getHeightAt(int x, int z);
 	glm::vec3 getNormalAt(int x, int z);
 	void calculateVertexInfo();
 	Mesh* mesh;
 
+	void smoothTerrain();
 	void setNormals();
 
 	void printToScreen(const VertexInfo& info);

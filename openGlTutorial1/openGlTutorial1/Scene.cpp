@@ -10,7 +10,7 @@ Scene::Scene()
 
 
 	this->terrain = new Terrain();
-	this->terrain->loadTerrain("./res/heightmap.png", 1);
+	this->terrain->loadTerrain("./res/heightmap.png", 7);
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR);
 	this->mouseWarp = false;
@@ -38,6 +38,7 @@ Scene::~Scene()
 	delete this->display;
 	delete this->mesh;
 	delete this->shader;
+	delete this->terrain;
 }
 
 void Scene::Start() 
@@ -50,7 +51,7 @@ void Scene::Start()
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->shader->Bind();
 		this->shader->Update(*this->camera);
-		this->mesh->Draw();
+		//this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 		this->display->Update();
 	}
