@@ -52,8 +52,8 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 		for (int x = 0; x < t_width; x++) {
 			for (int y = 0; y < t_height; y++) {
 				//Get 
-				unsigned char pixel_color = height_data[(y * t_width + x)];
-				if (x == 140)
+				unsigned char pixel_color = height_data[(x * t_width + y)];
+				if (x ==15)
 					int k = 0;
 				float h = maxHeight* (pixel_color/255.f);
 				setHeightAt(x, y, h);
@@ -133,22 +133,34 @@ void Terrain::calculateVertexInfo() {
 	TriangleVertex* tempTriangleVertex = new TriangleVertex[this->width*this->length];
 	glm::vec3 tempNormal;
 	int cIndex;
-	for (int x = 0; x < this->width - 1; x++) {
 
-		for (int z = 0; z < this->length; z++) {
+	std::vector<int> indices;
+	for (int x = 0; x < this->width-1; x++) {
+
+		for (int z = 0; z < this->length-1; z++) {
 			cIndex = x*this->length + z;
+
+			indices.push_back(x*this->length + z);
+			indices.push_back(x*this->length + z+1);
+			indices.push_back((x+1)*this->length + z);
+
 			tempNormal = this->normals[x][z];
 
-			tempVertexInfo[cIndex] = VertexInfo(glm::vec3(x, this->heights[x][z], z), glm::vec2(0, 0), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
+			tempVertexInfo[cIndex] = VertexInfo(glm::vec3(x/5, this->heights[x][z], z/5), glm::vec2(0, 0), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
 			 
 			tempTriangleVertex[cIndex] = { tempVertexInfo[cIndex].pos.x, tempVertexInfo[cIndex].pos.y, tempVertexInfo[cIndex].pos.z,
 				0.f, 0.f,
 				tempVertexInfo[cIndex].normal.x, tempVertexInfo[cIndex].normal.y, tempVertexInfo[cIndex].normal.z };
 
-			printToScreen(tempVertexInfo[cIndex]);
+			//printToScreen(tempVertexInfo[cIndex]);
 		}
 	}
-	this->mesh = new Mesh(tempVertexInfo, this->width*this->length, NULL, 6, tempTriangleVertex);
+	
+	int *tempArr = new int[indices.size()];
+	for (int i = 0; i < indices.size(); i++) {
+		tempArr[i] = indices.at(i);
+	}
+	this->mesh = new Mesh(tempVertexInfo, this->width*this->length, tempArr, indices.size(), tempTriangleVertex);
 }
 
 void Terrain::printToScreen(const VertexInfo& info) {

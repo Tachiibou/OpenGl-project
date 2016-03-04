@@ -23,7 +23,7 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 	this->horizontalAngle = 3.14f;
 	this->verticalAngle = 0.0f;
 	this->mouseSpeed = 1.0f;
-	this->moveSpeed = 3.0f;
+	this->moveSpeed = 60.0f;
 
 	this->direction = glm::vec3(
 		cos(this->verticalAngle) * sin(this->horizontalAngle),

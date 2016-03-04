@@ -67,7 +67,7 @@ Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int 
 	glBindVertexArray(0);
 
 
-	this->texture = new Texture("./obj/cube_box.jpg");
+	this->texture = new Texture("./obj/brick_16.jpg");
 }
 
 Mesh::~Mesh()

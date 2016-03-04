@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include "Mesh.h"
+#include <vector>
 
 class Terrain
 {
