@@ -24,7 +24,7 @@ Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int numInd
 	glBindVertexArray(0);
 }
 
-Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv)
+Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture)
 {
 	this->usingVertexInfo = true;
 	this->m_drawCount = numVertices;
@@ -66,8 +66,10 @@ Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int 
 
 	glBindVertexArray(0);
 
-
-	this->texture = new Texture("./obj/cube_box.jpg");
+	if (texture == nullptr) // default texture is brick
+		this->texture = new Texture(this->defaultTexture);
+	else
+		this->texture = texture;
 }
 
 Mesh::~Mesh()

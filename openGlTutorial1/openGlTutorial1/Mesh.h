@@ -19,27 +19,8 @@ private:
 	glm::vec3 pos;
 	
 };
-// Vertex, UV and normal
-class VertexInfo { 
-public:
-	VertexInfo(const glm::vec3&pos, const glm::vec2& UV, const glm::vec3& normal) {
-		this->pos = pos;
-		this->normal = normal;
-		this->UV = UV;
-	}
-	VertexInfo() {
-		this->pos = glm::vec3(0, 0, 0);
-		this->normal = glm::vec3(0, 0, 0);
-		this->UV = glm::vec2(0, 0);
-	}
-protected:
-public:
-	glm::vec3 pos;
-	glm::vec3 normal;
-	glm::vec2 UV;
 
-};
-
+// Struct used for sending data to GPU
 struct TriangleVertex
 {
 	float x, y, z;
@@ -51,12 +32,13 @@ class Mesh
 {
 public:
 	Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize);
-	Mesh(VertexInfo * vertexInfo, unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv);
+	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture);
 	virtual ~Mesh();
 
 	void Draw();
 private:
 	Texture *texture;
+	const char* defaultTexture = "obj/brick_16.jpg";
 	enum {
 		POSITION_VB,
 		UV_VB,
