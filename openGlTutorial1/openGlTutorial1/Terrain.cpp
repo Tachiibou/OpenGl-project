@@ -212,7 +212,8 @@ void Terrain::calculateVertexInfo() {
 	for (int i = 0; i < indices.size(); i++) {
 		tempArr[i] = indices.at(i);
 	}
-	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, nullptr);
+	char* textureName = "./obj/cube_box.jpg";
+	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, new Texture(textureName));
 	delete[]tempTriangleVertex;
 	delete[] tempArr;
 }
