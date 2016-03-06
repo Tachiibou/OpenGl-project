@@ -167,7 +167,6 @@ void Terrain::setNormals(){
 }
 
 void Terrain::calculateVertexInfo() {
-	VertexInfo* tempVertexInfo = new VertexInfo[this->width*this->length];;
 	TriangleVertex* tempTriangleVertex = new TriangleVertex[this->width*this->length];
 	
 	glm::vec3 tempNormal;
@@ -198,12 +197,10 @@ void Terrain::calculateVertexInfo() {
 
 			positionX = x*this->scaleSize;
 			positionZ = z*this->scaleSize;
-
-			tempVertexInfo[cIndex] = VertexInfo(glm::vec3(positionX, this->heights[x][z], positionZ), glm::vec2(u, v), glm::vec3(tempNormal.x, tempNormal.y, tempNormal.z));
 			 
-			tempTriangleVertex[cIndex] = { tempVertexInfo[cIndex].pos.x, tempVertexInfo[cIndex].pos.y, tempVertexInfo[cIndex].pos.z,
-				tempVertexInfo[cIndex].UV.x, tempVertexInfo[cIndex].UV.y,
-				tempVertexInfo[cIndex].normal.x, tempVertexInfo[cIndex].normal.y, tempVertexInfo[cIndex].normal.z };
+			tempTriangleVertex[cIndex] = { positionX, this->heights[x][z], positionZ,
+				u, v,
+				tempNormal.x, tempNormal.y, tempNormal.z };
 
 			//printToScreen(tempVertexInfo[cIndex]);
 			//std::cout << cIndex << std::endl;
@@ -215,9 +212,8 @@ void Terrain::calculateVertexInfo() {
 	for (int i = 0; i < indices.size(); i++) {
 		tempArr[i] = indices.at(i);
 	}
-	this->mesh = new Mesh(tempVertexInfo, this->width*this->length, tempArr, indices.size(), tempTriangleVertex);
+	this->mesh = new Mesh(NULL, this->width*this->length, tempArr, indices.size(), tempTriangleVertex);
 
-	delete[]tempVertexInfo;
 	delete[]tempTriangleVertex;
 	delete[] tempArr;
 }
