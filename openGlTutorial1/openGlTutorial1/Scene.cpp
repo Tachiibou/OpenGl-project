@@ -10,7 +10,7 @@ Scene::Scene()
 
 
 	this->terrain = new Terrain();
-	this->terrain->loadTerrain("./res/heightmap.png", 7);
+	this->terrain->loadTerrain("./res/heightmap.png", 10);
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR);
 	this->mouseWarp = false;
