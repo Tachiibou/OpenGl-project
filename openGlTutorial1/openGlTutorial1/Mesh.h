@@ -1,12 +1,10 @@
 #ifndef MESH_H
 #define MESH_H
-
 #include "glm\glm.hpp"
 #include "GL\glew.h"
 #include "Texture.h"
-
 // Vertex class can be used for normals aswell
-class Vertex { 
+class Vertex {
 public:
 	Vertex(const glm::vec3&pos) {
 		this->pos = pos;
@@ -17,9 +15,8 @@ public:
 protected:
 private:
 	glm::vec3 pos;
-	
-};
 
+};
 // Struct used for sending data to GPU
 struct TriangleVertex
 {
@@ -27,14 +24,12 @@ struct TriangleVertex
 	float u, v;
 	float xn, yn, zn;
 };
-
 class Mesh
 {
 public:
 	Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize);
 	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture);
 	virtual ~Mesh();
-
 	void Draw();
 private:
 	Texture *texture;
@@ -46,7 +41,6 @@ private:
 		INDEX_VB,
 		NUM_BUFFERS
 	};
-
 	GLuint m_vertexArrayObject;
 	GLuint indexBufferObject;
 	GLuint m_vertexArrayBuffers[NUM_BUFFERS];
@@ -54,5 +48,4 @@ private:
 	unsigned int indexArraySize;
 	bool usingVertexInfo;
 };
-
 #endif

@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Mesh.h"
 #include "ResourceLoader.h"
+#include "Terrain.h"
 
 using namespace constVar;
 
@@ -19,6 +20,7 @@ private:
 	Camera* camera;
 	Shader* shader;
 	Mesh* mesh;
+	Terrain* terrain;
 	Vertex vertices[4];
 
 	glm::vec3 cameraMove;

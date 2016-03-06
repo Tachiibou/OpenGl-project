@@ -53,5 +53,7 @@
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />
     <None Include="res\basicVertex.glsl" />
+    <None Include="res\terrainFragment.glsl" />
+    <None Include="res\terrainVertex.glsl" />
   </ItemGroup>
 </Project>
