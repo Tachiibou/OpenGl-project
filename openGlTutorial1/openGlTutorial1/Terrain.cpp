@@ -52,9 +52,7 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 		Initialize(t_width, t_height);
 		for (int y = 0; y < t_height; y++) {
 			for (int x = 0; x < t_width; x++) {
-				//Takes the Blue Color (R, G, (B))
 				int index = 3 * (y * t_width + x);
-				
 				unsigned char pixel_color = (unsigned char)height_data[index];
 				if (x==150 && y == 150)
 					int k = 0;
