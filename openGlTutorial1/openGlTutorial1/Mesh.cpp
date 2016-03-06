@@ -24,7 +24,7 @@ Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int numInd
 	glBindVertexArray(0);
 }
 
-Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv)
+Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture)
 {
 	this->usingVertexInfo = true;
 	this->m_drawCount = numVertices;
@@ -68,6 +68,10 @@ Mesh::Mesh(VertexInfo* vertexInfo, unsigned int numVertices, int indices[], int 
 
 
 	this->texture = new Texture("./obj/brick_16.jpg");
+	if (texture == nullptr) // default texture is brick
+		this->texture = new Texture(this->defaultTexture);
+	else
+		this->texture = texture;
 }
 
 Mesh::~Mesh()
@@ -94,26 +98,6 @@ void Mesh::Draw() {
 	//glVertexAttribPointer(1, 3, GL_INT, GL_FALSE, 0, 0);
 
 	glDrawElements(GL_TRIANGLES,this->indexArraySize ,GL_UNSIGNED_INT,0);
-
-	glBindVertexArray(0);
-}
-
-void Mesh::DrawStrip() {
-	texture->Bind();
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-	glEnableVertexAttribArray(3);
-
-	glBindVertexArray(m_vertexArrayObject);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[POSITION_VB]);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexArrayBuffers[INDEX_VB]);
-	//glVertexAttribPointer(1, 3, GL_INT, GL_FALSE, 0, 0);
-
-	glDrawElements(GL_TRIANGLE_STRIP, this->indexArraySize, GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
 }

@@ -212,17 +212,11 @@ void Terrain::calculateVertexInfo() {
 	for (int i = 0; i < indices.size(); i++) {
 		tempArr[i] = indices.at(i);
 	}
-	this->mesh = new Mesh(NULL, this->width*this->length, tempArr, indices.size(), tempTriangleVertex);
+	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, nullptr);
 
 	delete[]tempTriangleVertex;
 	delete[] tempArr;
 }
-
-void Terrain::printToScreen(const VertexInfo& info) {
-	std::cout <<"|X: " << info.pos.x << "|Y: " << info.pos.y << "|Z: " << info.pos.z << std::endl;
-	std::cout << "|NX: " << info.normal.x << "|NY: " << info.normal.y << "|NZ: " << info.normal.z << std::endl<<"---------------------------------"<<std::endl;
-}
-
 Mesh* Terrain::getMesh() {
 	return this->mesh;
 }

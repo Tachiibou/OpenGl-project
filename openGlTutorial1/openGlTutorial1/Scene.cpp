@@ -51,7 +51,7 @@ void Scene::Start()
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->shader->Bind();
 		this->shader->Update(*this->camera);
-		//this->mesh->Draw();
+		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 		this->display->Update();
 	}
