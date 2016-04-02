@@ -79,15 +79,17 @@ Mesh* ResourceLoader::getMesh()
 		while (getline(mtlFile, line))  // looping through MTL file
 		{
 			if (line.substr(0, 2) == "ma") // find texture filename "map_kd"
-				textureFileName = getSecondWord(line);
+				textureFileName = this->getSecondWord(line);
 			if (line.substr(0, 2) == "il") // illum
-				illum = std::stoi(getSecondWord(line));
+				illum = std::stoi(this->getSecondWord(line));
 			if (line.substr(0, 2) == "Kd") // Kd	diffuse reflectance
 				this->threeFloatIntoVariable(line, this->kd);
 			if (line.substr(0, 2) == "Ka") // Ka	ambient reflectance
 				this->threeFloatIntoVariable(line, this->ka);
 			if (line.substr(0, 2) == "Tf") // Tf	transmission filter
 				this->threeFloatIntoVariable(line, this->tf);
+			if (line.substr(0, 2) == "Ni") // Ni optical_density This is also known as index of refraction
+				this->ni = std::stof(this->getSecondWord(line));
 		}
 	}
 	

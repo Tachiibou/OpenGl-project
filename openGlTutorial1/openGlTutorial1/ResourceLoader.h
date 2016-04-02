@@ -41,6 +41,7 @@ private:
 	const std::string OBJ_DIR = "obj/";
 	glm::vec3 kd, ka, tf;
 	int illum;
+	float ni;
 
 	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
 	Vertex* createVertices(std::vector<glm::vec3> pos);
