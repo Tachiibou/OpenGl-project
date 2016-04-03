@@ -39,6 +39,9 @@ private:
 	TriangleVertex* triangleVert;
 	int* indexArr;
 	const std::string OBJ_DIR = "obj/";
+	glm::vec3 kd, ka, tf;
+	int illum;
+	float ni;
 
 	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
 	Vertex* createVertices(std::vector<glm::vec3> pos);
@@ -49,6 +52,7 @@ private:
 	void insertVertex(std::string line, std::vector<glm::vec3>& vertexVector);
 	void insertUV(std::string line, std::vector<glm::vec2>& UVector);
 	void insertNormal(std::string line, std::vector<glm::vec3>& normalVector);
+	void threeFloatIntoVariable(std::string line, glm::vec3& variable);
 	std::string getSecondWord(std::string line);
 
 	TriangleVertex* makeStruct(std::vector<VertexInfo> vertexInfo);

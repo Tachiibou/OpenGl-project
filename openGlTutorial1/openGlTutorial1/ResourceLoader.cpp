@@ -79,7 +79,17 @@ Mesh* ResourceLoader::getMesh()
 		while (getline(mtlFile, line))  // looping through MTL file
 		{
 			if (line.substr(0, 2) == "ma") // find texture filename "map_kd"
-				textureFileName = getSecondWord(line);
+				textureFileName = this->getSecondWord(line);
+			if (line.substr(0, 2) == "il") // illum
+				illum = std::stoi(this->getSecondWord(line));
+			if (line.substr(0, 2) == "Kd") // Kd	diffuse reflectance
+				this->threeFloatIntoVariable(line, this->kd);
+			if (line.substr(0, 2) == "Ka") // Ka	ambient reflectance
+				this->threeFloatIntoVariable(line, this->ka);
+			if (line.substr(0, 2) == "Tf") // Tf	transmission filter
+				this->threeFloatIntoVariable(line, this->tf);
+			if (line.substr(0, 2) == "Ni") // Ni optical_density This is also known as index of refraction
+				this->ni = std::stof(this->getSecondWord(line));
 		}
 	}
 	
@@ -219,6 +229,17 @@ void ResourceLoader::insertNormal(std::string line, std::vector<glm::vec3>& norm
 
 	inputString >> scrap >> normal.x >> normal.y >> normal.z;
 	normalVector.push_back(normal);
+}
+
+// Removes first value and inserts the three following into the vec3 variable
+void ResourceLoader::threeFloatIntoVariable(std::string line, glm::vec3& variable)
+{
+	std::istringstream inputString;
+	std::string scrap; // scrap will contain the first word
+
+	inputString.str(line);
+
+	inputString >> scrap >> variable.x >> variable.y >> variable.z;
 }
 
 // simply returns the second word in the sentence. Works for returning texture name and mtl name
