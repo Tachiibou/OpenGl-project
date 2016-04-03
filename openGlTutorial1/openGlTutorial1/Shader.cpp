@@ -26,7 +26,6 @@ Shader::Shader(const std::string & fileName)
 
 	m_uniforms[uniform::PERSPECTIVE_U] = glGetUniformLocation(m_program, "perspectiveMatrix");
 	m_uniforms[uniform::VIEW_U] = glGetUniformLocation(m_program, "viewMatrix");
-	
 
 }
 

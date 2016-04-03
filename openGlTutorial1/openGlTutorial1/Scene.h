@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "ResourceLoader.h"
 #include "Terrain.h"
+#include "DeferredRendering.h"
 
 using namespace constVar;
 
@@ -30,6 +31,7 @@ private:
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
 
+	DeferredRendering* defRend;
 
 	void eventHandler();
 	void Update();
