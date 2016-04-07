@@ -6,14 +6,27 @@ static void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const s
 static std::string LoadShader(const std::string &fileName);
 static GLuint CreateShader(const std::string& text, GLenum shaderType);
 
-Shader::Shader(const std::string & fileName)
+Shader::Shader(const std::string & fileName, bool& geo)
 {
-
 	m_program = glCreateProgram();
-	m_shaders[0] = CreateShader(LoadShader("./res/" + fileName + "Vertex.glsl"), GL_VERTEX_SHADER);
-	m_shaders[1] = CreateShader(LoadShader("./res/" + fileName + "Fragment.glsl"), GL_FRAGMENT_SHADER);
 
-	for (unsigned int i = 0; i < NUM_SHADERS; i++)
+	if (geo)
+	{
+		this->nrOfShaders = 3;
+		this->m_shaders = new GLuint[this->nrOfShaders];
+		m_shaders[0] = CreateShader(LoadShader("./res/" + fileName + "Vertex.glsl"), GL_VERTEX_SHADER);
+		m_shaders[1] = CreateShader(LoadShader("./res/" + fileName + "Fragment.glsl"), GL_FRAGMENT_SHADER);
+		m_shaders[2] = CreateShader(LoadShader("./res/" + fileName + "Geometry.glsl"), GL_GEOMETRY_SHADER);
+	}
+	else
+	{
+		this->nrOfShaders = 2;
+		this->m_shaders = new GLuint[this->nrOfShaders];
+		m_shaders[0] = CreateShader(LoadShader("./res/" + fileName + "Vertex.glsl"), GL_VERTEX_SHADER);
+		m_shaders[1] = CreateShader(LoadShader("./res/" + fileName + "Fragment.glsl"), GL_FRAGMENT_SHADER);
+	}
+
+	for (unsigned int i = 0; i < nrOfShaders; i++)
 		glAttachShader(m_program, m_shaders[i]);
 
 	glBindAttribLocation(m_program, 0, "position");
@@ -26,8 +39,6 @@ Shader::Shader(const std::string & fileName)
 
 	m_uniforms[uniform::PERSPECTIVE_U] = glGetUniformLocation(m_program, "perspectiveMatrix");
 	m_uniforms[uniform::VIEW_U] = glGetUniformLocation(m_program, "viewMatrix");
-	
-
 }
 
 void Shader::Update(Camera&camera) {
@@ -61,13 +72,15 @@ static GLuint CreateShader(const std::string& text, GLenum shaderType) {
 
 Shader::~Shader()
 {
-	for (unsigned i = 0; i < NUM_SHADERS; i++) 
+	for (unsigned i = 0; i < this->nrOfShaders; i++) 
 	{
 		glDetachShader(m_program, m_shaders[i]);
 		glDeleteShader(m_shaders[i]);
 	}
 
 	glDeleteProgram(m_program);
+
+	delete[]this->m_shaders;
 }
 
 void Shader::Bind() {

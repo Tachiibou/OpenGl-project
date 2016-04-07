@@ -8,16 +8,16 @@ Scene::Scene()
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 
-
-	
-
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR);
 	this->mouseWarp = false;
 	this->deltaTime = 0.0f;
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
 
-	this->shader = new Shader("basic");
+	std::string shaderFile = "basic";
+	bool geo = false;
+
+	this->shader = new Shader(shaderFile, geo);
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));

@@ -7,7 +7,7 @@
 class Shader
 {
 public:
-	Shader(const std::string& fileName);
+	Shader(const std::string& fileName, bool& geo);
 	virtual ~Shader();
 
 	void Bind();
@@ -17,6 +17,7 @@ public:
 private:
 
 	static const unsigned int NUM_SHADERS = 2;
+	int nrOfShaders;
 
 	enum uniform {
 		PERSPECTIVE_U,
@@ -27,7 +28,7 @@ private:
 
 	GLuint m_uniforms[NUM_UNIFORMS];
 	GLuint m_program;
-	GLuint m_shaders[NUM_SHADERS];
+	GLuint* m_shaders;
 };
 
 #endif
