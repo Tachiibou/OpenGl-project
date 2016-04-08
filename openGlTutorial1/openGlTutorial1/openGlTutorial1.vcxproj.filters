@@ -58,10 +58,13 @@
     <None Include="res\basicVertex.glsl" />
     <None Include="res\terrainFragment.glsl" />
     <None Include="res\terrainVertex.glsl" />
-    <None Include="backFaceVertex.glsl">
+    <None Include="res\backFaceFragment.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="backFaceGeometry.glsl">
+    <None Include="res\backFaceGeometry.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\backFaceVertex.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

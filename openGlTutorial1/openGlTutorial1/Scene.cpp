@@ -14,10 +14,7 @@ Scene::Scene()
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
 
-	std::string shaderFile = "basic";
-	bool geo = false;
-
-	this->shader = new Shader(shaderFile, geo);
+	this->shader = new Shader("backFace", true);
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));

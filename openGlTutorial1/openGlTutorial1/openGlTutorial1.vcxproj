@@ -169,8 +169,9 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="backFaceGeometry.glsl" />
-    <None Include="backFaceVertex.glsl" />
+    <None Include="res\backFaceFragment.glsl" />
+    <None Include="res\backFaceGeometry.glsl" />
+    <None Include="res\backFaceVertex.glsl" />
     <None Include="res\basicFragment.glsl" />
     <None Include="res\basicVertex.glsl" />
     <None Include="res\terrainFragment.glsl" />

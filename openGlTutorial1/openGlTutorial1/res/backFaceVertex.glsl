@@ -7,15 +7,15 @@ layout(location = 2)in vec3 normal;
 uniform mat4 viewMatrix;
 uniform mat4 perspectiveMatrix;
 
-out VertexVS
-{
-	vec2 uv;
-	vec3 normal;
-} vertex;
+out vec3 VSpos;
+out vec2 VSuv;
+out vec3 VSnormal;
 
-int main()
+void main()
 {
-	gl_Position = viewMatrix * perspectiveMatrix * vec4(position, 1);
-	vertex.uv = uv;
-	vertex.normal = normal;
+	gl_Position = perspectiveMatrix * viewMatrix * vec4(position, 1);
+
+	VSpos = position;
+	VSuv = uv;
+	VSnormal = normal;
 }
