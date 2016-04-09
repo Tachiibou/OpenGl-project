@@ -27,6 +27,8 @@ Scene::Scene()
 	this->terrain = new Terrain();
 	this->terrain->loadTerrain("./res/heightmap.png", 10);
 	this->mesh = r.getMesh();
+
+	this->CreateFramebuffer();
 	
 }
 
@@ -48,10 +50,11 @@ void Scene::Start()
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->shader->Bind();
-		this->bindFramebuffer();
+		this->BindFrameBuffer();
 		this->shader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
+		this->UnbindFrameBuffer();
 		this->display->Update();
 	}
 }
@@ -192,7 +195,7 @@ void Scene::CreateFramebuffer()
 
 }
 
-void Scene::bindFrameBuffer()
+void Scene::BindFrameBuffer()
 {
 	// Render to our framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);

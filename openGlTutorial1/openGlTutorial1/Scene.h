@@ -43,7 +43,7 @@ private:
 	GLuint FramebufferName = 0;
 	void RenderQuad();
 	void CreateFramebuffer();
-	void bindFrameBuffer();
+	void BindFrameBuffer();
 	void UnbindFrameBuffer();
 
 public:
