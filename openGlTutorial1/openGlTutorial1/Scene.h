@@ -22,6 +22,8 @@ private:
 	Mesh* mesh;
 	Terrain* terrain;
 	Vertex vertices[4];
+	GLuint quadVAO = 0;
+	GLuint quadVBO;
 
 	glm::vec3 cameraMove;
 	bool mouseWarp;
