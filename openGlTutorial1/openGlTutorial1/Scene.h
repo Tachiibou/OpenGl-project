@@ -36,6 +36,7 @@ private:
 
 	void keyBoardCheck();
 	void mouseCheck();
+	void RenderQuad();
 
 public:
 	Scene();
