@@ -38,7 +38,10 @@ private:
 
 	void keyBoardCheck();
 	void mouseCheck();
+
+	// Gaussian blur functions
 	void RenderQuad();
+	void bindFramebuffer();
 
 public:
 	Scene();
