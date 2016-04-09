@@ -48,6 +48,7 @@ void Scene::Start()
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->shader->Bind();
+		this->bindFramebuffer();
 		this->shader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
@@ -152,9 +153,9 @@ void Scene::RenderQuad()
 	glBindVertexArray(0);
 }
 
-void Scene::bindFramebuffer()
+void Scene::CreateFramebuffer()
 {
-	GLuint FramebufferName = 0;
+	
 	glGenFramebuffers(1, &FramebufferName);
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
@@ -189,7 +190,16 @@ void Scene::bindFramebuffer()
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR CREATING FRAMEBUFFER" << std::endl;
 
+}
+
+void Scene::bindFrameBuffer()
+{
 	// Render to our framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-	glViewport(0, 0, 1024, 768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+	//glViewport(0, 0, 1024, 768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+}
+
+void Scene::UnbindFrameBuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

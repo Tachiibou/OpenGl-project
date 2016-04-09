@@ -40,8 +40,11 @@ private:
 	void mouseCheck();
 
 	// Gaussian blur functions
+	GLuint FramebufferName = 0;
 	void RenderQuad();
-	void bindFramebuffer();
+	void CreateFramebuffer();
+	void bindFrameBuffer();
+	void UnbindFrameBuffer();
 
 public:
 	Scene();
