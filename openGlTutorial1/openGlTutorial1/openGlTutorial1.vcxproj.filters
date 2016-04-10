@@ -67,5 +67,11 @@
     <None Include="res\backFaceVertex.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="res\textureFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\textureVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

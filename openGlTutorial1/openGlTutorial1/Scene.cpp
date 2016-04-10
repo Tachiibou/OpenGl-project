@@ -15,6 +15,7 @@ Scene::Scene()
 	this->lastTime = 0.0f;
 
 	this->shader = new Shader("backFace", true);
+	this->shader2 = new Shader("texture", false);
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
@@ -39,6 +40,7 @@ Scene::~Scene()
 	delete this->mesh;
 	delete this->shader;
 	delete this->terrain;
+	delete this->shader2;
 }
 
 void Scene::Start() 
@@ -55,6 +57,8 @@ void Scene::Start()
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 		this->UnbindFrameBuffer();
+		this->shader2->Bind();
+		this->RenderQuad();
 		this->display->Update();
 	}
 }

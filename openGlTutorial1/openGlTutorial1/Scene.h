@@ -18,7 +18,7 @@ private:
 	SDL_Event sdlEvent;
 	Display* display;
 	Camera* camera;
-	Shader* shader, shader2;
+	Shader* shader, *shader2;
 	Mesh* mesh;
 	Terrain* terrain;
 	Vertex vertices[4];
