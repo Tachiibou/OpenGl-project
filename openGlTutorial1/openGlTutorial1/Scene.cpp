@@ -3,7 +3,7 @@
 Scene::Scene()
 {
 
-	ResourceLoader r = ResourceLoader("obj/box.obj");
+	ResourceLoader r = ResourceLoader("obj/sphere1.obj");
 	
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
@@ -28,7 +28,7 @@ Scene::Scene()
 
 	//this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
 	this->terrain = new Terrain();
-	this->terrain->loadTerrain("./res/heightmap.png", 10);
+	this->terrain->loadTerrain("./res/test2.png", 10);
 	this->mesh = r.getMesh();
 	
 }
