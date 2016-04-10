@@ -3,9 +3,13 @@
 in vec2 GSuv;
 in vec3 GSnormal;
 
+out vec3 color;
+out vec3 color2;
+
 uniform sampler2D texture;
 
 void main()
 {
-	gl_FragColor = texture2D(texture, GSuv);
+	color = vec3(texture2D(texture, GSuv));
+	color2 = vec3(texture2D(texture, GSuv)) + vec3(1,0,1);
 }

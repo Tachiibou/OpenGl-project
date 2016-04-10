@@ -45,7 +45,7 @@ Scene::~Scene()
 
 void Scene::Start() 
 {
-	GLuint texID;
+	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
 	while (isRunning)
 	{
@@ -60,11 +60,18 @@ void Scene::Start()
 		this->terrain->getMesh()->Draw();
 		this->UnbindFrameBuffer();
 		this->shader2->Bind();
-		glBindTexture(GL_TEXTURE_2D, renderedTexture);
-		
+
+		glActiveTexture(GL_TEXTURE0);
 		texID = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture");
+		glUniform1i(texID, 0);
+		glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
-
+		glActiveTexture(GL_TEXTURE1);
+		texID2 = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2");
+		glUniform1i(texID2, 1);
+		glBindTexture(GL_TEXTURE_2D, renderedTexture2);
+		
+		
 		this->RenderQuad();
 		
 		
@@ -181,9 +188,20 @@ void Scene::CreateFramebuffer()
 
 	// The texture we're going to render to
 	glGenTextures(1, &renderedTexture);
+	glGenTextures(1, &renderedTexture2);
 
 	// "Bind" the newly created texture : all future texture functions will modify this texture
 	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+
+	// Give an empty image to OpenGL ( the last "0" )
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+	// Poor filtering. Needed !
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	// "Bind" the newly created texture : all future texture functions will modify this texture
+	glBindTexture(GL_TEXTURE_2D, renderedTexture2);
 
 	// Give an empty image to OpenGL ( the last "0" )
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
@@ -201,10 +219,11 @@ void Scene::CreateFramebuffer()
 
 	// Set "renderedTexture" as our colour attachement #0
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, renderedTexture2, 0);
 
 	// Set the list of draw buffers.
-	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1 };
+	glDrawBuffers(2, DrawBuffers); // "1" is the size of DrawBuffers
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR CREATING FRAMEBUFFER" << std::endl;

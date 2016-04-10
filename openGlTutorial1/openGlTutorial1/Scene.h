@@ -41,7 +41,7 @@ private:
 
 	// Gaussian blur functions
 	GLuint FramebufferName = 0;
-	GLuint renderedTexture;
+	GLuint renderedTexture, renderedTexture2;
 	void RenderQuad();
 	void CreateFramebuffer();
 	void BindFrameBuffer();
