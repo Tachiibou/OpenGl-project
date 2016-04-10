@@ -45,6 +45,8 @@ Scene::~Scene()
 
 void Scene::Start() 
 {
+	GLuint texID;
+	GLfloat derp[4] = { 1,0,0,1 };
 	while (isRunning)
 	{
 		this->Update();
@@ -58,8 +60,17 @@ void Scene::Start()
 		this->terrain->getMesh()->Draw();
 		this->UnbindFrameBuffer();
 		this->shader2->Bind();
+		glBindTexture(GL_TEXTURE_2D, renderedTexture);
+		
+		texID = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture");
+
+
 		this->RenderQuad();
+		
+		
+		
 		this->display->Update();
+		
 	}
 }
 
@@ -133,6 +144,7 @@ void Scene::mouseCheck()
 	}
 }
 
+// renders a quad with uv coordinates
 void Scene::RenderQuad()
 {
 	if (quadVAO == 0)
@@ -160,6 +172,7 @@ void Scene::RenderQuad()
 	glBindVertexArray(0);
 }
 
+// Creates a framebuffer with one texture attatched to it
 void Scene::CreateFramebuffer()
 {
 	
@@ -198,13 +211,17 @@ void Scene::CreateFramebuffer()
 
 }
 
+// bind the framebuffer and clear the texture
 void Scene::BindFrameBuffer()
 {
 	// Render to our framebuffer
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 	//glViewport(0, 0, 1024, 768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
+	this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f); // clear the texture from last frame
+	
 }
 
+// Unbind the framebuffer
 void Scene::UnbindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -3,10 +3,12 @@
 in vec2 fragment_uv;
 out vec4 color;
 
+uniform sampler2D renderedTexture;
+
 void main()
 {
-	uniform sampler2D renderedTexture;
+	
 
-	//color = vec3(1,0,0);
+	//color = vec4(1,0,0,1);
 	color = texture2D(renderedTexture, fragment_uv);
 }
