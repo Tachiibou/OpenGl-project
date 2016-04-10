@@ -49,6 +49,11 @@ void Shader::Update(Camera&camera) {
 	glUniform3f(m_uniforms[uniform::VIEW_POS], camera.getPos().x, camera.getPos().y, camera.getPos().z);
 }
 
+GLuint Shader::getProgram()
+{
+	return this->m_program;
+}
+
 static GLuint CreateShader(const std::string& text, GLenum shaderType) {
 	GLuint shader = glCreateShader(shaderType);
 
