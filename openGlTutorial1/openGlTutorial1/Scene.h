@@ -18,7 +18,7 @@ private:
 	SDL_Event sdlEvent;
 	Display* display;
 	Camera* camera;
-	Shader* shader;
+	Shader* shader, shader2;
 	Mesh* mesh;
 	Terrain* terrain;
 	Vertex vertices[4];
@@ -41,6 +41,7 @@ private:
 
 	// Gaussian blur functions
 	GLuint FramebufferName = 0;
+	GLuint renderedTexture;
 	void RenderQuad();
 	void CreateFramebuffer();
 	void BindFrameBuffer();

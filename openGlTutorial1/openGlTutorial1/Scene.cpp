@@ -163,7 +163,6 @@ void Scene::CreateFramebuffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
 
 	// The texture we're going to render to
-	GLuint renderedTexture;
 	glGenTextures(1, &renderedTexture);
 
 	// "Bind" the newly created texture : all future texture functions will modify this texture
