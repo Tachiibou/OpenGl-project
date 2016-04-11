@@ -11,5 +11,5 @@ uniform sampler2D texture;
 void main()
 {
 	color = vec3(texture2D(texture, GSuv));
-	color2 = vec3(texture2D(texture, GSuv)) + vec3(1,0,1);
+	color2 = GSnormal;
 }
