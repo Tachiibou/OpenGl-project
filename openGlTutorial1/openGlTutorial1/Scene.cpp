@@ -30,6 +30,10 @@ Scene::Scene()
 	this->mesh = r.getMesh();
 
 	this->CreateFramebuffer();
+
+	this->frameBuffer = new FrameBuffer();
+	this->frameBuffer->CreateFrameBuffer(3);
+	this->frameBuffer->UnbindFrameBuffer();
 	
 }
 
@@ -41,6 +45,7 @@ Scene::~Scene()
 	delete this->shader;
 	delete this->terrain;
 	delete this->shader2;
+	delete this->frameBuffer;
 }
 
 void Scene::Start() 
@@ -54,22 +59,27 @@ void Scene::Start()
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->shader->Bind();
-		this->BindFrameBuffer();
+		this->frameBuffer->BindFrameBuffer();
+		//this->BindFrameBuffer();
 		this->shader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
-		this->UnbindFrameBuffer();
+		this->frameBuffer->UnbindFrameBuffer();
+		//this->UnbindFrameBuffer();
 		this->shader2->Bind();
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture"),0);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2"), 1);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);
 
-		glActiveTexture(GL_TEXTURE0);
-		texID = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture");
-		glUniform1i(texID, 0);
-		glBindTexture(GL_TEXTURE_2D, renderedTexture);
+		//glActiveTexture(GL_TEXTURE0);
+		//texID = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture");
+		//glUniform1i(texID, 0);
+		//glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
-		glActiveTexture(GL_TEXTURE1);
-		texID2 = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2");
-		glUniform1i(texID2, 1);
-		glBindTexture(GL_TEXTURE_2D, renderedTexture2);
+		//glActiveTexture(GL_TEXTURE1);
+		//texID2 = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2");
+		//glUniform1i(texID2, 1);
+		//glBindTexture(GL_TEXTURE_2D, renderedTexture2);
 		
 		
 		this->RenderQuad();

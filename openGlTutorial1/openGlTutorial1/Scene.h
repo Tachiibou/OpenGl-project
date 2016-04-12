@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "ResourceLoader.h"
 #include "Terrain.h"
+#include "FrameBuffer.h"
 
 using namespace constVar;
 
@@ -31,6 +32,8 @@ private:
 	float deltaTime;
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
+
+	FrameBuffer* frameBuffer;
 
 
 	void eventHandler();
