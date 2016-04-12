@@ -17,8 +17,12 @@ out vec3 GSnormal;
 
 void main()
 {
-	vec3 posToView = normalize(VSpos[0] - viewPos);
-	float test = dot(-posToView, VSnormal[0]);
+	vec3 v1 = VSpos[1] - VSpos[0];
+	vec3 v2 = VSpos[2] - VSpos[0];
+	vec3 finalNor = cross(v1,v2);
+
+	vec3 posToView = normalize(viewPos - VSpos[0]);
+	float test = dot(posToView, finalNor);
 	
 	if(test >= 0.0)
 	{
