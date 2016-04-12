@@ -14,6 +14,8 @@ public:
 
 	void Update(Camera&camera);
 
+	GLuint getProgram();
+
 private:
 	int nrOfShaders;
 

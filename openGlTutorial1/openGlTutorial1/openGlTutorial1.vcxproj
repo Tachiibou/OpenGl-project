@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstVariables.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="Scene.h" />
@@ -176,6 +178,8 @@
     <None Include="res\basicVertex.glsl" />
     <None Include="res\terrainFragment.glsl" />
     <None Include="res\terrainVertex.glsl" />
+    <None Include="res\textureFragment.glsl" />
+    <None Include="res\textureVertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,8 +9,10 @@ uniform vec3 viewPos;
 in vec3 VSpos[];
 in vec2 VSuv[];
 in vec3 VSnormal[];
+in vec4 VStransformedPos[];
 
 out vec2 GSuv;
+out vec4 GSposition;
 out vec3 GSnormal;
 
 void main()
@@ -25,6 +27,7 @@ void main()
 			gl_Position = gl_in[i].gl_Position;
 			GSuv = VSuv[i];
 			GSnormal = VSnormal[i];
+			GSposition = VStransformedPos[i];
 			EmitVertex();
 		}
 		EndPrimitive();

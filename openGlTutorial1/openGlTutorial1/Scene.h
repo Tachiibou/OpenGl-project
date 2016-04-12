@@ -8,6 +8,7 @@
 #include "Mesh.h"
 #include "ResourceLoader.h"
 #include "Terrain.h"
+#include "FrameBuffer.h"
 
 using namespace constVar;
 
@@ -18,10 +19,12 @@ private:
 	SDL_Event sdlEvent;
 	Display* display;
 	Camera* camera;
-	Shader* shader;
+	Shader* shader, *shader2;
 	Mesh* mesh;
 	Terrain* terrain;
 	Vertex vertices[4];
+	GLuint quadVAO = 0;
+	GLuint quadVBO;
 
 	glm::vec3 cameraMove;
 	bool mouseWarp;
@@ -29,6 +32,9 @@ private:
 	float deltaTime;
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
+	FrameBuffer* frameBuffer;
+
+	
 
 
 	void eventHandler();
@@ -36,6 +42,8 @@ private:
 
 	void keyBoardCheck();
 	void mouseCheck();
+
+	void RenderQuad();
 
 public:
 	Scene();

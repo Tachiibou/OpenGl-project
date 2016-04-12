@@ -10,6 +10,7 @@ uniform mat4 perspectiveMatrix;
 out vec3 VSpos;
 out vec2 VSuv;
 out vec3 VSnormal;
+out vec4 VStransformedPos;
 
 void main()
 {
@@ -18,4 +19,5 @@ void main()
 	VSpos = position;
 	VSuv = uv;
 	VSnormal = normal;
+	VStransformedPos = viewMatrix * vec4(position, 1);
 }
