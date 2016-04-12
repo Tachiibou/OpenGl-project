@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{4ef57bd5-e263-4630-976e-42cda0403a38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -37,6 +40,9 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
@@ -49,11 +55,27 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="FrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />
     <None Include="res\basicVertex.glsl" />
     <None Include="res\terrainFragment.glsl" />
     <None Include="res\terrainVertex.glsl" />
+    <None Include="res\backFaceFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\backFaceGeometry.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\backFaceVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\textureFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\textureVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <iostream>
 
 Camera::Camera()
 {
@@ -50,6 +51,11 @@ glm::mat4& Camera::getViewMatrix()
 glm::mat4& Camera::getPerspectiveMatrix()
 {
 	return this->perspectiveMatrix;
+}
+
+glm::vec3 & Camera::getPos()
+{
+	return this->pos;
 }
 
 void Camera::move(glm::vec3 dir)
