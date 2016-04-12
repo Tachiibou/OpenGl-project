@@ -29,7 +29,7 @@ public:
 	
 	glm::mat4 &getViewMatrix();
 	glm::mat4 &getPerspectiveMatrix();
-
+	glm::vec3 &getPos();
 
 	void move(glm::vec3 dir);
 	void move(float x, float y, float z, float deltaTime);

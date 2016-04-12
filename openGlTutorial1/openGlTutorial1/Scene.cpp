@@ -8,16 +8,14 @@ Scene::Scene()
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 
-
-	
-
 	
 	this->mouseWarp = false;
 	this->deltaTime = 0.0f;
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
 
-	this->shader = new Shader("basic");
+	this->shader = new Shader("backFace", true);
+	this->shader2 = new Shader("texture", false);
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
@@ -32,6 +30,10 @@ Scene::Scene()
 	this->mesh = r.getMesh();
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, this->terrain);
+
+	this->frameBuffer = new FrameBuffer();
+	this->frameBuffer->CreateFrameBuffer(3);
+	this->frameBuffer->UnbindFrameBuffer();
 	
 }
 
@@ -42,10 +44,14 @@ Scene::~Scene()
 	delete this->mesh;
 	delete this->shader;
 	delete this->terrain;
+	delete this->shader2;
+	delete this->frameBuffer;
 }
 
 void Scene::Start() 
 {
+	GLuint texID, texID2;
+	GLfloat derp[4] = { 1,0,0,1 };
 	while (isRunning)
 	{
 		this->Update();
@@ -53,10 +59,20 @@ void Scene::Start()
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->shader->Bind();
+		this->frameBuffer->BindFrameBuffer();
 		this->shader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
+		this->frameBuffer->UnbindFrameBuffer();
+
+		this->shader2->Bind();
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture"),0);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2"), 1);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);	
+		this->RenderQuad();
+		
 		this->display->Update();
+		
 	}
 }
 
@@ -128,4 +144,32 @@ void Scene::mouseCheck()
 		SDL_WarpMouseInWindow(NULL, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 		this->ignoreMouseMotion = true;
 	}
+}
+
+// renders a quad with uv coordinates
+void Scene::RenderQuad()
+{
+	if (quadVAO == 0)
+	{
+		GLfloat quadVertices[] = {
+			// Positions        // Texture Coords
+			-1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+			1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+			1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		};
+		// Setup plane VAO
+		glGenVertexArrays(1, &quadVAO);
+		glGenBuffers(1, &quadVBO);
+		glBindVertexArray(quadVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	}
+	glBindVertexArray(quadVAO);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glBindVertexArray(0);
 }
