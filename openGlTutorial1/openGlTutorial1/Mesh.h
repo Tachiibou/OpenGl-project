@@ -33,7 +33,7 @@ public:
 	void Draw();
 private:
 	Texture *texture;
-	const char* defaultTexture = "obj/cartoonStone.jpg";
+	const char* defaultTexture = "obj/brick_16.jpg";
 	enum {
 		POSITION_VB,
 		UV_VB,

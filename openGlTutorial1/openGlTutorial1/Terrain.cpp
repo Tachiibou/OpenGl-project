@@ -234,7 +234,7 @@ void Terrain::calculateVertexInfo() {
 	for (int i = 0; i < indices.size(); i++) {
 		tempArr[i] = indices.at(i);
 	}
-	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex,nullptr);
+	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, new Texture("./obj/brick_16.jpg"));
 	delete[]tempTriangleVertex;
 	delete[] tempArr;
 }
