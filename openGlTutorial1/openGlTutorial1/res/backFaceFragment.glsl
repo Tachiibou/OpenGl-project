@@ -2,6 +2,7 @@
 
 in vec2 GSuv;
 in vec3 GSnormal;
+in vec4 GSposition;
 
 out vec3 color;
 out vec3 color2;
@@ -13,5 +14,5 @@ void main()
 {
 	color = vec3(texture2D(texture, GSuv));
 	color2 = GSnormal;
-	color3 = vec3(1,0,0);
+	color3 = vec3(GSposition);
 }
