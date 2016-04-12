@@ -32,8 +32,9 @@ private:
 	float deltaTime;
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
-
 	FrameBuffer* frameBuffer;
+
+	
 
 
 	void eventHandler();
@@ -42,13 +43,7 @@ private:
 	void keyBoardCheck();
 	void mouseCheck();
 
-	// Gaussian blur functions
-	GLuint FramebufferName = 0;
-	GLuint renderedTexture, renderedTexture2;
 	void RenderQuad();
-	void CreateFramebuffer();
-	void BindFrameBuffer();
-	void UnbindFrameBuffer();
 
 public:
 	Scene();

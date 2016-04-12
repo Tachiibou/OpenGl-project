@@ -29,8 +29,6 @@ Scene::Scene()
 	this->terrain->loadTerrain("./res/heightmap.png", 10);
 	this->mesh = r.getMesh();
 
-	this->CreateFramebuffer();
-
 	this->frameBuffer = new FrameBuffer();
 	this->frameBuffer->CreateFrameBuffer(3);
 	this->frameBuffer->UnbindFrameBuffer();
@@ -60,31 +58,16 @@ void Scene::Start()
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->shader->Bind();
 		this->frameBuffer->BindFrameBuffer();
-		//this->BindFrameBuffer();
 		this->shader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer->UnbindFrameBuffer();
-		//this->UnbindFrameBuffer();
+
 		this->shader2->Bind();
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture"),0);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2"), 1);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);
-
-		//glActiveTexture(GL_TEXTURE0);
-		//texID = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture");
-		//glUniform1i(texID, 0);
-		//glBindTexture(GL_TEXTURE_2D, renderedTexture);
-
-		//glActiveTexture(GL_TEXTURE1);
-		//texID2 = glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2");
-		//glUniform1i(texID2, 1);
-		//glBindTexture(GL_TEXTURE_2D, renderedTexture2);
-		
-		
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);	
 		this->RenderQuad();
-		
-		
 		
 		this->display->Update();
 		
@@ -187,71 +170,4 @@ void Scene::RenderQuad()
 	glBindVertexArray(quadVAO);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glBindVertexArray(0);
-}
-
-// Creates a framebuffer with one texture attatched to it
-void Scene::CreateFramebuffer()
-{
-	
-	glGenFramebuffers(1, &FramebufferName);
-	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-
-	// The texture we're going to render to
-	glGenTextures(1, &renderedTexture);
-	glGenTextures(1, &renderedTexture2);
-
-	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, renderedTexture);
-
-	// Give an empty image to OpenGL ( the last "0" )
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-
-	// Poor filtering. Needed !
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, renderedTexture2);
-
-	// Give an empty image to OpenGL ( the last "0" )
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1024, 768, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-
-	// Poor filtering. Needed !
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	// The depth buffer
-	GLuint depthrenderbuffer;
-	glGenRenderbuffers(1, &depthrenderbuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
-
-	// Set "renderedTexture" as our colour attachement #0
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, renderedTexture2, 0);
-
-	// Set the list of draw buffers.
-	GLenum DrawBuffers[2] = { GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1 };
-	glDrawBuffers(2, DrawBuffers); // "1" is the size of DrawBuffers
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "ERROR CREATING FRAMEBUFFER" << std::endl;
-
-}
-
-// bind the framebuffer and clear the texture
-void Scene::BindFrameBuffer()
-{
-	// Render to our framebuffer
-	glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-	//glViewport(0, 0, 1024, 768); // Render on the whole framebuffer, complete from the lower left corner to the upper right
-	this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f); // clear the texture from last frame
-	
-}
-
-// Unbind the framebuffer
-void Scene::UnbindFrameBuffer()
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
