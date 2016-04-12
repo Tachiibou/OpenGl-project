@@ -11,7 +11,7 @@ Scene::Scene()
 
 	
 
-	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR);
+	
 	this->mouseWarp = false;
 	this->deltaTime = 0.0f;
 	this->currentTime = 0.0f;
@@ -28,8 +28,10 @@ Scene::Scene()
 
 	//this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
 	this->terrain = new Terrain();
-	this->terrain->loadTerrain("./res/test2.png", 10);
+	this->terrain->loadTerrain("./res/heightmap.png", 15);
 	this->mesh = r.getMesh();
+
+	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, this->terrain);
 	
 }
 

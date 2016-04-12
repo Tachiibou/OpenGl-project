@@ -4,6 +4,7 @@
 #include "GL\glew.h"
 #include "glm\glm.hpp"
 #include "glm\gtx\transform.hpp"
+#include "Terrain.h"
 
 class Camera
 {
@@ -18,10 +19,12 @@ private:
 
 	bool horizontalMove, verticalMove;
 	int horizontalDir, verticalDir;
+	Terrain* terrain;
+	const int CAMERA_HEIGHT = 2;
 
 public:
 	Camera();
-	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar);
+	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar, Terrain* terrain );
 	~Camera();
 	
 	glm::mat4 &getViewMatrix();
