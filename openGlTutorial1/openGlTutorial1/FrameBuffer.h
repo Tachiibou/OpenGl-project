@@ -22,6 +22,9 @@ private:
 	GLenum* drawBuffers;
 	int textureAmount;
 
+	//ShadowMapping
+	GLfloat borderColor[4];
+
 public:
 	FrameBuffer();
 	~FrameBuffer();
@@ -29,5 +32,7 @@ public:
 	void BindFrameBuffer();
 	void UnbindFrameBuffer();
 	void BindTexturesToProgram(GLuint uniform, GLuint texture);
+
+	void CreateFrameBufferShadowMapping();
 };
 #endif

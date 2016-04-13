@@ -16,6 +16,8 @@ Scene::Scene()
 
 	this->shader = new Shader("backFace", true);
 	this->shader2 = new Shader("texture", false);
+	//this->shadowMapping = new Shader("shadowMapping");
+	this->depthMap = new Shader("depthMap");
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
@@ -30,9 +32,11 @@ Scene::Scene()
 	this->mesh = r.getMesh();
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, this->terrain);
+	this->lightView = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, this->terrain);
 
 	this->frameBuffer = new FrameBuffer();
-	this->frameBuffer->CreateFrameBuffer(3);
+	//this->frameBuffer->CreateFrameBuffer(3);
+	this->frameBuffer->CreateFrameBufferShadowMapping();
 	this->frameBuffer->UnbindFrameBuffer();
 	
 }
@@ -46,6 +50,9 @@ Scene::~Scene()
 	delete this->terrain;
 	delete this->shader2;
 	delete this->frameBuffer;
+	delete this->lightView;
+	delete this->depthMap;
+	//delete this->shadowMapping;
 }
 
 void Scene::Start() 
@@ -58,17 +65,35 @@ void Scene::Start()
 		this->eventHandler();
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
-		this->shader->Bind();
+
+		this->depthMap->Bind();
+		this->depthMap->Update(*this->lightView);
+
+		glViewport(0, 0, 1024, 768);
+		this->frameBuffer->BindFrameBuffer();
+			glClear(GL_DEPTH_BUFFER_BIT);
+			this->mesh->Draw();
+			this->terrain->getMesh()->Draw();
+		this->frameBuffer->UnbindFrameBuffer();
+
+		/*glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		this->shadowMapping->Bind();
+		this->shadowMapping->Update(*this->camera);*/
+		
+		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		/*this->shader->Bind();
 		this->frameBuffer->BindFrameBuffer();
 		this->shader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
-		this->frameBuffer->UnbindFrameBuffer();
+		this->frameBuffer->UnbindFrameBuffer();*/
 
 		this->shader2->Bind();
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture"),0);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2"), 1);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);	
+		//this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2"), 1);
+		//this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);
 		this->RenderQuad();
 		
 		this->display->Update();

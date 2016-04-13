@@ -171,6 +171,8 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="depthMapFragment.glsl" />
+    <None Include="depthMapVertex.glsl" />
     <None Include="res\backFaceFragment.glsl" />
     <None Include="res\backFaceGeometry.glsl" />
     <None Include="res\backFaceVertex.glsl" />

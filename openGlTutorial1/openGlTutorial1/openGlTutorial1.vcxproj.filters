@@ -77,5 +77,11 @@
     <None Include="res\textureVertex.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="depthMapVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="depthMapFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
