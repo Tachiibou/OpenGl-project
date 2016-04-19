@@ -69,7 +69,7 @@ static GLuint CreateShader(const std::string& text, GLenum shaderType) {
 	glShaderSource(shader, 1, shaderSourceStrings, shaderSourceStringLength);
 	glCompileShader(shader);
 
-	CheckShaderError(shader, GL_COMPILE_STATUS, false, "Error: SHader COmpilation Error");
+	CheckShaderError(shader, GL_COMPILE_STATUS, false, "Error: Shader Compilation Error");
 
 	return shader;
 }

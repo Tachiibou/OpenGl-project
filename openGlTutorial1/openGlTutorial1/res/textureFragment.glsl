@@ -9,8 +9,7 @@ uniform sampler2D renderedTexture3;
 
 void main()
 {
-	
-
 	//color = vec4(1,0,0,1);
+	//color = texture2D(renderedTexture3, fragment_uv);
 	color = (texture2D(renderedTexture, fragment_uv) * 0.5) + (texture2D(renderedTexture2, fragment_uv) * 0.5) + (texture2D(renderedTexture3, fragment_uv) * 0.0) ;
 }
