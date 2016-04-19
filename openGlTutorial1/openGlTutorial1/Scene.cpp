@@ -56,6 +56,7 @@ void Scene::Start()
 {
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
+	GLfloat lightPos[] = { 0, 20, 0 };
 	
 	while (isRunning)
 	{
@@ -71,9 +72,10 @@ void Scene::Start()
 		this->frameBuffer->UnbindFrameBuffer();
 
 		this->lightShader->Bind();
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture"),0);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2"), 1);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);	
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture"),0);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture2"), 1);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture3"), 2);
+		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, lightPos);
 		this->RenderQuad();
 		
 		this->display->Update();
