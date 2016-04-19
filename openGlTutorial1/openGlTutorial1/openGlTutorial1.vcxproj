@@ -176,6 +176,10 @@
     <None Include="res\backFaceVertex.glsl" />
     <None Include="res\basicFragment.glsl" />
     <None Include="res\basicVertex.glsl" />
+    <None Include="res\geoPassFragment.glsl" />
+    <None Include="res\geoPassVertex.glsl" />
+    <None Include="res\lightPassFragment.glsl" />
+    <None Include="res\lightPassVertex.glsl" />
     <None Include="res\terrainFragment.glsl" />
     <None Include="res\terrainVertex.glsl" />
     <None Include="res\textureFragment.glsl" />

@@ -15,7 +15,9 @@ Scene::Scene()
 	this->lastTime = 0.0f;
 
 	this->shader = new Shader("backFace", true);
-	this->shader2 = new Shader("texture", false);
+	this->shader2 = new Shader("texture");
+	this->geoShader = new Shader("geoPass");
+	this->lightShader = new Shader("lightPass");
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
@@ -46,29 +48,34 @@ Scene::~Scene()
 	delete this->terrain;
 	delete this->shader2;
 	delete this->frameBuffer;
+	delete this->geoShader;
+	delete this->lightShader;
 }
 
 void Scene::Start() 
 {
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
+	GLfloat lightPos[] = { 0, 20, 0 };
+	
 	while (isRunning)
 	{
 		this->Update();
 		this->eventHandler();
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
-		this->shader->Bind();
+		this->geoShader->Bind();
 		this->frameBuffer->BindFrameBuffer();
-		this->shader->Update(*this->camera);
+		this->geoShader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer->UnbindFrameBuffer();
 
-		this->shader2->Bind();
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture"),0);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture2"), 1);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->shader2->getProgram(), "renderedTexture3"), 2);	
+		this->lightShader->Bind();
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture"),0);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture2"), 1);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture3"), 2);
+		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, lightPos);
 		this->RenderQuad();
 		
 		this->display->Update();

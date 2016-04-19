@@ -46,7 +46,7 @@ void Shader::Update(Camera&camera) {
 
 	glUniformMatrix4fv(m_uniforms[uniform::VIEW_U], 1, GL_FALSE, &camera.getViewMatrix()[0][0]);
 	glUniformMatrix4fv(m_uniforms[uniform::PERSPECTIVE_U], 1, GL_FALSE, &camera.getPerspectiveMatrix()[0][0]);
-	glUniform3f(m_uniforms[uniform::VIEW_POS], camera.getPos().x, camera.getPos().y, camera.getPos().z);
+	glUniform3fv(m_uniforms[uniform::VIEW_POS], 1, &camera.getPos()[0]);
 }
 
 GLuint Shader::getProgram()
@@ -69,7 +69,7 @@ static GLuint CreateShader(const std::string& text, GLenum shaderType) {
 	glShaderSource(shader, 1, shaderSourceStrings, shaderSourceStringLength);
 	glCompileShader(shader);
 
-	CheckShaderError(shader, GL_COMPILE_STATUS, false, "Error: SHader COmpilation Error");
+	CheckShaderError(shader, GL_COMPILE_STATUS, false, "Error: Shader Compilation Error");
 
 	return shader;
 }
