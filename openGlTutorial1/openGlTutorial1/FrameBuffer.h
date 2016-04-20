@@ -22,10 +22,17 @@ private:
 	GLenum* drawBuffers;
 	int textureAmount;
 
+
+	int shadowHeight = 1024,
+		shadowWidth = 1024;
+	GLuint depthMapFBO;
+	GLuint depthMap;
+
 public:
 	FrameBuffer();
 	~FrameBuffer();
 	void CreateFrameBuffer(int textureAmount);
+	void AddDepthMap();
 	void BindFrameBuffer();
 	void UnbindFrameBuffer();
 	void BindTexturesToProgram(GLuint uniform, GLuint texture);
