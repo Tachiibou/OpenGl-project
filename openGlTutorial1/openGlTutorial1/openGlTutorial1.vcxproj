@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="FilterComputeShader.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstVariables.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="FilterComputeShader.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="ResourceLoader.h" />
@@ -176,6 +178,7 @@
     <None Include="res\backFaceVertex.glsl" />
     <None Include="res\basicFragment.glsl" />
     <None Include="res\basicVertex.glsl" />
+    <None Include="res\blur.glsl" />
     <None Include="res\geoPassFragment.glsl" />
     <None Include="res\geoPassVertex.glsl" />
     <None Include="res\lightPassFragment.glsl" />
