@@ -20,7 +20,8 @@ private:
 	Display* display;
 	Camera* camera;
 	Shader* shader, *shader2,
-		  *geoShader, *lightShader;
+		  *geoShader, *lightShader,
+		  *depthShader, *debugShadowShader;
 	Mesh* mesh;
 	Terrain* terrain;
 	Vertex vertices[4];
@@ -35,7 +36,8 @@ private:
 	float moveSpeed;
 	FrameBuffer* frameBuffer;
 
-	
+	glm::vec3 lightPos;
+	glm::mat4 lightSpaceMatrix;
 
 
 	void eventHandler();

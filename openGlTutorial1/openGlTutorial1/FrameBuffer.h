@@ -3,6 +3,8 @@
 #include "glm\glm.hpp"
 #include "GL\glew.h"
 #include <iostream>
+#include "ConstVariables.h"
+
 class FrameBuffer
 {
 private:
@@ -22,9 +24,6 @@ private:
 	GLenum* drawBuffers;
 	int textureAmount;
 
-
-	int shadowHeight = 1024,
-		shadowWidth = 1024;
 	GLuint depthMapFBO;
 	GLuint depthMap;
 
@@ -34,7 +33,9 @@ public:
 	void CreateFrameBuffer(int textureAmount);
 	void AddDepthMap();
 	void BindFrameBuffer();
+	void BindDepthMapFB();
 	void UnbindFrameBuffer();
 	void BindTexturesToProgram(GLuint uniform, GLuint texture);
+	void BindDepthMapToProgram(GLuint uniform);
 };
 #endif

@@ -19,6 +19,9 @@ namespace constVar {
 	static const float CAM_ZFAR = 1000.f;
 	static const float CAM_ASPECT = (WINDOW_WIDTH / WINDOW_HEIGHT);
 
+	//SHADOW
+	static const int SHADOW_WIDTH = 1024;
+	static const int SHADOW_HEIGHT = 1024;
 }
 
 

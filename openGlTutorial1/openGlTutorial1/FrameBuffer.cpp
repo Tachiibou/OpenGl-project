@@ -88,15 +88,18 @@ void FrameBuffer::CreateFrameBuffer(int textureAmount)
 void FrameBuffer::AddDepthMap()
 {
 	glGenFramebuffers(1, &this->depthMapFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, this->depthMapFBO);
+
 	glGenTextures(1, &this->depthMap);
 	glBindTexture(GL_TEXTURE_2D, this->depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, this->shadowWidth, this->shadowHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, constVar::SHADOW_WIDTH, constVar::SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	//GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, this->depthMapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->depthMapFBO, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
@@ -107,6 +110,11 @@ void FrameBuffer::BindFrameBuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, this->framebufferName);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear last frame from texture
+}
+
+void FrameBuffer::BindDepthMapFB()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, this->depthMapFBO);
 }
 
 void FrameBuffer::UnbindFrameBuffer()
@@ -120,4 +128,11 @@ void FrameBuffer::BindTexturesToProgram(GLuint uniform, GLuint texture)
 	//this->texUniformID = glGetUniformLocation(program, "renderedTexture");
 	glUniform1i(uniform, texture);
 	glBindTexture(GL_TEXTURE_2D, this->textures[texture]);
+}
+
+void FrameBuffer::BindDepthMapToProgram(GLuint uniform)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(uniform, 0);
+	glBindTexture(GL_TEXTURE_2D, this->depthMap);
 }

@@ -58,10 +58,6 @@
     <ClInclude Include="FrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\basicFragment.glsl" />
-    <None Include="res\basicVertex.glsl" />
-    <None Include="res\terrainFragment.glsl" />
-    <None Include="res\terrainVertex.glsl" />
     <None Include="res\backFaceFragment.glsl">
       <Filter>Shaders</Filter>
     </None>
@@ -87,6 +83,30 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="res\lightPassVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\basicFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\basicVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\terrainFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\terrainVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\depthMapVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\depthMapFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\debugShadowVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\debugShadowFragment.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
