@@ -60,7 +60,7 @@ void Scene::Start()
 {
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
-	GLfloat lightPos[] = { 0, 2, 0 };
+	GLfloat lightPos[] = { 0, 20, 0 };
 	
 	while (isRunning)
 	{
