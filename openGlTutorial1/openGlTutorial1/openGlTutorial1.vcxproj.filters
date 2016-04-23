@@ -43,6 +43,9 @@
     <ClCompile Include="FrameBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FilterComputeShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
@@ -56,6 +59,7 @@
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="FilterComputeShader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />
@@ -87,6 +91,9 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="res\lightPassVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\blur.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

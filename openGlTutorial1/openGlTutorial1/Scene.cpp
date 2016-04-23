@@ -34,9 +34,12 @@ Scene::Scene()
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, this->terrain);
 
 	this->frameBuffer = new FrameBuffer();
-	this->frameBuffer->CreateFrameBuffer(3);
+	this->frameBuffer->CreateFrameBuffer(3,1024,768);
 	this->frameBuffer->UnbindFrameBuffer();
 	
+	this->filterComputeShader = new FilterComputeShader("derp");
+	//this->filterComputeShader->LoadShader("./res/blur.glsl");
+	this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
 }
 
 Scene::~Scene()
@@ -50,13 +53,14 @@ Scene::~Scene()
 	delete this->frameBuffer;
 	delete this->geoShader;
 	delete this->lightShader;
+	delete this->filterComputeShader;
 }
 
 void Scene::Start() 
 {
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
-	GLfloat lightPos[] = { 0, 20, 0 };
+	GLfloat lightPos[] = { 0, 2, 0 };
 	
 	while (isRunning)
 	{
@@ -70,6 +74,12 @@ void Scene::Start()
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer->UnbindFrameBuffer();
+
+		this->filterComputeShader->BindShader();
+		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2);
+		this->filterComputeShader->UniformVec3("colorVector", glm::vec3(0.0f, 0.0f, 1.0f));
+		this->filterComputeShader->Uniform1f("number", 1.0f);
+		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1);
 
 		this->lightShader->Bind();
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture"),0);

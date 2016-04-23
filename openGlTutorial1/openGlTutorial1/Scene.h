@@ -9,6 +9,7 @@
 #include "ResourceLoader.h"
 #include "Terrain.h"
 #include "FrameBuffer.h"
+#include "FilterComputeShader.h"
 
 using namespace constVar;
 
@@ -34,6 +35,7 @@ private:
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
 	FrameBuffer* frameBuffer;
+	FilterComputeShader* filterComputeShader;
 
 	
 
