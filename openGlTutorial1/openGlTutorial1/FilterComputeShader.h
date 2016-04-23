@@ -10,7 +10,7 @@
 class FilterComputeShader
 {
 private:
-	GLuint program;
+	GLuint program, shader;
 
 public:
 	FilterComputeShader(std::string fileName);

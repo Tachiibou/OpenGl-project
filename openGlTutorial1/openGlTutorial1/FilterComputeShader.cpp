@@ -10,6 +10,9 @@ FilterComputeShader::FilterComputeShader(std::string fileName)
 
 FilterComputeShader::~FilterComputeShader()
 {
+	glDeleteShader(this->shader);
+	glDeleteProgram(this->program);
+	
 }
 
 std::string FilterComputeShader::LoadShader(const std::string & fileName)
@@ -27,7 +30,7 @@ void FilterComputeShader::CreateShader(const std::string & text)
 {
 	// Creating the compute shader, and the program object containing the shader
 	this->program = glCreateProgram();
-	GLuint shader = glCreateShader(GL_COMPUTE_SHADER);
+	shader = glCreateShader(GL_COMPUTE_SHADER);
 	const char* shaderTextPtr = text.c_str();
 
 	glShaderSource(shader, 1, &shaderTextPtr, NULL);

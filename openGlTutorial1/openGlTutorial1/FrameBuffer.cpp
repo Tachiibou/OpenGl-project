@@ -14,6 +14,7 @@ FrameBuffer::~FrameBuffer()
 {
 	if (this->drawBuffers != nullptr)
 		delete this->drawBuffers;
+	glDeleteFramebuffers(1,&this->framebufferName);
 }
 
 void FrameBuffer::CreateFrameBuffer(int textureAmount, int screenWidth, int screenHeight)
