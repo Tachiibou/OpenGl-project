@@ -18,6 +18,7 @@ Scene::Scene()
 	this->shader2 = new Shader("texture");
 	this->geoShader = new Shader("geoPass");
 	this->lightShader = new Shader("lightPass");
+	this->depthShader = new Shader("depth");
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
@@ -31,11 +32,16 @@ Scene::Scene()
 	this->terrain->loadTerrain("./res/heightmap.png", 15);
 	this->mesh = r.getMesh();
 
-	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, this->terrain);
+	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr);
+	this->lightCamera = new Camera(glm::vec3(0,2,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-10,10,-10,10, -10, 200);
 
 	this->frameBuffer = new FrameBuffer();
-	this->frameBuffer->CreateFrameBuffer(3,1024,768);
+	this->frameBuffer->CreateFrameBuffer(4,1024,768);
 	this->frameBuffer->UnbindFrameBuffer();
+
+	this->frameBuffer2 = new FrameBuffer();
+	this->frameBuffer2->CreateFrameBuffer(1, 1024, 768);
+	this->frameBuffer2->UnbindFrameBuffer();
 	
 	this->filterComputeShader = new FilterComputeShader("derp");
 	//this->filterComputeShader->LoadShader("./res/blur.glsl");
@@ -54,6 +60,9 @@ Scene::~Scene()
 	delete this->geoShader;
 	delete this->lightShader;
 	delete this->filterComputeShader;
+	delete this->depthShader;
+	delete this->lightCamera;
+	delete this->frameBuffer2;
 }
 
 void Scene::Start() 
@@ -61,6 +70,10 @@ void Scene::Start()
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
 	GLfloat lightPos[] = { 0, 20, 0 };
+	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0,0,0), glm::vec3(0,0,1),glm::vec3(0,1,0));
+	glm::mat4 projectionMatrix = glm::ortho(-10,10,-10,10,-10,200);
+	GLint viewUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightViewMatrix");
+	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
 	
 	while (isRunning)
 	{
@@ -68,8 +81,16 @@ void Scene::Start()
 		this->eventHandler();
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
-		this->geoShader->Bind();
+		this->depthShader->Bind();
+		this->frameBuffer2->BindFrameBuffer();
+		this->depthShader->Update(*this->lightCamera);
+		this->mesh->Draw();
+		this->terrain->getMesh()->Draw();
+		this->frameBuffer2->UnbindFrameBuffer();
+
 		this->frameBuffer->BindFrameBuffer();
+		this->geoShader->Bind();
+		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0);
 		this->geoShader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
@@ -85,6 +106,7 @@ void Scene::Start()
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture"),0);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture2"), 1);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture3"), 2);
+		//this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture4"), 0);
 		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, lightPos);
 		this->RenderQuad();
 		

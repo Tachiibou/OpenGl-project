@@ -15,7 +15,7 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 	this->perspectiveMatrix = glm::perspective(fov, aspect, zNear, zFar);
 
 
-	if ((this->pos.x < this->terrain->getWidth() && this->pos.z < this->terrain->getLength()) && (this->pos.x >= 0 && this->pos.z >= 0)) {
+	if (this->terrain != nullptr && (this->pos.x < this->terrain->getWidth() && this->pos.z < this->terrain->getLength()) && (this->pos.x >= 0 && this->pos.z >= 0)) {
 		this->pos.y = terrain->getHeightAt(this->pos.x, this->pos.z) + CAMERA_HEIGHT;
 		this->pos.x = terrain->getWidth() - 10;
 		this->pos.z = terrain->getLength() - 10;
@@ -37,6 +37,32 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 		cos(this->horizontalAngle - 3.14f / 2.0f)
 		);
 	
+}
+
+Camera::Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float right, float bottom, float top, float zNear, float zFar) {
+	this->terrain = nullptr;
+	this->pos = pos;
+	this->up = up;
+	this->forward = forward;
+	this->viewMatrix = glm::lookAt(pos, pos + forward, up);
+	this->perspectiveMatrix = glm::ortho<float>(left,right,bottom,top,zNear,zFar);
+
+	this->horizontalAngle = 3.14f;
+	this->verticalAngle = 0.0f;
+	this->mouseSpeed = 1.0f;
+	this->moveSpeed = 60.0f;
+
+	this->direction = glm::vec3(
+		cos(this->verticalAngle) * sin(this->horizontalAngle),
+		sin(this->verticalAngle),
+		cos(this->verticalAngle) * cos(this->horizontalAngle));
+
+	this->right = glm::vec3(
+		sin(this->horizontalAngle - 3.14f / 2.0f),
+		0,
+		cos(this->horizontalAngle - 3.14f / 2.0f)
+		);
+
 }
 
 Camera::~Camera()
@@ -96,7 +122,7 @@ void Camera::move(float x, float y, float z, float deltaTime)
 
 	//total /= nrAdded;
 
-	if ((this->pos.x < this->terrain->getWidth() && this->pos.z < this->terrain->getLength()) && (this->pos.x>=0 && this->pos.z>=0)) {
+	if (this->terrain != nullptr && (this->pos.x < this->terrain->getWidth() && this->pos.z < this->terrain->getLength()) && (this->pos.x>=0 && this->pos.z>=0)) {
 		this->pos.y = terrain->getHeightAt(this->pos.x, this->pos.z) + CAMERA_HEIGHT;
 	}
 
