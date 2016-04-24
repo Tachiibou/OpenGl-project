@@ -6,11 +6,13 @@ out vec3 fragColor;
 uniform sampler2D renderedTexture;
 uniform sampler2D renderedTexture2;
 uniform sampler2D renderedTexture3;
+uniform sampler2D renderedTexture4;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 void main()
 {
+
 	// Get the data from the textures
 	vec3 fragPos = texture2D(renderedTexture, fragUv).xyz;
 	vec3 fragNormal = texture2D(renderedTexture2, fragUv).xyz;
@@ -32,4 +34,5 @@ void main()
 
 	lighting += diffuse + specular;
 	fragColor = lighting;
+	//fragColor = texture2D(renderedTexture4, fragUv).xyz;
 }

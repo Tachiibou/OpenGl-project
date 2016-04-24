@@ -19,9 +19,9 @@ private:
 	bool isRunning;
 	SDL_Event sdlEvent;
 	Display* display;
-	Camera* camera;
+	Camera* camera, *lightCamera;
 	Shader* shader, *shader2,
-		  *geoShader, *lightShader;
+		  *geoShader, *lightShader, *depthShader;
 	Mesh* mesh;
 	Terrain* terrain;
 	Vertex vertices[4];
@@ -34,7 +34,7 @@ private:
 	float deltaTime;
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
-	FrameBuffer* frameBuffer;
+	FrameBuffer* frameBuffer, *frameBuffer2;
 	FilterComputeShader* filterComputeShader;
 
 	

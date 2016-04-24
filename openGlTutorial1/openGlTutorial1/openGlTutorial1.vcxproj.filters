@@ -96,5 +96,11 @@
     <None Include="res\blur.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="res\depthFragment.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\depthVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

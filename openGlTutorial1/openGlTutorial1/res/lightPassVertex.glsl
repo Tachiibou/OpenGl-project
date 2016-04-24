@@ -7,6 +7,7 @@ out vec2 fragUv;
 
 void main()
 {
-	gl_Position = vec4(position, 1);
+	
 	fragUv = uv;
+	gl_Position = vec4(position, 1);
 }
