@@ -38,10 +38,13 @@ Scene::Scene()
 
 	this->frameBuffer = new FrameBuffer();
 	this->frameBuffer->CreateFrameBuffer(3);
-	this->frameBuffer->AddDepthMap();
 	this->frameBuffer->UnbindFrameBuffer();
+
+	this->shadowMapFB = new FrameBuffer();
+	this->shadowMapFB->AddDepthMap();
+	this->shadowMapFB->UnbindFrameBuffer();
 	
-	this->lightPos = glm::vec3(0, 2, 0);
+	this->lightPos = glm::vec3(0, 1, 0);
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, CAM_ZNEAR, CAM_ZFAR);
 	glm::mat4 lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	this->lightSpaceMatrix = lightProjection * lightView;
@@ -58,6 +61,7 @@ Scene::~Scene()
 	delete this->terrain;
 	delete this->shader2;
 	delete this->frameBuffer;
+	delete this->shadowMapFB;
 	delete this->geoShader;
 	delete this->lightShader;
 	delete this->depthShader;
@@ -70,24 +74,26 @@ void Scene::Start()
 	GLfloat derp[4] = { 1,0,0,1 };
 
 	glEnable(GL_DEPTH_TEST);
-	//glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	GLfloat nearPlane = 1.0f, farPlane = 7.5f;
+	GLfloat nearPlane = CAM_ZNEAR, farPlane = CAM_ZFAR;
 
 	while (isRunning)
 	{
 		this->Update();
 		this->eventHandler();
 
-		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		this->depthShader->Bind();
-		this->frameBuffer->BindDepthMapFB();
+		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "lightSpaceMatrix"), 1, GL_FALSE, &this->lightSpaceMatrix[0][0]);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		this->shadowMapFB->BindDepthMapFB();
 
 		glClear(GL_DEPTH_BUFFER_BIT);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 
-		this->frameBuffer->UnbindFrameBuffer();
+		this->shadowMapFB->UnbindFrameBuffer();
 
 		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -95,7 +101,7 @@ void Scene::Start()
 		this->debugShadowShader->Bind();
 		glUniform1f(glGetUniformLocation(this->depthShader->getProgram(), "nearPlane"), nearPlane);
 		glUniform1f(glGetUniformLocation(this->depthShader->getProgram(), "farPlane"), farPlane);
-		this->frameBuffer->BindDepthMapToProgram(glGetUniformLocation(this->debugShadowShader->getProgram(), "depthMap"));
+		this->shadowMapFB->BindDepthMapToProgram(glGetUniformLocation(this->debugShadowShader->getProgram(), "depthMap"));
 
 		/*this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		this->geoShader->Bind();

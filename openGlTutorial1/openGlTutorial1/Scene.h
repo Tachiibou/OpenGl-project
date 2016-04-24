@@ -34,7 +34,7 @@ private:
 	float deltaTime;
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
-	FrameBuffer* frameBuffer;
+	FrameBuffer* frameBuffer, *shadowMapFB;
 
 	glm::vec3 lightPos;
 	glm::mat4 lightSpaceMatrix;
