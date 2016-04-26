@@ -29,6 +29,7 @@ public:
 	void BindFrameBuffer();
 	void UnbindFrameBuffer();
 	void BindTexturesToProgram(GLuint uniform, GLuint texture);
+	void BindTexturesToProgram(GLuint uniform, GLuint texture, GLuint bindingLocation);
 	void BindImageTexturesToProgram(GLuint uniform, GLuint texture);
 };
 #endif

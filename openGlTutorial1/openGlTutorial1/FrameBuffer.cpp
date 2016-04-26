@@ -97,10 +97,20 @@ void FrameBuffer::UnbindFrameBuffer()
 
 void FrameBuffer::BindTexturesToProgram(GLuint uniform, GLuint texture)
 {
+	
 	glActiveTexture(GL_TEXTURE0 + texture);
 	//this->texUniformID = glGetUniformLocation(program, "renderedTexture");
 	glUniform1i(uniform, texture);
 	glBindTexture(GL_TEXTURE_2D, this->textures[texture]);
+	
+}
+
+void FrameBuffer::BindTexturesToProgram(GLuint uniform, GLuint texture, GLuint bindingLocation)
+{
+	glActiveTexture(GL_TEXTURE0 + bindingLocation);
+	//this->texUniformID = glGetUniformLocation(program, "renderedTexture");
+	glBindTexture(GL_TEXTURE_2D, this->textures[texture]);
+	glUniform1i(uniform, bindingLocation);
 }
 
 void FrameBuffer::BindImageTexturesToProgram(GLuint uniform, GLuint texture)
