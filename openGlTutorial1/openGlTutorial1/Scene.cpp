@@ -70,7 +70,7 @@ void Scene::Start()
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
 	GLfloat lightPos[] = { 0, 20, 0 };
-	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0,0,0), glm::vec3(0,0,1),glm::vec3(0,1,0));
+	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0,2,0), glm::vec3(0,-1,0),glm::vec3(1,0,0));
 	glm::mat4 projectionMatrix = glm::ortho(-10,10,-10,10,-10,200);
 	GLint viewUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightViewMatrix");
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
@@ -92,6 +92,8 @@ void Scene::Start()
 		this->geoShader->Bind();
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3);
 		this->geoShader->Update(*this->camera);
+		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
+		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer->UnbindFrameBuffer();

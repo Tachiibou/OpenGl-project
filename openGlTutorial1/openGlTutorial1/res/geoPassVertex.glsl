@@ -31,4 +31,5 @@ void main()
 	fragUv = uv;
 	fragNormal = normal;
 	fragLightPos = vec3(bias * lightPerspectiveMatrix * lightViewMatrix * vec4(position,1));
+	//fragLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * vec4(position,1));
 }
