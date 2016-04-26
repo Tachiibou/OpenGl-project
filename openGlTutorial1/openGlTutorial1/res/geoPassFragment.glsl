@@ -18,5 +18,5 @@ void main()
 
 	gPos = clamp(fragPos,0.0,1.0);
 	gNormal = clamp(normalize(fragNormal),0.0,1.0);
-	gColor = clamp(vec3(texture2D(texture, fragUv)),0.0,1.0);
+	gColor = clamp(vec3(texture2D(texture, fragUv)) + vec3(texture2D(depth, fragUv)),0.0,1.0);
 }

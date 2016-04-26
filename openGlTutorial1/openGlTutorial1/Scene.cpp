@@ -90,7 +90,7 @@ void Scene::Start()
 
 		this->frameBuffer->BindFrameBuffer();
 		this->geoShader->Bind();
-		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0);
+		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3);
 		this->geoShader->Update(*this->camera);
 		this->mesh->Draw();
 		this->terrain->getMesh()->Draw();
@@ -106,7 +106,7 @@ void Scene::Start()
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture"),0);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture2"), 1);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture3"), 2);
-		//this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture4"), 0);
+		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture4"), 0,3);
 		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, lightPos);
 		this->RenderQuad();
 		
