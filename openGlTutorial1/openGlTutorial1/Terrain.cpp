@@ -214,8 +214,10 @@ void Terrain::calculateVertexInfo() {
 			tempNormal = this->getNormalAt(x, z);
 
 			
-			u = x;// x / (float)this->width;
-			v = z;// 1- (z / (float)this->length);
+			//u = x;// x / (float)this->width;
+			//v = z;// 1- (z / (float)this->length);
+			u = (x / (float)this->width) * 2;
+			v = (1 - (z / (float)this->length)) * 2;
 
 			positionX = x;
 			positionZ = z;
