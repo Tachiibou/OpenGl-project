@@ -9,6 +9,7 @@ out vec2 fragUv;
 out vec3 fragNormal;
 out vec3 fragLightPos;
 
+uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 perspectiveMatrix;
 uniform mat4 lightViewMatrix;
@@ -25,11 +26,11 @@ void main()
 				vec4(0.5,0.5,0.5,1)
 				);
 
-	gl_Position = perspectiveMatrix * viewMatrix * vec4(position, 1);
+	gl_Position = perspectiveMatrix * viewMatrix * modelMatrix * vec4(position, 1);
 	
-	fragPos = position;
+	fragPos = vec3(modelMatrix * vec4(position, 1));
 	fragUv = uv;
-	fragNormal = normal;
+	fragNormal = vec3(normalize(transpose(inverse(modelMatrix)) * vec4(normal, 1)));
 	fragLightPos = vec3(bias * lightPerspectiveMatrix * lightViewMatrix * vec4(position,1));
 	//fragLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * vec4(position,1));
 }

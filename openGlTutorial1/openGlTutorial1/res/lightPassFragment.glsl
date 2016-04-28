@@ -33,6 +33,6 @@ void main()
 	vec3 specular = lightColor * spec * specStr;
 
 	lighting += diffuse + specular;
-	fragColor = lighting;
-	//fragColor = texture2D(renderedTexture3, fragUv).xyz;
+	//fragColor = lighting;
+	fragColor = texture2D(renderedTexture3, fragUv).xyz;
 }

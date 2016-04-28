@@ -32,8 +32,8 @@ Scene::Scene()
 	this->terrain->loadTerrain("./res/heightmap.png", 15);
 	this->mesh = r.getMesh();
 
-	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr);
-	this->lightCamera = new Camera(glm::vec3(0,2,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-10,10,-10,10, -10, 200);
+	this->camera = new Camera(glm::vec3(0, 25, 10), CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr);
+	this->lightCamera = new Camera(glm::vec3(10, 30, 10), glm::vec3(1,0,0), glm::vec3(10,20,10),-10,10,-10,10, -10, 200);
 
 	this->frameBuffer = new FrameBuffer();
 	this->frameBuffer->CreateFrameBuffer(4,1024,768);
@@ -67,49 +67,80 @@ Scene::~Scene()
 
 void Scene::Start() 
 {
+	glm::mat4 modelMatrix1 = glm::mat4();
+	GLint modelMatrixUniform1 = glGetUniformLocation(this->geoShader->getProgram(), "modelMatrix");
+	//glm::mat4 modelMatrix2 = glm::mat4(1.0f);
+	glm::vec3 rotVec = glm::vec3(0, 1, 0);
+	float rot = 0;
+
+	glm::vec3 spherePos = glm::vec3(10, 20, 10);
+	
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
 	GLfloat lightPos[] = { 0, 20, 0 };
-	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0,2,0), glm::vec3(0,-1,0),glm::vec3(1,0,0));
+	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0,5,0), glm::vec3(0,-1,0),glm::vec3(1,0,0));
 	glm::mat4 projectionMatrix = glm::ortho(-10,10,-10,10,-10,200);
 	GLint viewUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightViewMatrix");
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
 	
 	while (isRunning)
 	{
+		//rot += 0.001;
+		//modelMatrix2 = glm::rotate(rot, rotVec);
 		this->Update();
 		this->eventHandler();
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
+		
+		// Get depth map
 		this->depthShader->Bind();
 		this->frameBuffer2->BindFrameBuffer();
 		this->depthShader->Update(*this->lightCamera);
+
+		modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
+		glUniformMatrix4fv(modelMatrixUniform1, 1, GL_FALSE, &modelMatrix1[0][0]);
 		this->mesh->Draw();
+
+		//modelMatrix1 = glm::rotate(rot, rotVec);
+		modelMatrix1 = glm::mat4();
+		glUniformMatrix4fv(modelMatrixUniform1, 1, GL_FALSE, &modelMatrix1[0][0]);
 		this->terrain->getMesh()->Draw();
+
 		this->frameBuffer2->UnbindFrameBuffer();
 
+		// Geometry pass
 		this->frameBuffer->BindFrameBuffer();
 		this->geoShader->Bind();
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3);
 		this->geoShader->Update(*this->camera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
+
+		modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
+		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "modelMatrix"), 1, GL_FALSE, &modelMatrix1[0][0]);
 		this->mesh->Draw();
+
+		//modelMatrix1 = glm::rotate(rot, rotVec);
+		modelMatrix1 = glm::mat4();
+		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "modelMatrix"), 1, GL_FALSE, &modelMatrix1[0][0]);
 		this->terrain->getMesh()->Draw();
+
 		this->frameBuffer->UnbindFrameBuffer();
 
+		// Blur
 		this->filterComputeShader->BindShader();
 		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2);
 		this->filterComputeShader->UniformVec3("colorVector", glm::vec3(0.0f, 0.0f, 1.0f));
 		this->filterComputeShader->Uniform1f("number", 1.0f);
 		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1);
 
+		// Light pass
 		this->lightShader->Bind();
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture"),0);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture2"), 1);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture3"), 2);
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture4"), 0,3);
-		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, lightPos);
+		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, &this->lightCamera->getPos()[0]);
 		this->RenderQuad();
 		
 		this->display->Update();
