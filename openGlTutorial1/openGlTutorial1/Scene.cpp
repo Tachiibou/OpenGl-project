@@ -2,7 +2,6 @@
 
 Scene::Scene()
 {
-
 	ResourceLoader r = ResourceLoader("obj/sphere1.obj");
 	
 	this->isRunning = true;
@@ -67,16 +66,19 @@ Scene::~Scene()
 
 void Scene::Start() 
 {
-	glm::mat4 modelMatrix1 = glm::mat4();
-	GLint modelMatrixUniform1 = glGetUniformLocation(this->geoShader->getProgram(), "modelMatrix");
-	//glm::mat4 modelMatrix2 = glm::mat4(1.0f);
-	glm::vec3 rotVec = glm::vec3(0, 1, 0);
-	float rot = 0;
-
 	glm::vec3 spherePos = glm::vec3(10, 15, 10);
-
+	glm::mat4 modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
+	glm::mat4 modelMatrix2 = glm::mat4();
+	GLint modelUniform = glGetUniformLocation(this->depthShader->getProgram(), "modelMatrix");
+	GLint depthUniform = glGetUniformLocation(this->geoShader->getProgram(), "depth");
 	GLint viewUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightViewMatrix");
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
+
+	//glm::mat4 modelMatrix2 = glm::mat4(1.0f);
+	//glm::vec3 rotVec = glm::vec3(0, 1, 0);
+	//float rot = 0;
+	
+
 	
 	while (isRunning)
 	{
@@ -92,13 +94,12 @@ void Scene::Start()
 		this->frameBuffer2->BindFrameBuffer();
 		this->depthShader->Update(*this->lightCamera);
 
-		modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
-		glUniformMatrix4fv(modelMatrixUniform1, 1, GL_FALSE, &modelMatrix1[0][0]);
+		//modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
+		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, &modelMatrix1[0][0]);
 		this->mesh->Draw();
 
-		//modelMatrix1 = glm::rotate(rot, rotVec);
-		modelMatrix1 = glm::mat4();
-		glUniformMatrix4fv(modelMatrixUniform1, 1, GL_FALSE, &modelMatrix1[0][0]);
+		//modelMatrix1 = glm::mat4();
+		glUniformMatrix4fv(modelUniform, 1, GL_FALSE, &modelMatrix2[0][0]);
 		this->terrain->getMesh()->Draw();
 
 		this->frameBuffer2->UnbindFrameBuffer();
@@ -106,18 +107,17 @@ void Scene::Start()
 		// Geometry pass
 		this->frameBuffer->BindFrameBuffer();
 		this->geoShader->Bind();
-		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3);
+		this->frameBuffer2->BindTexturesToProgram(depthUniform, 0,3);
 		this->geoShader->Update(*this->camera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
 
-		modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
+		//modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
 		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "modelMatrix"), 1, GL_FALSE, &modelMatrix1[0][0]);
 		this->mesh->Draw();
 
-		//modelMatrix1 = glm::rotate(rot, rotVec);
-		modelMatrix1 = glm::mat4();
-		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "modelMatrix"), 1, GL_FALSE, &modelMatrix1[0][0]);
+		//modelMatrix1 = glm::mat4();
+		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "modelMatrix"), 1, GL_FALSE, &modelMatrix2[0][0]);
 		this->terrain->getMesh()->Draw();
 
 		this->frameBuffer->UnbindFrameBuffer();
@@ -139,7 +139,6 @@ void Scene::Start()
 		this->RenderQuad();
 		
 		this->display->Update();
-		
 	}
 }
 
