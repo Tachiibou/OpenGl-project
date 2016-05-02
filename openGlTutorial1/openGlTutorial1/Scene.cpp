@@ -73,13 +73,8 @@ void Scene::Start()
 	glm::vec3 rotVec = glm::vec3(0, 1, 0);
 	float rot = 0;
 
-	glm::vec3 spherePos = glm::vec3(10, 20, 10);
-	
-	GLuint texID, texID2;
-	GLfloat derp[4] = { 1,0,0,1 };
-	GLfloat lightPos[] = { 0, 20, 0 };
-	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0,5,0), glm::vec3(0,-1,0),glm::vec3(1,0,0));
-	glm::mat4 projectionMatrix = glm::ortho(-10,10,-10,10,-10,200);
+	glm::vec3 spherePos = glm::vec3(10, 15, 10);
+
 	GLint viewUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightViewMatrix");
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
 	
