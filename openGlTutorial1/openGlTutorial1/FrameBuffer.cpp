@@ -68,25 +68,28 @@ void FrameBuffer::CreateFrameBuffer(int textureAmount, int screenWidth, int scre
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, screenWidth, screenHeight);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
+	GLenum* DrawBuffers = new GLenum[this->textureAmount];
 	for (int i = 0; i < this->textureAmount; i++)
 	{
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, this->textures[i], 0);
+		DrawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
 	}
 	//// Set "renderedTexture" as our colour attachement #0
 	//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->textures[0], 0);
 	//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + 1, this->textures[1], 0);
 
 	// Set the list of draw buffers.
-	GLenum DrawBuffers[NUM_TEXTURES] = { GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3 };
+	//GLenum DrawBuffers[NUM_TEXTURES] = { GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1,GL_COLOR_ATTACHMENT2,GL_COLOR_ATTACHMENT3 };
 	//this->drawBuffers = new GLenum[this->textureAmount];
 	//for (int i = 0; i < this->textureAmount; i++)
 	//{
 	//	this->drawBuffers[i] = GL_COLOR_ATTACHMENT0 + i;
 	//}
-	glDrawBuffers(NUM_TEXTURES, DrawBuffers); // "NUM_TEXTURES" is the size of DrawBuffers
+	glDrawBuffers(this->textureAmount, DrawBuffers); // "NUM_TEXTURES" is the size of DrawBuffers
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR CREATING FRAMEBUFFER" << std::endl;
+	delete DrawBuffers;
 }
 
 void FrameBuffer::BindFrameBuffer()
@@ -104,8 +107,8 @@ void FrameBuffer::BindTexturesToProgram(GLuint uniform, GLuint texture)
 {
 	glActiveTexture(GL_TEXTURE0 + texture);
 	//this->texUniformID = glGetUniformLocation(program, "renderedTexture");
-	glUniform1i(uniform, texture);
 	glBindTexture(GL_TEXTURE_2D, this->textures[texture]);
+	glUniform1i(uniform, texture);
 	
 }
 
