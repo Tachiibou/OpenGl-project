@@ -90,8 +90,8 @@ void Scene::Start()
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
 		
 		// Get depth map
-		this->depthShader->Bind();
 		this->frameBuffer2->BindFrameBuffer();
+		this->depthShader->Bind();
 		this->depthShader->Update(*this->lightCamera);
 
 		//modelMatrix1 = glm::translate(glm::mat4(1.0f), spherePos);
