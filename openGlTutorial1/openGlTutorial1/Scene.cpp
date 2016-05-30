@@ -69,7 +69,7 @@ void Scene::Start()
 {
 	GLuint texID, texID2;
 	GLfloat derp[4] = { 1,0,0,1 };
-	GLfloat lightPos[] = { 0, 20, 0 };
+	GLfloat lightPos[] = { 0, 2, 0 };
 	glm::mat4 viewMatrix = glm::lookAt(glm::vec3(0,2,0), glm::vec3(0,-1,0),glm::vec3(1,0,0));
 	glm::mat4 projectionMatrix = glm::ortho(-10,10,-10,10,-10,200);
 	GLint viewUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightViewMatrix");
