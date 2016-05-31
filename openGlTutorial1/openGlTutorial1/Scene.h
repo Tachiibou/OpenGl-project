@@ -37,7 +37,7 @@ private:
 	FrameBuffer* frameBuffer, *frameBuffer2;
 	FilterComputeShader* filterComputeShader;
 
-	
+	bool moveLight;
 
 
 	void eventHandler();

@@ -6,9 +6,8 @@ Scene::Scene()
 	
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
-
 	
-	this->mouseWarp = false;
+	this->mouseWarp = true;
 	this->deltaTime = 0.0f;
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
@@ -32,7 +31,7 @@ Scene::Scene()
 	this->mesh = r.getMesh();
 
 	this->camera = new Camera(glm::vec3(0, 25, 10), CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr);
-	this->lightCamera = new Camera(glm::vec3(10, 30, 10), glm::vec3(1,0,0), glm::vec3(10,20,10),-10,10,-10,10, -10, 200);
+	this->lightCamera = new Camera(glm::vec3(10, 30, 10), glm::vec3(1,0,0), glm::vec3(10,15,10),-10,10,-10,10, 0.01, 200);
 
 	this->frameBuffer = new FrameBuffer();
 	this->frameBuffer->CreateFrameBuffer(4,1024,768);
@@ -45,6 +44,8 @@ Scene::Scene()
 	this->filterComputeShader = new FilterComputeShader("derp");
 	//this->filterComputeShader->LoadShader("./res/blur.glsl");
 	this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
+
+	this->moveLight = false;
 }
 
 Scene::~Scene()
@@ -136,6 +137,10 @@ void Scene::Start()
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture3"), 2);
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture4"), 0,3);
 		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, &this->lightCamera->getPos()[0]);
+
+		glUniformMatrix4fv(glGetUniformLocation(this->lightShader->getProgram(), "lightViewMatrix"), 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(this->lightShader->getProgram(), "lightProjectionMatrix"), 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
+
 		this->RenderQuad();
 		
 		this->display->Update();
@@ -161,7 +166,12 @@ void Scene::eventHandler()
 		}
 	}
 	if (this->cameraMove != glm::vec3())
-		this->camera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
+	{
+		if (!this->moveLight)
+			this->camera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
+		else
+			this->lightCamera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
+	}
 }
 
 void Scene::Update()
@@ -199,6 +209,11 @@ void Scene::keyBoardCheck()
 	}
 	else if (this->sdlEvent.key.keysym.sym == SDLK_l && this->mouseWarp)
 		this->mouseWarp = false;
+
+	if (this->sdlEvent.key.keysym.sym == SDLK_SPACE)
+		this->moveLight = !this->moveLight;
+	if (this->sdlEvent.key.keysym.sym = SDLK_r)
+		this->lightCamera->getPos() = glm::vec3(10, 30, 10);
 }
 
 void Scene::mouseCheck()

@@ -7,6 +7,10 @@ uniform sampler2D renderedTexture;
 uniform sampler2D renderedTexture2;
 uniform sampler2D renderedTexture3;
 uniform sampler2D renderedTexture4;
+
+uniform mat4 lightViewMatrix;
+uniform mat4 lightProjectionMatrix;
+
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 
@@ -33,6 +37,7 @@ void main()
 	vec3 specular = lightColor * spec * specStr;
 
 	lighting += diffuse + specular;
-	//fragColor = lighting;
-	fragColor = texture2D(renderedTexture3, fragUv).xyz;
+	fragColor = lighting;
+	//fragColor = texture2D(renderedTexture3, fragUv).xyz;
+	//fragColor = texture2D(renderedTexture3, fragUv).xyz + texture2D(renderedTexture4, fragUv).xyz;
 }
