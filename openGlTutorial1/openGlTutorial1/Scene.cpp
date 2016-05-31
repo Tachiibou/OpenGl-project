@@ -19,6 +19,7 @@ Scene::Scene()
 	this->geoShader = new Shader("geoPass");
 	this->lightShader = new Shader("lightPass");
 	this->depthShader = new Shader("depth");
+	this->terrainShader = new Shader("terrain");
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
@@ -29,7 +30,7 @@ Scene::Scene()
 
 	//this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
 	this->terrain = new Terrain();
-	this->terrain->loadTerrain("./res/heightmap.png", 15);
+	this->terrain->loadTerrain("./res/heightmapClone.png", 15);
 	this->mesh = r.getMesh();
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr);
@@ -95,6 +96,16 @@ void Scene::Start()
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
 		this->mesh->Draw();
+
+
+		this->terrainShader->Bind();
+		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0, 3);
+		//GLuint DERP = glGetUniformLocation(this->terrainShader->getProgram(), "texture0");
+		//GLuint DERP1 = glGetUniformLocation(this->terrainShader->getProgram(), "texture1");
+		this->terrainShader->Update(*this->camera);
+		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
+		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
+
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer->UnbindFrameBuffer();
 

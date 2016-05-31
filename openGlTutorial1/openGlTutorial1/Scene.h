@@ -21,7 +21,7 @@ private:
 	Display* display;
 	Camera* camera, *lightCamera;
 	Shader* shader, *shader2,
-		  *geoShader, *lightShader, *depthShader;
+		  *geoShader, *lightShader, *depthShader, *terrainShader;
 	Mesh* mesh;
 	Terrain* terrain;
 	Vertex vertices[4];

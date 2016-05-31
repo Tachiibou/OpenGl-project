@@ -29,6 +29,7 @@ class Mesh
 public:
 	Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize);
 	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture);
+	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights);
 	virtual ~Mesh();
 	void Draw();
 private:
@@ -39,11 +40,12 @@ private:
 		UV_VB,
 		NORMAL_VB,
 		INDEX_VB,
+		HEIGHTS_VB,
 		NUM_BUFFERS
 	};
 	GLuint m_vertexArrayObject;
 	GLuint indexBufferObject;
-	GLuint m_vertexArrayBuffers[NUM_BUFFERS];
+	GLuint *m_vertexArrayBuffers;
 	unsigned int m_drawCount;
 	unsigned int indexArraySize;
 	bool usingVertexInfo;

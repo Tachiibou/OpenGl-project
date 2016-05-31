@@ -3,17 +3,21 @@
 
 #include "glm\glm.hpp"
 #include "GL\glew.h"
+#include <vector>
 
 class Texture
 {
 private:
-		GLuint texture;
+	std::vector<GLuint> textures;
+	GLuint texture;
 public:
 	Texture();
-	Texture(const char* filename);
+	Texture(const char* fileName);
 
 	void Bind();
 	~Texture();
+
+	void addTexture(const char* fileName);
 };
 
 #endif

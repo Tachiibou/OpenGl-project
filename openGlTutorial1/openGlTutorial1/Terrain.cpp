@@ -58,7 +58,9 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 				unsigned int total = 0;
 				for (int yt = -2; yt < 3; yt++) {
 					for (int xt = -2; xt < 3; xt++) {   
-						if ((yt + y >= 0 && xt + x>=0) && (yt + y <= t_height && xt + x <= t_width)) {
+
+
+						if ((yt + y >= 0 && xt + x>=0) && (yt + y < t_height && xt + x < t_width)) {
 							int index = 3 * (yt + y * t_width + x + xt);
 							total += (unsigned char)height_data[index];
 							nrAdded++;
@@ -75,6 +77,13 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 				//if (x==100 && y == 200)
 				//	int k = 0;
 				//float h = (pixel_color);
+
+				if (y == t_height - 1) {
+					if (x > t_width - 10) {
+						int k = 0;
+					}
+				}
+
 				setHeightAt(x, y, total);
 			}
 		}
@@ -193,10 +202,11 @@ void Terrain::calculateVertexInfo() {
 	
 	glm::vec3 tempNormal;
 	int cIndex;
-
 	std::vector<int> indices;
 	float positionX, positionZ;
 	float u, v;
+	float maxHeight = 0;
+	float* heights = new float[this->width*this->length];
 	for (int x = 0; x < this->width; x++) {
 
 		for (int z = 0; z < this->length; z++) {
@@ -209,11 +219,16 @@ void Terrain::calculateVertexInfo() {
 				indices.push_back((x + 1)*  this->length + z);
 				indices.push_back(x*  this->length + z + 1);
 				indices.push_back((x + 1) *  this->length + z + 1);
+
+				
 			}
-			
+			else {
+				int k = 0;
+			}
+
 			tempNormal = this->getNormalAt(x, z);
 
-			
+
 			//u = x;// x / (float)this->width;
 			//v = z;// 1- (z / (float)this->length);
 			u = (x / (float)this->width) * 2;
@@ -222,23 +237,42 @@ void Terrain::calculateVertexInfo() {
 			positionX = x;
 			positionZ = z;
 
-			tempTriangleVertex[cIndex] = { positionX, this->heights[x][z],positionZ,
+			float cHeight = this->heights[x][z];
+
+			tempTriangleVertex[cIndex] = { positionX, cHeight,positionZ,
 				u,v,
 				tempNormal.x, tempNormal.y, tempNormal.z };
+			
+			if (maxHeight < cHeight)
+				maxHeight = cHeight;
+
+			heights[cIndex] = cHeight;
 
 			//printToScreen(tempVertexInfo[cIndex]);
 			//std::cout << cIndex << std::endl;
 		}
 	}
 
+	for (unsigned int i = 0; i < this->width*this->length; i++) {
+		heights[i] = heights[i] / maxHeight;
+	}
+		
 	
 	int *tempArr = new int[indices.size()];
 	for (int i = 0; i < indices.size(); i++) {
 		tempArr[i] = indices.at(i);
 	}
-	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, new Texture("./obj/brick_16.jpg"));
+
+	Texture* terrainTexture = new Texture();
+	terrainTexture->addTexture("./obj/brick_16.jpg");
+	terrainTexture->addTexture("./obj/Snow.jpg");
+
+	//terrainTexture->addTexture("./obj/Stone.jpg");
+	//terrainTexture->addTexture("./obj/Snow.jpg");
+	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, terrainTexture, heights);
 	delete[]tempTriangleVertex;
 	delete[] tempArr;
+	delete[] heights;
 }
 Mesh* Terrain::getMesh() {
 	return this->mesh;
