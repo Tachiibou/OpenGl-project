@@ -42,9 +42,9 @@ Scene::Scene()
 	this->frameBuffer2->CreateFrameBuffer(1, 1024, 768);
 	this->frameBuffer2->UnbindFrameBuffer();
 	
-	//this->filterComputeShader = new FilterComputeShader("derp");
-	////this->filterComputeShader->LoadShader("./res/blur.glsl");
-	//this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
+	this->filterComputeShader = new FilterComputeShader("derp");
+	//this->filterComputeShader->LoadShader("./res/blur.glsl");
+	this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
 }
 
 Scene::~Scene()
@@ -123,11 +123,11 @@ void Scene::Start()
 		this->frameBuffer->UnbindFrameBuffer();
 
 		// Blur
-		/*this->filterComputeShader->BindShader();
+		this->filterComputeShader->BindShader();
 		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2);
 		this->filterComputeShader->UniformVec3("colorVector", glm::vec3(0.0f, 0.0f, 1.0f));
 		this->filterComputeShader->Uniform1f("number", 1.0f);
-		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1);*/
+		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1);
 
 		// Light pass
 		this->lightShader->Bind();
