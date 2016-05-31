@@ -34,7 +34,8 @@ Scene::Scene()
 	this->mesh = r.getMesh();
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr);
-	this->lightCamera = new Camera(glm::vec3(0,2,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-10,10,-10,10, -10, 200);
+	//this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, -10, 10, -10, 10, -10, 200);
+	this->lightCamera = new Camera(glm::vec3(10,30,10), glm::vec3(1,0,0), glm::vec3(0,-1,0),-10,10,-10,10, -10, 200);
 
 	this->frameBuffer = new FrameBuffer();
 	this->frameBuffer->CreateFrameBuffer(4,1024,768);
@@ -47,6 +48,8 @@ Scene::Scene()
 	this->filterComputeShader = new FilterComputeShader("derp");
 	//this->filterComputeShader->LoadShader("./res/blur.glsl");
 	this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
+
+	this->moveLight = false;
 }
 
 Scene::~Scene()
@@ -75,7 +78,10 @@ void Scene::Start()
 	glm::mat4 projectionMatrix = glm::ortho(-10,10,-10,10,-10,200);
 	GLint viewUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightViewMatrix");
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
-	
+
+	glm::mat4 worldMatrix(1.0f);
+	glm::vec3 spherePos(10, 20, 10);
+
 	while (isRunning)
 	{
 		this->Update();
@@ -85,7 +91,11 @@ void Scene::Start()
 		this->depthShader->Bind();
 		this->frameBuffer2->BindFrameBuffer();
 		this->depthShader->Update(*this->lightCamera);
+		worldMatrix = glm::translate(worldMatrix, spherePos);
+		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->mesh->Draw();
+		worldMatrix = glm::mat4(1.0f);
+		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer2->UnbindFrameBuffer();
 
@@ -95,17 +105,20 @@ void Scene::Start()
 		this->geoShader->Update(*this->camera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
+		worldMatrix = glm::translate(worldMatrix, spherePos);
+		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->mesh->Draw();
 
-
 		this->terrainShader->Bind();
-		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0, 3);
+		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->terrainShader->getProgram(), "depth"), 0, 3);
 		//GLuint DERP = glGetUniformLocation(this->terrainShader->getProgram(), "texture0");
 		//GLuint DERP1 = glGetUniformLocation(this->terrainShader->getProgram(), "texture1");
 		this->terrainShader->Update(*this->camera);
-		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
-		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "lightViewMatrix"), 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "lightPerspectiveMatrix"), 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
 
+		worldMatrix = glm::mat4(1.0f);
+		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer->UnbindFrameBuffer();
 
@@ -147,7 +160,13 @@ void Scene::eventHandler()
 		}
 	}
 	if (this->cameraMove != glm::vec3())
-		this->camera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
+	{
+		if(!this->moveLight)
+			this->camera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
+		else
+			this->lightCamera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
+	}
+		
 }
 
 void Scene::Update()
@@ -185,6 +204,9 @@ void Scene::keyBoardCheck()
 	}
 	else if (this->sdlEvent.key.keysym.sym == SDLK_l && this->mouseWarp)
 		this->mouseWarp = false;
+
+	if (this->sdlEvent.key.keysym.sym == SDLK_SPACE)
+		this->moveLight = !this->moveLight;
 }
 
 void Scene::mouseCheck()
