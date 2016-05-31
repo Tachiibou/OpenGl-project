@@ -11,8 +11,8 @@ namespace constVar {
 	static const char* WINDOW_NAME = "3D Project";
 
 	//CAMERA
-	static const glm::vec3 CAM_POS = glm::vec3(250, 10, 250);
-	static const glm::vec3 CAM_FORWARD = glm::vec3(0, 0, 1);
+	static const glm::vec3 CAM_POS = glm::vec3(-2, 15, -2);
+	static const glm::vec3 CAM_FORWARD = glm::vec3(.7f, 0, .7f);
 	static const glm::vec3 CAM_UP = glm::vec3(0, 1, 0);
 	static const float CAM_FOV = (70);
 	static const float CAM_ZNEAR = .01f;
