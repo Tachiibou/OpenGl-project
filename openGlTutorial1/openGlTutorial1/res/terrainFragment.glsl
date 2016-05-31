@@ -14,6 +14,17 @@ uniform sampler2D texture0;
 uniform sampler2D texture1;
 uniform sampler2D depth;
 
+const float highMax = .7f;
+
+vec3 calulateBlend(){
+	float amount = clamp(fragmentHeightPercentage / highMax, 0, 1);
+
+	vec3 firstColor = (1-amount) * vec3(texture2D(texture0, fragUv)); //Lower
+	vec3 secondColor = amount * vec3(texture2D(texture1, fragUv));    //Upper
+
+	return firstColor + secondColor;
+}
+
 void main()
 {
 	float bias = 0.005;
@@ -25,5 +36,8 @@ void main()
 	gNormal = clamp(normalize(fragNormal),0.0,1.0);
 	//gColor = clamp(vec3(texture2D(texture, fragUv)) + vec3(texture2D(depth, fragLightPos.xy)),0.0,1.0);
 	//gColor = gNormal;
-	gColor = clamp(mix(vec3(texture2D(texture0, fragUv)), vec3(texture2D(texture1, fragUv)),fragmentHeightPercentage)  * visibility, 0.0,1.0);
+
+
+	gColor = clamp ( calulateBlend()* visibility, 0.0,1.0); //Final Color
+	//gColor = clamp(mix(vec3(texture2D(texture0, fragUv)), vec3(texture2D(texture1, fragUv)),fragmentHeightPercentage - (1-highMax))  * visibility, 0.0,1.0);
 }
