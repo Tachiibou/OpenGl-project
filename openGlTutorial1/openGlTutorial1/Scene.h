@@ -10,12 +10,14 @@
 #include "Terrain.h"
 #include "FrameBuffer.h"
 #include "FilterComputeShader.h"
+#include "ViewFrustum.h"
 
 using namespace constVar;
 
 class Scene
 {
 private:
+	ViewFrustum frustrum;
 	bool isRunning;
 	SDL_Event sdlEvent;
 	Display* display;

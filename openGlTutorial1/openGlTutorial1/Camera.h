@@ -28,8 +28,9 @@ public:
 	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float right, float bottom, float top, float zNear, float zFar);
 	~Camera();
 	
-	glm::mat4 &getViewMatrix();
-	glm::mat4 &getPerspectiveMatrix();
+	glm::mat4 getViewMatrix()const;
+	glm::mat4 getPerspectiveMatrix()const;
+	glm::mat4 &getViewPerspectiveMatrix() const;
 	glm::vec3 &getPos();
 
 	void move(glm::vec3 dir);

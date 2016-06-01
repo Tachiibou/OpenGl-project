@@ -46,6 +46,9 @@
     <ClCompile Include="FilterComputeShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ViewFrustum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
@@ -60,6 +63,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="FilterComputeShader.h" />
+    <ClInclude Include="ViewFrustum.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />
@@ -104,6 +108,9 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="res\terrainVertex.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="res\geoPassGeometry.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

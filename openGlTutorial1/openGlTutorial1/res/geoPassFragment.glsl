@@ -19,9 +19,9 @@ void main()
 	if(texture2D(depth, fragLightPos.xy).z < fragLightPos.z - bias)
 		visibility = 0.5;
 	// Line 20
-	gPos = clamp(fragPos,0.0,1.0);
-	gNormal = clamp(normalize(fragNormal),0.0,1.0);
+	gPos = fragPos;
+	gNormal = normalize(fragNormal);
 	//gColor = clamp(vec3(texture2D(texture, fragUv)) + vec3(texture2D(depth, fragLightPos.xy)),0.0,1.0);
 	//gColor = gNormal;
-	gColor = clamp(vec3(texture2D(texture, fragUv)) * visibility, 0.0,1.0);
+	gColor = vec3(texture2D(texture, fragUv)) * visibility;
 }

@@ -69,14 +69,19 @@ Camera::~Camera()
 {
 }
 
-glm::mat4& Camera::getViewMatrix()
+glm::mat4 Camera::getViewMatrix()const
 {
 	return this->viewMatrix;
 }
 
-glm::mat4& Camera::getPerspectiveMatrix()
+glm::mat4 Camera::getPerspectiveMatrix()const
 {
 	return this->perspectiveMatrix;
+}
+
+glm::mat4 & Camera::getViewPerspectiveMatrix() const
+{
+	return this->perspectiveMatrix * this->viewMatrix;
 }
 
 glm::vec3 & Camera::getPos()

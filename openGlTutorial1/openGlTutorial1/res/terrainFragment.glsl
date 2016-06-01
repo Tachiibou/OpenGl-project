@@ -19,10 +19,11 @@ const float highMax = .7f;
 vec3 calulateBlend(){
 	float amount = clamp(fragmentHeightPercentage / highMax, 0, 1);
 
-	vec3 firstColor = (1-amount) * vec3(texture2D(texture0, fragUv)); //Lower
-	vec3 secondColor = amount * vec3(texture2D(texture1, fragUv));    //Upper
+	vec3 firstColor = (1-amount) * vec3(texture2D(texture1, fragUv)); //Lower
+	vec3 secondColor = amount * vec3(texture2D(texture0, fragUv));    //Upper
 
-	return firstColor + secondColor;
+	return mix(vec3(texture2D(texture0, fragUv)),vec3(texture2D(texture1, fragUv)),fragmentHeightPercentage);
+	//return firstColor + secondColor;
 }
 
 void main()
@@ -32,12 +33,12 @@ void main()
 	if(texture2D(depth, fragLightPos.xy).z < fragLightPos.z - bias)
 		visibility = 0.5;
 	// Line 20
-	gPos = clamp(fragPos,0.0,1.0);
-	gNormal = clamp(normalize(fragNormal),0.0,1.0);
+	gPos = fragPos;
+	gNormal = normalize(fragNormal);
 	//gColor = clamp(vec3(texture2D(texture, fragUv)) + vec3(texture2D(depth, fragLightPos.xy)),0.0,1.0);
 	//gColor = gNormal;
 
 
-	gColor = clamp ( calulateBlend()* visibility, 0.0,1.0); //Final Color
+	gColor = calulateBlend()* visibility; //Final Color
 	//gColor = clamp(mix(vec3(texture2D(texture0, fragUv)), vec3(texture2D(texture1, fragUv)),fragmentHeightPercentage - (1-highMax))  * visibility, 0.0,1.0);
 }
