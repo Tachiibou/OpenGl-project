@@ -82,8 +82,8 @@ void Scene::Start()
 	
 	while (isRunning)
 	{
-		this->frustrum.updateFrustrum(this->camera->getViewPerspectiveMatrix());
-		std::cout << (this->frustrum.dotInFrustrum(spherePos) ? "INSIDE" : "OUTSIDE") << std::endl;
+		this->frustrum.createPlanesFromMatrix(this->camera->getViewPerspectiveMatrix());
+		std::cout << (this->frustrum.pointIsInFrustum(spherePos) ? "INSIDE" : "OUTSIDE") << std::endl;
 		GLfloat lightPos[3] = { this->lightCamera->getPos().x,this->lightCamera->getPos().y,this->lightCamera->getPos().z };
 		GLfloat camPos[3] = { this->camera->getPos().x,this->camera->getPos().y,this->camera->getPos().z };
 

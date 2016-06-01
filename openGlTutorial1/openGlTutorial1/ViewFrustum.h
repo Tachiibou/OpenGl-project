@@ -1,35 +1,44 @@
 #pragma once
 #include "glm\glm.hpp"
-#include "GL\glew.h"
-#include <vector>
-enum Planes
+class GLFrustum
 {
-	RIGHT,
-	LEFT,
-	NEAR,
-	FAR,
-	TOP,
-	BOTTOM,
-	NUM_PLANES
-};
-class ViewFrustum
-{
-private:
-	struct Plane
-	{
-		float distance;
-		glm::vec3 normal;
-		void normalize(){
-			this->normal = glm::normalize(this->normal);
-			this->distance /= this->normal.length();
-		};
-	};
-	Plane planes[NUM_PLANES];
 public:
-	ViewFrustum();
-	~ViewFrustum();
-	void updateFrustrum(glm::mat4 viewProjection);
-	bool dotInFrustrum(const glm::vec3& pt);
+	enum planeEnum
+	{
+		NEAR_PLANE = 0,
+		FAR_PLANE,
+		LEFT_PLANE,
+		RIGHT_PLANE,
+		TOP_PLANE,
+		BOTTOM_PLANE,
+		NUM_PLANES
+	};
 
+	enum IntersectEnum
+	{
+		INSIDE,
+		INTERSECT,
+		OUTSIDE
+	};
+
+	GLFrustum();
+	~GLFrustum();
+
+	void createPlanesFromMatrix(glm::mat4 matrix);
+	bool pointIsInFrustum(glm::vec3 pt);
+	int AABBIsInFrustum(glm::vec3 center, glm::vec3 extent);
+private:
+	struct plane
+	{
+		glm::vec3 normal;
+		float w;
+
+		float signedDistanceToPoint(glm::vec3 pt)
+		{
+			return glm::dot(normal, pt) + w;
+		}
+	};
+
+	plane planes[NUM_PLANES];
 };
 

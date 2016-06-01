@@ -1,89 +1,78 @@
 #include "ViewFrustum.h"
 
-ViewFrustum::ViewFrustum()
+
+
+GLFrustum::GLFrustum()
 {
 }
 
 
-ViewFrustum::~ViewFrustum()
+GLFrustum::~GLFrustum()
 {
 }
 
-void ViewFrustum::updateFrustrum(glm::mat4 viewProjection)
+void GLFrustum::createPlanesFromMatrix(glm::mat4 matrix)
 {
-	//planes[RIGHT].normal.x = viewProjection[0][3] - viewProjection[0][0];
-	//planes[RIGHT].normal.y = viewProjection[1][3] - viewProjection[1][0];
-	//planes[RIGHT].normal.z = viewProjection[2][3] - viewProjection[2][0];
-	//planes[RIGHT].distanceistance = viewProjection[3][3] - viewProjection[3][0];
+	planes[LEFT_PLANE].normal.x = matrix[0][3] + matrix[0][0];
+	planes[LEFT_PLANE].normal.y = matrix[1][3] + matrix[1][0];
+	planes[LEFT_PLANE].normal.z = matrix[2][3] + matrix[2][0];
+	planes[LEFT_PLANE].w = matrix[3][3] + matrix[3][0];
 
-	//planes[LEFT].normal.x = viewProjection[0][3] + viewProjection[0][0];
-	//planes[LEFT].normal.y = viewProjection[1][3] + viewProjection[1][0];
-	//planes[LEFT].normal.z = viewProjection[2][3] + viewProjection[2][0];
-	//planes[LEFT].distanceistance = viewProjection[3][3] + viewProjection[3][0];
+	planes[RIGHT_PLANE].normal.x = matrix[0][3] - matrix[0][0];
+	planes[RIGHT_PLANE].normal.y = matrix[1][3] - matrix[1][0];
+	planes[RIGHT_PLANE].normal.z = matrix[2][3] - matrix[2][0];
+	planes[RIGHT_PLANE].w = matrix[3][3] - matrix[3][0];
 
-	//planes[NEAR].normal.x = viewProjection[0][3] + viewProjection[0][2];
-	//planes[NEAR].normal.y = viewProjection[1][3] + viewProjection[1][2];
-	//planes[NEAR].normal.z = viewProjection[2][3] + viewProjection[2][2];
-	//planes[NEAR].distanceistance = viewProjection[3][3] + viewProjection[3][2];
+	planes[BOTTOM_PLANE].normal.x = matrix[0][3] + matrix[0][1];
+	planes[BOTTOM_PLANE].normal.y = matrix[1][3] + matrix[1][1];
+	planes[BOTTOM_PLANE].normal.z = matrix[2][3] + matrix[2][1];
+	planes[BOTTOM_PLANE].w = matrix[3][3] + matrix[3][1];
 
-	//planes[FAR].normal.x = viewProjection[0][3] - viewProjection[0][2];
-	//planes[FAR].normal.y = viewProjection[1][3] - viewProjection[1][2];
-	//planes[FAR].normal.z = viewProjection[2][3] - viewProjection[2][2];
-	//planes[FAR].distanceistance = viewProjection[3][3] - viewProjection[3][2];
+	planes[TOP_PLANE].normal.x = matrix[0][3] - matrix[0][1];
+	planes[TOP_PLANE].normal.y = matrix[1][3] - matrix[1][1];
+	planes[TOP_PLANE].normal.z = matrix[2][3] - matrix[2][1];
+	planes[TOP_PLANE].w = matrix[3][3] - matrix[3][1];
 
-	//planes[TOP].normal.x = viewProjection[0][3] - viewProjection[0][1];
-	//planes[TOP].normal.y = viewProjection[1][3] - viewProjection[1][1];
-	//planes[TOP].normal.z = viewProjection[2][3] -				[2][1];
-	//planes[TOP].distanceistance = viewProjection[3][3] - viewProjection[3][1];
+	planes[NEAR_PLANE].normal.x = matrix[0][3] + matrix[0][2];
+	planes[NEAR_PLANE].normal.y = matrix[1][3] + matrix[1][2];
+	planes[NEAR_PLANE].normal.z = matrix[2][3] + matrix[2][2];
+	planes[NEAR_PLANE].w = matrix[3][3] + matrix[3][2];
 
-	//planes[BOTTOM].normal.x = viewProjection[0][3] + viewProjection[0][1];
-	//planes[BOTTOM].normal.y = viewProjection[1][3] + viewProjection[1][1];
-	//planes[BOTTOM].normal.z = viewProjection[2][3] + viewProjection[2][1];
-	//planes[BOTTOM].distanceistance = viewProjection[3][3] + viewProjection[3][1];
+	planes[FAR_PLANE].normal.x = matrix[0][3] - matrix[0][2];
+	planes[FAR_PLANE].normal.y = matrix[1][3] - matrix[1][2];
+	planes[FAR_PLANE].normal.z = matrix[2][3] - matrix[2][2];
+	planes[FAR_PLANE].w = matrix[3][3] - matrix[3][2];
 
-
-	planes[RIGHT].normal.x = viewProjection[0][3] - viewProjection[0][0];
-	planes[RIGHT].normal.y = viewProjection[1][3] - viewProjection[1][0];
-	planes[RIGHT].normal.z = viewProjection[2][3] - viewProjection[2][0];
-	planes[RIGHT].distance = viewProjection[3][3] - viewProjection[3][0];
-
-	planes[LEFT].normal.x = viewProjection[0][3] + viewProjection[0][0];
-	planes[LEFT].normal.y = viewProjection[1][3] + viewProjection[1][0];
-	planes[LEFT].normal.z = viewProjection[2][3] + viewProjection[2][0];
-	planes[LEFT].distance = viewProjection[3][3] + viewProjection[3][0];
-
-	planes[BOTTOM].normal.x = viewProjection[0][3] + viewProjection[0][1];
-	planes[BOTTOM].normal.y = viewProjection[1][3] + viewProjection[1][1];
-	planes[BOTTOM].normal.z = viewProjection[2][3] + viewProjection[2][1];
-	planes[BOTTOM].distance = viewProjection[3][3] + viewProjection[3][1];
-		
-	planes[TOP].normal.x = viewProjection[0][3] - viewProjection[0][1];
-	planes[TOP].normal.y = viewProjection[1][3] - viewProjection[1][1];
-	planes[TOP].normal.z = viewProjection[2][3] - viewProjection[2][1];
-	planes[TOP].distance = viewProjection[3][3] - viewProjection[3][1];
-
-	planes[FAR].normal.x = viewProjection[0][3] - viewProjection[0][2];
-	planes[FAR].normal.y = viewProjection[1][3] - viewProjection[1][2];
-	planes[FAR].normal.z = viewProjection[2][3] - viewProjection[2][2];
-	planes[FAR].distance = viewProjection[3][3] - viewProjection[3][2];
-
-	planes[NEAR].normal.x = viewProjection[0][3] + viewProjection[0][2];
-	planes[NEAR].normal.y = viewProjection[1][3] + viewProjection[1][2];
-	planes[NEAR].normal.z = viewProjection[2][3] + viewProjection[2][2];
-	planes[NEAR].distance = viewProjection[3][3] + viewProjection[3][2];
-
-	for (size_t i = 0; i < NUM_PLANES; i++) // normalize all planes
+	for (unsigned int i = 0; i < 6; i++)
 	{
-		planes[i].normalize();
+		float length = planes[i].normal.length();
+		planes[i].normal /= length;
+		planes[i].w /= length;
 	}
 }
 
-bool ViewFrustum::dotInFrustrum(const glm::vec3& pt) {
-	for (size_t i = 0; i < NUM_PLANES; i++) {
-
-		if (glm::dot(planes[i].normal,pt) + planes[i].distance < 0)
+bool GLFrustum::pointIsInFrustum(glm::vec3 pt)
+{
+	for (int i = 0; i < NUM_PLANES; i++)
+	{
+		if (planes[i].signedDistanceToPoint(pt) < 0)
+		{
 			return false;
+		}
 	}
 
 	return true;
+}
+
+int GLFrustum::AABBIsInFrustum(glm::vec3 center, glm::vec3 extent)
+{
+	int results = INSIDE;
+	for (int i = 0; i < NUM_PLANES; i++)
+	{
+		float d = dot(center, planes[i].normal) + planes[i].w;
+		float r = dot(extent, glm::abs(planes[i].normal));
+		if (d + r < 0) return OUTSIDE;
+		if (d - r < 0) results = INTERSECT;
+	}
+	return results;
 }

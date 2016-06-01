@@ -17,7 +17,7 @@ using namespace constVar;
 class Scene
 {
 private:
-	ViewFrustum frustrum;
+	GLFrustum frustrum;
 	bool isRunning;
 	SDL_Event sdlEvent;
 	Display* display;
