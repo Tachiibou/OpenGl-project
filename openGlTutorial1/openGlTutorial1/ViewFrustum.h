@@ -20,8 +20,11 @@ private:
 		float distance;
 		glm::vec3 normal;
 		void normalize(){
-			this->normal = glm::normalize(this->normal);
-			this->distance /= this->normal.length();
+			float length = normal.length();
+			normal /= length;
+			distance /= length;
+			//normal = glm::normalize(this->normal);
+			//distance /= this->normal.length();
 		};
 	};
 	Plane planes[NUM_PLANES];
@@ -29,7 +32,7 @@ public:
 	ViewFrustum();
 	~ViewFrustum();
 	void updateFrustrum(glm::mat4 viewProjection);
-	bool dotInFrustrum(const glm::vec3& pt);
+	bool dotInFrustrum(glm::vec3 pt);
 
 };
 

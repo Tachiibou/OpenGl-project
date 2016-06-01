@@ -78,7 +78,7 @@ void ViewFrustum::updateFrustrum(glm::mat4 viewProjection)
 	}
 }
 
-bool ViewFrustum::dotInFrustrum(const glm::vec3& pt) {
+bool ViewFrustum::dotInFrustrum(glm::vec3 pt) {
 	for (size_t i = 0; i < NUM_PLANES; i++) {
 
 		if (glm::dot(planes[i].normal,pt) + planes[i].distance < 0)
