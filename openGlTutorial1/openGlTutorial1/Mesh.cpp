@@ -140,6 +140,7 @@ void Mesh::Draw() {
 void Mesh::setPos(glm::vec3 pos)
 {
 	this->worldPos = pos;
+	this->bbox.pos = pos;
 }
 
 void Mesh::setWorldMatrix(glm::mat4 worldMatrix)
@@ -155,4 +156,15 @@ glm::vec3& Mesh::getPos()
 glm::mat4& Mesh::getWorldMatrix()
 {
 	return this->worldMatrix;
+}
+
+void Mesh::createBoundingBox(float halfSize)
+{
+	this->bbox.pos = this->worldPos;
+	this->bbox.halfSize = halfSize;
+}
+
+BoundingBox Mesh::getBoundingBox()
+{
+	return bbox;
 }

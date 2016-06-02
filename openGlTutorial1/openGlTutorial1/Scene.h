@@ -12,6 +12,7 @@
 #include "FilterComputeShader.h"
 #include "ViewFrustum.h"
 #include "QuadTree.h"
+#include "QuadTree2.h"
 
 using namespace constVar;
 

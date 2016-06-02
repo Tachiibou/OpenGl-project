@@ -17,6 +17,11 @@ private:
 	glm::vec3 pos;
 
 };
+
+struct BoundingBox {
+	float halfSize;
+	glm::vec3 pos;
+};
 // Struct used for sending data to GPU
 struct TriangleVertex
 {
@@ -38,6 +43,8 @@ public:
 	glm::vec3& getPos();
 	glm::mat4& getWorldMatrix();
 
+	void createBoundingBox(float halfSize);
+	BoundingBox getBoundingBox();
 private:
 	Texture *texture;
 	const char* defaultTexture = "obj/brick_16.jpg";
@@ -58,5 +65,7 @@ private:
 
 	glm::vec3 worldPos;
 	glm::mat4 worldMatrix;
+	BoundingBox bbox;
+	
 };
 #endif

@@ -57,6 +57,8 @@ private:
 
 	TriangleVertex* makeStruct(std::vector<VertexInfo> vertexInfo);
 
+	float getMeshHalfSize(std::vector<glm::vec3> *vertexVector);
+
 public:
 	ResourceLoader();
 	ResourceLoader(std::string fileName);

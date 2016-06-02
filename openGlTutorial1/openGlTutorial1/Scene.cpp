@@ -50,8 +50,13 @@ Scene::Scene()
 
 	this->moveLight = false;
 
+	this->mesh->setPos(glm::vec3(-812,0,-187.5f));
 
-	this->qt = new QuadTree(glm::vec3(0,0,0), );
+	QuadTree2 *testTree = new QuadTree2();
+
+	testTree->createQuadTree(glm::vec3(0,0,0), 1000, 4);
+
+	testTree->addMesh(mesh);
 }
 
 Scene::~Scene()
@@ -77,16 +82,17 @@ void Scene::Start()
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
 
 	glm::mat4 worldMatrix(1.0f);
-	glm::vec3 spherePos(10, 20, 10);
-	glm::vec3 spherePos1(20, 20, 10);
-	glm::vec3 spherePos2(-10, 20, 10);
-	glm::vec3 spherePos3 = this->lightCamera->getPos() - glm::vec3(-100, 0, -100);
+	
+	
+	//glm::vec3 spherePos1(20, 20, 10);
+	//glm::vec3 spherePos2(-10, 20, 10);
+	//glm::vec3 spherePos3 = this->lightCamera->getPos() - glm::vec3(-100, 0, -100);
 	glm::vec3 terrainPos(-124, -10, -124);
 	
 	while (isRunning)
 	{
 		this->frustrum.updateFrustrum(this->camera->getViewPerspectiveMatrix());
-		std::cout << (this->frustrum.dotInFrustrum(spherePos) ? "INSIDE" : "OUTSIDE") << std::endl;
+		//std::cout << (this->frustrum.dotInFrustrum(spherePos) ? "INSIDE" : "OUTSIDE") << std::endl;
 		GLfloat lightPos[3] = { this->lightCamera->getPos().x,this->lightCamera->getPos().y,this->lightCamera->getPos().z };
 		GLfloat camPos[3] = { this->camera->getPos().x,this->camera->getPos().y,this->camera->getPos().z };
 
@@ -97,20 +103,11 @@ void Scene::Start()
 		this->depthShader->Bind();
 		this->frameBuffer2->BindFrameBuffer();
 		this->depthShader->Update(*this->lightCamera);
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos);
+		worldMatrix = glm::translate(glm::mat4(1.0f), mesh->getPos());
 		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		//if(this->frustrum.dotInFrustrum(spherePos))
-			this->mesh->Draw();
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos1);
-		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->mesh->Draw();
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos2);
-		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
-		this->mesh->Draw();
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos3);
-		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
-		this->mesh->Draw();
-	
+
 		worldMatrix = glm::translate(glm::mat4(1.0f), terrainPos);
 		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->terrain->getMesh()->Draw();
@@ -121,19 +118,10 @@ void Scene::Start()
 		this->geoShader->Update(*this->camera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos);
+		worldMatrix = glm::translate(glm::mat4(1.0f), mesh->getPos());
 		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		//if (this->frustrum.dotInFrustrum(spherePos))
 			this->mesh->Draw();
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos1);
-		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
-		this->mesh->Draw();
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos2);
-		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
-		this->mesh->Draw();
-		worldMatrix = glm::translate(glm::mat4(1.0f), spherePos3);
-		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
-		this->mesh->Draw();
 
 		this->terrainShader->Bind();
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->terrainShader->getProgram(), "depth"), 0, 3);

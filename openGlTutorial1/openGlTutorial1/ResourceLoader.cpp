@@ -107,8 +107,39 @@ Mesh* ResourceLoader::getMesh()
 	this->vertexInfoArray = this->VertexInfoVectorToArray(vertexInfoVector);
 
 	this->triangleVert = this->makeStruct(vertexInfoVector);
+	Mesh* mesh = new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert, texture);
+	mesh->createBoundingBox(getMeshHalfSize(&vertexVector));
+	return mesh;
+}
 
-	return new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert,texture);
+float ResourceLoader::getMeshHalfSize(std::vector<glm::vec3> *vertexVector) {
+	float maxX = FLT_MIN;
+	float minX = FLT_MAX;
+	float maxZ = FLT_MIN;
+	float minZ = FLT_MAX;
+
+	glm::vec3 *vec;
+	for (size_t i = 0; i < vertexVector->size(); i++)
+	{
+		vec = &vertexVector->at(i);
+
+		if (vec->x>maxX)
+			maxX = vec->x;
+		if (vec->x < minX)
+			minX = vec->x;
+		if (vec->z > maxZ)
+			maxZ = vec->z;
+		if (vec->z < minZ)
+			minZ = vec->z;
+
+
+	}
+
+	float x = maxX - minX;
+	float z = maxZ - minZ;
+
+	return (x>z) ? x / 2 : z / 2;
+
 }
 
 void ResourceLoader::printFile()
@@ -202,7 +233,22 @@ void ResourceLoader::insertVertex(std::string line, std::vector<glm::vec3>& vert
 
 	inputString >> scrap >> vertexPos.x >> vertexPos.y >> vertexPos.z;
 	vertexVector.push_back(vertexPos);
+	/*
 
+	STÖRSTA X
+	MINSTA X
+	STÖRSTA Z
+	MINSTA Z
+	TX = SX-MX = 2
+	TZ = SZ-MZ = 6
+
+	return (TX>TZ)?TX/2:TZ/2;
+
+	SX = 2
+	MX = 0
+	SZ = 4
+	MZ = -2
+	*/
 }
 
 //insert UV coordinates from line into UVector&
