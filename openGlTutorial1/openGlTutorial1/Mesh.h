@@ -32,6 +32,12 @@ public:
 	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights);
 	virtual ~Mesh();
 	void Draw();
+	
+	void setPos(glm::vec3 pos);
+	void setWorldMatrix(glm::mat4 worldMatrix);
+	const glm::vec3& getPos();
+	const glm::mat4& getWorldMatrix();
+
 private:
 	Texture *texture;
 	const char* defaultTexture = "obj/brick_16.jpg";
@@ -49,5 +55,8 @@ private:
 	unsigned int m_drawCount;
 	unsigned int indexArraySize;
 	bool usingVertexInfo;
+
+	glm::vec3 worldPos;
+	glm::mat4 worldMatrix;
 };
 #endif

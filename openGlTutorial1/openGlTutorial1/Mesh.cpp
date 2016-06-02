@@ -15,6 +15,9 @@ Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int numInd
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindVertexArray(0);
+
+	this->worldPos = glm::vec3();
+	this->worldMatrix = glm::mat4(1.0f);
 }
 Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture)
 {
@@ -57,8 +60,10 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 		this->texture = new Texture(this->defaultTexture);
 	else
 		this->texture = texture;
-}
 
+	this->worldPos = glm::vec3();
+	this->worldMatrix = glm::mat4(1.0f);
+}
 
 //For Terrain
 Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights) {
@@ -105,6 +110,9 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 		this->texture = new Texture(this->defaultTexture);
 	else
 		this->texture = texture;
+
+	this->worldPos = glm::vec3();
+	this->worldMatrix = glm::mat4(1.0f);
 }
 Mesh::~Mesh()
 {
@@ -127,4 +135,24 @@ void Mesh::Draw() {
 	//glVertexAttribPointer(1, 3, GL_INT, GL_FALSE, 0, 0);
 	glDrawElements(GL_TRIANGLES, this->indexArraySize, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+}
+
+void Mesh::setPos(glm::vec3 pos)
+{
+	this->worldPos = pos;
+}
+
+void Mesh::setWorldMatrix(glm::mat4 worldMatrix)
+{
+	this->worldMatrix = worldMatrix;
+}
+
+glm::vec3& Mesh::getPos()
+{
+	return this->worldPos;
+}
+
+glm::mat4& Mesh::getWorldMatrix()
+{
+	return this->worldMatrix;
 }
