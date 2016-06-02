@@ -26,7 +26,7 @@ private:
 	
 public:
 	QuadTree();
-	QuadTree(float halfSide, int depth, std::vector<Mesh*> meshes);
+	QuadTree(glm::vec3 center, float halfSide, int depth, std::vector<Mesh*> meshes);
 	virtual ~QuadTree();
 	std::vector<Mesh*> getMeshesInFrustum(ViewFrustum* frustum);
 };

@@ -49,6 +49,9 @@ Scene::Scene()
 	this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
 
 	this->moveLight = false;
+
+
+	this->qt = new QuadTree(glm::vec3(0,0,0), );
 }
 
 Scene::~Scene()

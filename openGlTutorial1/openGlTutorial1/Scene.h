@@ -11,6 +11,7 @@
 #include "FrameBuffer.h"
 #include "FilterComputeShader.h"
 #include "ViewFrustum.h"
+#include "QuadTree.h"
 
 using namespace constVar;
 
@@ -40,7 +41,7 @@ private:
 	FilterComputeShader* filterComputeShader;
 
 	bool moveLight;
-
+	QuadTree* qt;
 
 	void eventHandler();
 	void Update();

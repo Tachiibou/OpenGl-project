@@ -35,8 +35,8 @@ public:
 	
 	void setPos(glm::vec3 pos);
 	void setWorldMatrix(glm::mat4 worldMatrix);
-	const glm::vec3& getPos();
-	const glm::mat4& getWorldMatrix();
+	glm::vec3& getPos();
+	glm::mat4& getWorldMatrix();
 
 private:
 	Texture *texture;
