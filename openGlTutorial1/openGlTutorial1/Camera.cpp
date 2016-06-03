@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include <iostream>
-
+#include "glm/ext.hpp"
 Camera::Camera()
 {
 }
@@ -157,4 +157,6 @@ void Camera::look(float x, float y, float deltaTime)
 	this->up = glm::cross(this->right, this->direction);
 
 	this->viewMatrix = glm::lookAt(this->pos, this->pos + this->direction, this->up);
+
+	std::cout << "Camera Forw: " << glm::to_string(direction) << std::endl;
 }

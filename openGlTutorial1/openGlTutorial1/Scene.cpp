@@ -1,5 +1,5 @@
 #include "Scene.h"
-
+#include "glm/ext.hpp"
 Scene::Scene()
 {
 	ResourceLoader r = ResourceLoader("obj/sphere1.obj");
@@ -50,13 +50,11 @@ Scene::Scene()
 
 	this->moveLight = false;
 
-	this->mesh->setPos(glm::vec3(-812,0,-187.5f));
+	this->mesh->setPos(glm::vec3(0,10,0));
 
-	QuadTree2 *testTree = new QuadTree2();
 
-	testTree->createQuadTree(glm::vec3(0,0,0), 1000, 4);
 
-	testTree->addMesh(mesh);
+	
 }
 
 Scene::~Scene()
@@ -88,11 +86,30 @@ void Scene::Start()
 	//glm::vec3 spherePos2(-10, 20, 10);
 	//glm::vec3 spherePos3 = this->lightCamera->getPos() - glm::vec3(-100, 0, -100);
 	glm::vec3 terrainPos(-124, -10, -124);
+
+	QuadTree2 *testTree = new QuadTree2();
+
+	testTree->createQuadTree(glm::vec3(0, 0, 0), 100, 4);
+
+	testTree->addMesh(mesh);
 	
 	while (isRunning)
 	{
-		this->frustrum.updateFrustrum(this->camera->getViewPerspectiveMatrix());
-		//std::cout << (this->frustrum.dotInFrustrum(spherePos) ? "INSIDE" : "OUTSIDE") << std::endl;
+		this->frustrum.updateFrustrum(this->camera->getViewMatrix(), this->camera->getPerspectiveMatrix());
+
+		std::vector<Mesh*> meshes = testTree->getMeshes(&this->frustrum);
+
+		//std::cout << meshes.size() << std::endl;
+
+		
+		//float x = (glm::inverse(this->camera->getViewMatrix())[3][0]);
+		//float y = (glm::inverse(this->camera->getViewMatrix())[3][1]);
+		//float z = (glm::inverse(this->camera->getViewMatrix())[3][2]);
+		//std::cout <<"x: "<<x<<" y: "<< y<<" z: "<< z << std::endl;
+
+		//list<meshes> quadGetMeshes(Frustum)
+		//draw<listmehse>
+		//std::cout << (this->frustrum.dotInFrustrum(this->mesh->getPos()) ? "INSIDE" : "OUTSIDE") << std::endl;
 		GLfloat lightPos[3] = { this->lightCamera->getPos().x,this->lightCamera->getPos().y,this->lightCamera->getPos().z };
 		GLfloat camPos[3] = { this->camera->getPos().x,this->camera->getPos().y,this->camera->getPos().z };
 

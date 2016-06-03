@@ -28,11 +28,14 @@ private:
 		};
 	};
 	Plane planes[NUM_PLANES];
+	glm::vec3 frustumPos;
 public:
 	ViewFrustum();
 	~ViewFrustum();
-	void updateFrustrum(glm::mat4 viewProjection);
+	void updateFrustrum(glm::mat4 viewM, glm::mat4 projM);
 	bool dotInFrustrum(glm::vec3 pt);
+	bool quadeNodeInsFrustum(glm::vec3 pos, float halfLength);
 
+	glm::vec3 getFrustumPos();
 };
 

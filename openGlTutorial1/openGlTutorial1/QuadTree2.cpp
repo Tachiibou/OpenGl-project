@@ -21,3 +21,7 @@ void QuadTree2::addMesh(Mesh * mesh)
 {
 	node->addMesh(mesh);
 }
+
+std::vector<Mesh*> QuadTree2::getMeshes(ViewFrustum* frustum) {
+	return node->getMeshesInFrustum(frustum);
+}
