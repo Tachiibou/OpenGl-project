@@ -158,5 +158,5 @@ void Camera::look(float x, float y, float deltaTime)
 
 	this->viewMatrix = glm::lookAt(this->pos, this->pos + this->direction, this->up);
 
-	std::cout << "Camera Forw: " << glm::to_string(direction) << std::endl;
+	//std::cout << "Camera Forw: " << glm::to_string(direction) << std::endl;
 }

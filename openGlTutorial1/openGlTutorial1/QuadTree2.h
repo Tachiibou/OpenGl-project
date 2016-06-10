@@ -24,7 +24,7 @@ private:
 		QuadPos quadLocation; 
 
 		QuadNode(glm::vec3 pos, float halfSize, QuadPos location) {
-			std::cout<<"POS: " << glm::to_string(pos)<<" || SIZE: " << halfSize << std::endl;
+			//std::cout<<"POS: " << glm::to_string(pos)<<" || SIZE: " << halfSize << std::endl;
 			this->quadLocation = location;
 			this->Pos = pos;
 			this->halfSize = halfSize;
@@ -62,7 +62,7 @@ private:
 			}
 			else {
 				this->meshes.push_back(mesh);
-				std::cout << glm::to_string(Pos) << " || ADDED MESH YAO" << std::endl;
+				//std::cout << glm::to_string(Pos) << " || ADDED MESH YAO" << std::endl;
 			}
 			
 		}

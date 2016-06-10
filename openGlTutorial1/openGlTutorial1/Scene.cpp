@@ -99,7 +99,7 @@ void Scene::Start()
 
 		std::vector<Mesh*> meshes = testTree->getMeshes(&this->frustrum);
 
-		//std::cout << meshes.size() << std::endl;
+		std::cout << meshes.size() << std::endl;
 
 		
 		//float x = (glm::inverse(this->camera->getViewMatrix())[3][0]);
