@@ -5,6 +5,7 @@
 #include "glm\glm.hpp"
 #include "glm\gtx\transform.hpp"
 #include "Terrain.h"
+#include "ConstVariables.h"
 
 class Camera
 {
@@ -21,10 +22,12 @@ private:
 	int horizontalDir, verticalDir;
 	Terrain* terrain;
 	const int CAMERA_HEIGHT = 2;
-
+	Camera* stableCamera; // stable camera always keep leveled on the Y pos and rotates only in Y
+	bool activeStableCamera;
+	
 public:
 	Camera();
-	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar, Terrain* terrain );
+	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar, Terrain* terrain, bool stableCamera );
 	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float right, float bottom, float top, float zNear, float zFar);
 	~Camera();
 	
@@ -33,9 +36,15 @@ public:
 	glm::mat4 &getViewPerspectiveMatrix() const;
 	glm::vec3 &getPos();
 
+	glm::mat4 getStableViewMatrix()const;
+	glm::mat4 getStablePerspectiveMatrix()const;
+	glm::mat4 &getStableViewPerspectiveMatrix() const;
+	glm::vec3 &getStablePos();
+
 	void move(glm::vec3 dir);
 	void move(float x, float y, float z, float deltaTime);
 	void look(float x, float y, float deltaTime);
+
 };
 
 #endif

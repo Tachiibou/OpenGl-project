@@ -34,6 +34,24 @@ private:
 			}
 		}
 
+		void deleteNodes() {
+			if (children[UP_LEFT] != nullptr) {
+				for (unsigned int i = 0; i < QuadPos::NUM; i++)
+				{
+					children[i]->deleteNodes();
+					delete children[i];
+				}
+			}
+			
+			//for (unsigned int i = 0; i < QuadPos::NUM; i++)
+			//{
+			//	delete this;
+			//}
+
+			//delete[]children;
+		}
+
+
 		void insertQuadNodes(int depth) {
 			if (depth > 0) {
 				children[UP_LEFT] = new QuadNode(glm::vec3(Pos.x -( halfSize / 2), Pos.y, Pos.z + (halfSize / 2)), this->halfSize / 2, QuadPos::UP_LEFT);
@@ -50,7 +68,8 @@ private:
 		}
 
 		void addMesh(Mesh* mesh) {
-			if (children[UP_LEFT] != nullptr) {
+			if (children[UP_LEFT] != nullptr) { // if we have children
+
 				for (unsigned int i = 0; i < QuadPos::NUM; i++)
 				{
 					if (children[i]->intersects(mesh->getBoundingBox())) {
@@ -79,10 +98,11 @@ private:
 
 		std::vector<Mesh*> getMeshesInFrustum(ViewFrustum* frustum) {
 			std::vector<Mesh*> returnMeshes;
-			if (children[UP_LEFT] != nullptr) {
+			if (children[UP_LEFT] != nullptr) { // if we have children
+
 				for (unsigned int i = 0; i < QuadPos::NUM; i++)
 				{
-					//Checks if any quad corner is inside frustum OR if frustum is inside quad
+					//Checks if any quad corner/children is inside frustum OR if frustum is inside quad
 					if (frustum->quadeNodeInsFrustum(children[i]->Pos, children[i]->halfSize) || children[i]->intersects(frustum->getFrustumPos())) {
 						std::vector<Mesh*> tempMeshes  = children[i]->getMeshesInFrustum(frustum);
 

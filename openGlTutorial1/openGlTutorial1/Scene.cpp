@@ -32,7 +32,7 @@ Scene::Scene()
 	this->terrain->loadTerrain("./res/heightmapClone.png", 15);
 	this->mesh = r.getMesh();
 
-	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr);
+	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr,true);
 	//this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, -10, 10, -10, 10, -10, 200);
 	this->lightCamera = new Camera(glm::vec3(10,30,10), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, -100, 200);
 
@@ -95,7 +95,7 @@ void Scene::Start()
 	
 	while (isRunning)
 	{
-		this->frustrum.updateFrustrum(this->camera->getViewMatrix(), this->camera->getPerspectiveMatrix());
+		this->frustrum.updateFrustrum(this->camera->getStableViewMatrix(), this->camera->getStablePerspectiveMatrix());
 
 		std::vector<Mesh*> meshes = testTree->getMeshes(&this->frustrum);
 
@@ -117,6 +117,9 @@ void Scene::Start()
 		this->eventHandler();
 
 		this->display->Clear(0.0f, 0.15f, 0.3f, 1.0f);
+
+		
+
 		this->depthShader->Bind();
 		this->frameBuffer2->BindFrameBuffer();
 		this->depthShader->Update(*this->lightCamera);
@@ -171,6 +174,7 @@ void Scene::Start()
 		this->display->Update();
 		
 	}
+	delete testTree;
 }
 
 void Scene::eventHandler() 

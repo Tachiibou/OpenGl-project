@@ -9,6 +9,8 @@ QuadTree2::QuadTree2()
 
 QuadTree2::~QuadTree2()
 {
+	node->deleteNodes();
+	delete node;
 }
 
 void QuadTree2::createQuadTree(glm::vec3 pos, float halfSize, int depth) {

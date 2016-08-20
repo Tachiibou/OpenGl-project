@@ -105,10 +105,10 @@ bool ViewFrustum::quadeNodeInsFrustum(glm::vec3 pos, float halfLength) {
 	//std::cout<<"PLANE NEAR" << glm::to_string(planes[NEAR].normal) << std::endl;
 
 	//isInside = isInside || (dotInFrustrum(this->frustumPos));
-	glm::vec3 topLeft = glm::vec3(pos.x - halfLength, 0, pos.z + halfLength);
-	glm::vec3 topRight = glm::vec3(pos.x + halfLength, 0, pos.z + halfLength);
-	glm::vec3 botLeft = glm::vec3(pos.x - halfLength, 0, pos.z - halfLength);
-	glm::vec3 botRight = glm::vec3(pos.x + halfLength, 0, pos.z - halfLength);
+	glm::vec3 topLeft = glm::vec3(pos.x - halfLength, pos.y, pos.z + halfLength);
+	glm::vec3 topRight = glm::vec3(pos.x + halfLength, pos.y, pos.z + halfLength);
+	glm::vec3 botLeft = glm::vec3(pos.x - halfLength, pos.y, pos.z - halfLength);
+	glm::vec3 botRight = glm::vec3(pos.x + halfLength, pos.y, pos.z - halfLength);
 
 	if (dotInFrustrum(topLeft))
 		isInside = true;

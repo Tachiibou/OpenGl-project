@@ -1,12 +1,13 @@
 #include "Camera.h"
 #include <iostream>
 #include "glm/ext.hpp"
+
 Camera::Camera()
 {
 }
 
 
-Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar, Terrain* terrain){
+Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar, Terrain* terrain, bool stableCamera){
 	this->terrain = terrain;
 	this->pos = pos;
 	this->up = up;
@@ -37,6 +38,11 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 		cos(this->horizontalAngle - 3.14f / 2.0f)
 		);
 	
+	this->activeStableCamera = stableCamera;
+
+	if (this->activeStableCamera) {
+		this->stableCamera = new Camera(pos, up, forward, fov, aspect, zNear, zFar, nullptr, false);
+	}
 }
 
 Camera::Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float right, float bottom, float top, float zNear, float zFar) {
@@ -63,10 +69,14 @@ Camera::Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float
 		cos(this->horizontalAngle - 3.14f / 2.0f)
 		);
 
+	activeStableCamera = false;
+
 }
 
 Camera::~Camera()
 {
+	if (activeStableCamera)
+		delete stableCamera;
 }
 
 glm::mat4 Camera::getViewMatrix()const
@@ -89,6 +99,26 @@ glm::vec3 & Camera::getPos()
 	return this->pos;
 }
 
+glm::mat4 Camera::getStableViewMatrix()const
+{
+	return this->stableCamera->viewMatrix;
+}
+
+glm::mat4 Camera::getStablePerspectiveMatrix()const
+{
+	return this->stableCamera->perspectiveMatrix;
+}
+
+glm::mat4 & Camera::getStableViewPerspectiveMatrix() const
+{
+	return this->stableCamera->perspectiveMatrix * this->stableCamera->viewMatrix;
+}
+
+glm::vec3 & Camera::getStablePos()
+{
+	return this->stableCamera->pos;
+}
+
 void Camera::move(glm::vec3 dir)
 {
 	this->pos += /*glm::normalize(this->forward -*/ dir;
@@ -97,6 +127,8 @@ void Camera::move(glm::vec3 dir)
 
 void Camera::move(float x, float y, float z, float deltaTime)
 {
+
+	
 
 	//if (y == 0)
 	//	this->direction = glm::vec3(this->direction.x, 0,  this->direction.z);
@@ -134,10 +166,24 @@ void Camera::move(float x, float y, float z, float deltaTime)
 	
 
 	this->viewMatrix = glm::lookAt(this->pos, this->pos + this->direction, this->up);
+
+	if (activeStableCamera) {
+		stableCamera->pos = glm::vec3(pos.x, 0, pos.z);
+		stableCamera->viewMatrix = glm::lookAt(this->stableCamera->pos, this->stableCamera->pos + this->stableCamera->direction, this->stableCamera->up);
+		//std::cout << "STABLE: " << glm::to_string(stableCamera->pos) << glm::to_string(stableCamera->direction) << std::endl;
+		//std::cout << "main: " << glm::to_string(pos) << glm::to_string(direction) << std::endl;
+
+
+		//stableCamera->move(x, 0, z, deltaTime);
+	}
+
+	
 }
 
 void Camera::look(float x, float y, float deltaTime)
 {
+
+	
 	if (x < 10)
 		this->horizontalAngle -= this->mouseSpeed * deltaTime * x;
 	if (y < 10)
@@ -157,6 +203,14 @@ void Camera::look(float x, float y, float deltaTime)
 	this->up = glm::cross(this->right, this->direction);
 
 	this->viewMatrix = glm::lookAt(this->pos, this->pos + this->direction, this->up);
+
+	if (activeStableCamera) {
+		this->stableCamera->direction = glm::vec3(direction.x, 0, direction.z);
+		this->stableCamera->right = this->right;
+		this->stableCamera->up = glm::vec3(0, 1, 0);
+		this->stableCamera->viewMatrix = glm::lookAt(this->stableCamera->pos, this->stableCamera->pos + this->stableCamera->direction, this->stableCamera->up);
+	}
+		//stableCamera->look(x, 0, deltaTime);
 
 	//std::cout << "Camera Forw: " << glm::to_string(direction) << std::endl;
 }
