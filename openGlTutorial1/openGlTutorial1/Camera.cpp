@@ -18,8 +18,6 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 
 	if (this->terrain != nullptr && (this->pos.x < this->terrain->getWidth() && this->pos.z < this->terrain->getLength()) && (this->pos.x >= 0 && this->pos.z >= 0)) {
 		this->pos.y = terrain->getHeightAt(this->pos.x, this->pos.z) + CAMERA_HEIGHT;
-		this->pos.x = terrain->getWidth() - 10;
-		this->pos.z = terrain->getLength() - 10;
 	}
 
 	this->horizontalAngle = 3.14f;
@@ -213,4 +211,10 @@ void Camera::look(float x, float y, float deltaTime)
 		//stableCamera->look(x, 0, deltaTime);
 
 	//std::cout << "Camera Forw: " << glm::to_string(direction) << std::endl;
+}
+
+void Camera::setPos(glm::vec3 pos)
+{
+	this->viewMatrix = glm::lookAt(pos, pos + forward, up);
+	this->pos = pos;
 }

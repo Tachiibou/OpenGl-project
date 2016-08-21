@@ -141,6 +141,7 @@ void Mesh::setPos(glm::vec3 pos)
 {
 	this->worldPos = pos;
 	this->bbox.pos = pos;
+	this->worldMatrix = glm::translate(this->worldPos);
 }
 
 void Mesh::setWorldMatrix(glm::mat4 worldMatrix)

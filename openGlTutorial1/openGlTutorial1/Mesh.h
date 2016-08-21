@@ -2,6 +2,7 @@
 #define MESH_H
 #include "glm\glm.hpp"
 #include "GL\glew.h"
+#include "glm\gtx\transform.hpp"
 #include "Texture.h"
 // Vertex class can be used for normals aswell
 class Vertex {

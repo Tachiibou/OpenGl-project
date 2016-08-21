@@ -45,6 +45,8 @@ public:
 	void move(float x, float y, float z, float deltaTime);
 	void look(float x, float y, float deltaTime);
 
+	void setPos(glm::vec3 pos);
+
 };
 
 #endif

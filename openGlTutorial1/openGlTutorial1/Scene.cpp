@@ -34,7 +34,7 @@ Scene::Scene()
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr,true);
 	//this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, -10, 10, -10, 10, -10, 200);
-	this->lightCamera = new Camera(glm::vec3(10,30,10), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, -100, 200);
+	this->lightCamera = new Camera(glm::vec3(0,80,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, -100, 200);
 
 	this->frameBuffer = new FrameBuffer();
 	this->frameBuffer->CreateFrameBuffer(4,1024,768);
@@ -50,7 +50,7 @@ Scene::Scene()
 
 	this->moveLight = false;
 
-	this->mesh->setPos(glm::vec3(0,10,0));
+	this->mesh->setPos(glm::vec3(124,20,124));
 
 
 
@@ -85,16 +85,18 @@ void Scene::Start()
 	//glm::vec3 spherePos1(20, 20, 10);
 	//glm::vec3 spherePos2(-10, 20, 10);
 	//glm::vec3 spherePos3 = this->lightCamera->getPos() - glm::vec3(-100, 0, -100);
-	glm::vec3 terrainPos(-124, -10, -124);
+	//glm::vec3 terrainPos(-124, -10, -124);
+	glm::vec3 terrainPos(0, 0, 0);
 
 	QuadTree2 *testTree = new QuadTree2();
 
-	testTree->createQuadTree(glm::vec3(0, 0, 0), 100, 4);
+	testTree->createQuadTree(glm::vec3(0, 0, 0), 1000, 5);
 
 	testTree->addMesh(mesh);
 	
 	while (isRunning)
 	{
+		this->lightCamera->setPos(this->camera->getPos() + glm::vec3(0,40,0));
 		this->frustrum.updateFrustrum(this->camera->getStableViewMatrix(), this->camera->getStablePerspectiveMatrix());
 
 		std::vector<Mesh*> meshes = testTree->getMeshes(&this->frustrum);
@@ -123,12 +125,12 @@ void Scene::Start()
 		this->depthShader->Bind();
 		this->frameBuffer2->BindFrameBuffer();
 		this->depthShader->Update(*this->lightCamera);
-		worldMatrix = glm::translate(glm::mat4(1.0f), mesh->getPos());
-		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
+		worldMatrix = mesh->getWorldMatrix();
+		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &this->mesh->getWorldMatrix()[0][0]);
 		//if(this->frustrum.dotInFrustrum(spherePos))
 		this->mesh->Draw();
 
-		worldMatrix = glm::translate(glm::mat4(1.0f), terrainPos);
+		worldMatrix = glm::translate(terrainPos);
 		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer2->UnbindFrameBuffer();
@@ -138,7 +140,7 @@ void Scene::Start()
 		this->geoShader->Update(*this->camera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
-		worldMatrix = glm::translate(glm::mat4(1.0f), mesh->getPos());
+		worldMatrix = glm::translate(mesh->getPos());
 		glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		//if (this->frustrum.dotInFrustrum(spherePos))
 			this->mesh->Draw();
@@ -151,7 +153,7 @@ void Scene::Start()
 		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "lightViewMatrix"), 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "lightPerspectiveMatrix"), 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
 
-		worldMatrix = glm::translate(glm::mat4(1.0f), terrainPos);
+		worldMatrix = glm::translate(terrainPos);
 		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer->UnbindFrameBuffer();

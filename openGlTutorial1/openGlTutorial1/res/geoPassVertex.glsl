@@ -32,7 +32,7 @@ void main()
 	VSpos = vec3(worldMatrix * vec4(position, 1));
 	VSuv = uv;
 	VSnormal = normal;
-	VLightPos = vec3(bias * lightPerspectiveMatrix * lightViewMatrix * worldMatrix * vec4(position,1));
+	VLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * worldMatrix * vec4(position,1));
 	VStransformedPos = viewMatrix*worldMatrix*vec4(position,1);
 	//fragLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * vec4(position,1));
 }
