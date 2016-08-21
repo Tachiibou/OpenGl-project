@@ -19,6 +19,7 @@ public:
 	void CreateShader(const std::string& text);
 	void BindShader();
 	void DispatchCompute(int width, int height, int depth);
+	void DispatchCompute(int width, int height, int depth,int passes);
 	GLint GetUniformLocation(std::string name);
 	void Uniform1f(std::string name, float number);
 	void UniformVec3(std::string name, glm::vec3 vector);

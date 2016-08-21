@@ -73,6 +73,14 @@ void FilterComputeShader::DispatchCompute(int width, int height, int depth)
 	glDispatchCompute(width, height, depth);
 }
 
+void FilterComputeShader::DispatchCompute(int width, int height, int depth, int passes)
+{
+	for (size_t i = 0; i < passes; i++)
+	{
+		glDispatchCompute(width, height, depth);
+	}
+}
+
 GLint FilterComputeShader::GetUniformLocation(std::string name)
 {
 	GLint d = glGetUniformLocation(this->program, name.c_str());
