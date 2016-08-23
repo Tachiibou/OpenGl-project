@@ -13,8 +13,6 @@ Scene::Scene()
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
 
-	this->shader = new Shader("backFace", true);
-	this->shader2 = new Shader("texture");
 	this->geoShader = new Shader("geoPass", true);
 	this->lightShader = new Shader("lightPass");
 	this->depthShader = new Shader("depth");
@@ -32,7 +30,7 @@ Scene::Scene()
 	this->terrain->loadTerrain("./res/heightmapClone.png", .4f);
 	
 
-	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, terrain,true);
+	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr,true);
 	//this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, -10, 10, -10, 10, -10, 200);
 	this->lightCamera = new Camera(glm::vec3(0,80,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, -100, 200);
 
@@ -55,11 +53,12 @@ Scene::Scene()
 	
 
 
-	for (size_t i = 0; i < 8; i++)
+	for (size_t i = 0; i < 2; i++)
 	{
 		meshes.push_back(r.getMesh());
 
 		meshes.back()->setPos(glm::vec3(124 + (i % 2 != 0 ? i * 3 : 0), 20, 124+(i%2==0? i*3:0)));
+		//meshes.back()->setPos(glm::vec3(124 , 20-i*5, 124));
 	}
 	
 
@@ -85,9 +84,7 @@ Scene::~Scene()
 {
 	delete this->camera;
 	delete this->display;
-	delete this->shader;
 	delete this->terrain;
-	delete this->shader2;
 	delete this->frameBuffer;
 	delete this->geoShader;
 	delete this->lightShader;
@@ -177,7 +174,7 @@ void Scene::Start()
 			//if(this->frustrum.dotInFrustrum(spherePos))
 			meshesInQuadTree[i]->Draw();
 		}
-
+		
 		this->terrainShader->Bind();
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->terrainShader->getProgram(), "depth"), 0, 3);
 		//GLuint DERP = glGetUniformLocation(this->terrainShader->getProgram(), "texture0");
@@ -198,10 +195,9 @@ void Scene::Start()
 		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1,30);
 
 		this->lightShader->Bind();
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture"),0);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture2"), 1);
-		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture3"), 2);
-		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "renderedTexture4"), 0,3);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "positionTexture"), 0);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "normalTexture"), 1);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "colorTexture"), 2);
 		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, lightPos);
 		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "viewPos"), 1, camPos);
 		this->RenderQuad();

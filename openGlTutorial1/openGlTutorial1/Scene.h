@@ -25,8 +25,7 @@ private:
 	SDL_Event sdlEvent;
 	Display* display;
 	Camera* camera, *lightCamera;
-	Shader* shader, *shader2,
-		  *geoShader, *lightShader, *depthShader, *terrainShader;
+	Shader* geoShader, *lightShader, *depthShader, *terrainShader;
 
 	std::vector<Mesh*> meshes;
 	Terrain* terrain;

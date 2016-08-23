@@ -179,9 +179,6 @@
     <ClInclude Include="ViewFrustum.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\backFaceFragment.glsl" />
-    <None Include="res\backFaceGeometry.glsl" />
-    <None Include="res\backFaceVertex.glsl" />
     <None Include="res\basicFragment.glsl" />
     <None Include="res\basicVertex.glsl" />
     <None Include="res\blur.glsl" />
@@ -195,8 +192,6 @@
     <None Include="res\terrainFragment.glsl" />
     <None Include="res\terrainGeometry.glsl" />
     <None Include="res\terrainVertex.glsl" />
-    <None Include="res\textureFragment.glsl" />
-    <None Include="res\textureVertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

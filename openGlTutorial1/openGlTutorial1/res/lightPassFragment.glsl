@@ -3,9 +3,9 @@
 in vec2 fragUv;
 out vec3 fragColor;
 
-uniform sampler2D renderedTexture;
-uniform sampler2D renderedTexture2;
-uniform sampler2D renderedTexture3;
+uniform sampler2D positionTexture;
+uniform sampler2D normalTexture;
+uniform sampler2D colorTexture;
 uniform sampler2D renderedTexture4;
 
 uniform vec3 lightPos;
@@ -14,9 +14,9 @@ uniform vec3 viewPos;
 void main()
 {
 	// Get the data from the textures
-	vec3 fragPos = texture2D(renderedTexture, fragUv).xyz;
-	vec3 fragNormal = texture2D(renderedTexture2, fragUv).xyz;
-	vec3 fragDiff = texture2D(renderedTexture3, fragUv).xyz;
+	vec3 fragPos = texture2D(positionTexture, fragUv).xyz;
+	vec3 fragNormal = texture2D(normalTexture, fragUv).xyz;
+	vec3 fragDiff = texture2D(colorTexture, fragUv).xyz;
 
 	vec3 lighting = fragDiff * 0.1; //Hardcoded ambient
 	vec3 viewDir = normalize(viewPos - fragPos);

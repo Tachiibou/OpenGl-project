@@ -76,21 +76,6 @@
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />
     <None Include="res\basicVertex.glsl" />
-    <None Include="res\backFaceFragment.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="res\backFaceGeometry.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="res\backFaceVertex.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="res\textureFragment.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="res\textureVertex.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="res\geoPassFragment.glsl">
       <Filter>Shaders</Filter>
     </None>
