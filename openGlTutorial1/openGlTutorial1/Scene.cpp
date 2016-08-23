@@ -18,7 +18,7 @@ Scene::Scene()
 	this->geoShader = new Shader("geoPass", true);
 	this->lightShader = new Shader("lightPass");
 	this->depthShader = new Shader("depth");
-	this->terrainShader = new Shader("terrain");
+	this->terrainShader = new Shader("terrain", true);
 	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
 	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
 	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
@@ -121,7 +121,7 @@ void Scene::Start()
 
 		meshesInQuadTree = quadTree->getMeshes(&this->frustrum);
 
-		std::cout << meshesInQuadTree.size() << std::endl;
+		//std::cout << meshesInQuadTree.size() << std::endl;
 
 		
 		//float x = (glm::inverse(this->camera->getViewMatrix())[3][0]);

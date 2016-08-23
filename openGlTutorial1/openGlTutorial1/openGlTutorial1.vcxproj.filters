@@ -121,5 +121,8 @@
     <None Include="res\geoPassGeometry.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="res\terrainGeometry.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

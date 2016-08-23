@@ -5,11 +5,11 @@ layout(location = 1) in vec2 uv;
 layout(location = 2) in vec3 normal;
 layout(location = 3) in float heightPercentage;
 
-out vec3 fragPos;
-out vec2 fragUv;
-out vec3 fragNormal;
-out vec3 fragLightPos;
-out float fragmentHeightPercentage;
+out vec3 VSPos;
+out vec2 VSUv;
+out vec3 VSNormal;
+out vec3 VSLightPos;
+out float VSHeightPercentage;
 
 uniform mat4 worldMatrix;
 uniform mat4 viewMatrix;
@@ -30,11 +30,11 @@ void main()
 
 	gl_Position = perspectiveMatrix * viewMatrix * worldMatrix * vec4(position, 1);
 	
-	fragPos = vec3(worldMatrix * vec4(position, 1));
-	fragUv = uv;
-	fragNormal = normal;
-	fragLightPos = vec3(bias * lightPerspectiveMatrix * lightViewMatrix * worldMatrix * vec4(position,1));
+	VSPos = vec3(worldMatrix * vec4(position, 1));
+	VSUv = uv;
+	VSNormal = normal;
+	VSLightPos = vec3(bias * lightPerspectiveMatrix * lightViewMatrix * worldMatrix * vec4(position,1));
 
-	fragmentHeightPercentage = heightPercentage;
+	VSHeightPercentage = heightPercentage;
 	//fragLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * vec4(position,1));
 }

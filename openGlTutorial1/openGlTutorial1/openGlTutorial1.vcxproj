@@ -193,6 +193,7 @@
     <None Include="res\lightPassFragment.glsl" />
     <None Include="res\lightPassVertex.glsl" />
     <None Include="res\terrainFragment.glsl" />
+    <None Include="res\terrainGeometry.glsl" />
     <None Include="res\terrainVertex.glsl" />
     <None Include="res\textureFragment.glsl" />
     <None Include="res\textureVertex.glsl" />

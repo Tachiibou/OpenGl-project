@@ -19,7 +19,7 @@ const float highMax = .7f;
 vec3 calulateBlend(){
 	float amount = clamp(fragmentHeightPercentage / highMax, 0, 1);
 
-	vec3 firstColor = (1-amount) * vec3(texture2D(texture1, fragUv)); //Lower
+	vec3 firstColor = (1-amount) * vec3(texture2D(texture1, fragUv)); //Lower 
 	vec3 secondColor = amount * vec3(texture2D(texture0, fragUv));    //Upper
 
 	return mix(vec3(texture2D(texture0, fragUv)),vec3(texture2D(texture1, fragUv)),fragmentHeightPercentage);
