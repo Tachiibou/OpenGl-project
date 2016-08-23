@@ -26,11 +26,13 @@ private:
 	Camera* camera, *lightCamera;
 	Shader* shader, *shader2,
 		  *geoShader, *lightShader, *depthShader, *terrainShader;
-	Mesh* mesh;
+
+	std::vector<Mesh*> meshes;
 	Terrain* terrain;
 	Vertex vertices[4];
 	GLuint quadVAO = 0;
 	GLuint quadVBO;
+	QuadTree2* quadTree;
 
 	glm::vec3 cameraMove;
 	bool mouseWarp;

@@ -25,6 +25,8 @@ private:
 
 	void smoothTerrain();
 	void setNormals();
+
+	glm::vec3 position;
 public:
 	float getHeightAt(int x, int z);
 	Terrain();
@@ -35,6 +37,8 @@ public:
 
 	int getWidth();
 	int getLength();
+
+	glm::vec3 getPos();
 };
 
 #endif

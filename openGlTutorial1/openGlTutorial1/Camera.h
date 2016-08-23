@@ -40,6 +40,7 @@ public:
 	glm::mat4 getStablePerspectiveMatrix()const;
 	glm::mat4 &getStableViewPerspectiveMatrix() const;
 	glm::vec3 &getStablePos();
+	glm::mat4 getStableRotatedViewMatrix()const;
 
 	void move(glm::vec3 dir);
 	void move(float x, float y, float z, float deltaTime);

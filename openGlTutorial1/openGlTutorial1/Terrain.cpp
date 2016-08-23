@@ -24,6 +24,7 @@ Terrain::~Terrain()
 }
 
 void Terrain::Initialize(int width, int length) {
+	position = glm::vec3(0);
 	this->length = length;
 	this->width = width;
 	scaleSize = .4f;
@@ -283,4 +284,8 @@ int Terrain::getWidth() {
 }
 int Terrain::getLength() {
 	return this->length;
+}
+
+glm::vec3 Terrain::getPos() {
+	return this->position;
 }

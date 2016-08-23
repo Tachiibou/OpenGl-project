@@ -102,6 +102,10 @@ glm::mat4 Camera::getStableViewMatrix()const
 	return this->stableCamera->viewMatrix;
 }
 
+glm::mat4 Camera::getStableRotatedViewMatrix()const {
+	return glm::lookAt(this->stableCamera->pos, this->stableCamera->pos + glm::normalize(this->stableCamera->direction + glm::vec3(1.f,0,0)), this->stableCamera->up);
+}
+
 glm::mat4 Camera::getStablePerspectiveMatrix()const
 {
 	return this->stableCamera->perspectiveMatrix;
