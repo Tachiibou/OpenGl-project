@@ -19,6 +19,7 @@ using namespace constVar;
 class Scene
 {
 private:
+	bool reduceAspect;
 	ViewFrustum frustrum;
 	bool isRunning;
 	SDL_Event sdlEvent;

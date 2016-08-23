@@ -30,7 +30,7 @@ private:
 public:
 	float getHeightAt(int x, int z);
 	Terrain();
-	void loadTerrain(const char*fileName, float maxHeight);
+	void loadTerrain(const char*fileName, float terrainScaler);
 	~Terrain();
 	void Initialize(int width, int length);
 	Mesh*getMesh();

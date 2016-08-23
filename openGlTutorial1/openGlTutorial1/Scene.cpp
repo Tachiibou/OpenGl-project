@@ -3,7 +3,7 @@
 Scene::Scene()
 {
 	
-	
+	this->reduceAspect = false;
 	this->isRunning = true;
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 
@@ -29,10 +29,10 @@ Scene::Scene()
 
 	//this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
 	this->terrain = new Terrain();
-	this->terrain->loadTerrain("./res/heightmapClone.png", 15);
+	this->terrain->loadTerrain("./res/heightmapClone.png", .4f);
 	
 
-	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr,true);
+	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, terrain,true);
 	//this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, -10, 10, -10, 10, -10, 200);
 	this->lightCamera = new Camera(glm::vec3(0,80,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, -100, 200);
 
@@ -55,17 +55,17 @@ Scene::Scene()
 	
 
 
-	for (size_t i = 0; i < 5; i++)
+	for (size_t i = 0; i < 8; i++)
 	{
 		meshes.push_back(r.getMesh());
 
-		meshes.back()->setPos(glm::vec3(124, 20, 124+i*3));
+		meshes.back()->setPos(glm::vec3(124 + (i % 2 != 0 ? i * 3 : 0), 20, 124+(i%2==0? i*3:0)));
 	}
 	
 
 	this->quadTree = new QuadTree2();
 
-	this->quadTree->createQuadTree(glm::vec3(0, 0, 0), 1000, 5);
+	this->quadTree->createQuadTree(glm::vec3(124, 0, 124), 256, 5);
 
 
 
@@ -98,6 +98,10 @@ Scene::~Scene()
 	delete this->quadTree;
 
 	//Delete vector of meshes
+	for (size_t i = 0; i < meshes.size(); i++)
+	{
+		delete meshes.at(i);
+	}
 }
 
 void Scene::Start() 
@@ -117,11 +121,11 @@ void Scene::Start()
 	while (isRunning)
 	{
 		this->lightCamera->setPos(this->camera->getPos() + glm::vec3(0,40,0));
-		this->frustrum.updateFrustrum(this->camera->getStableRotatedViewMatrix(), this->camera->getStablePerspectiveMatrix());
+		this->frustrum.updateFrustrum(this->camera->getStableViewMatrix(),(reduceAspect? this->camera->getStableTinyPerspectiveMatrix() : this->camera->getStablePerspectiveMatrix()));
 
 		meshesInQuadTree = quadTree->getMeshes(&this->frustrum);
 
-		//std::cout << meshesInQuadTree.size() << std::endl;
+		std::cout << meshesInQuadTree.size() << std::endl;
 
 		
 		//float x = (glm::inverse(this->camera->getViewMatrix())[3][0]);
@@ -273,6 +277,9 @@ void Scene::keyBoardCheck()
 
 	if (this->sdlEvent.key.keysym.sym == SDLK_SPACE)
 		this->moveLight = !this->moveLight;
+
+	if (this->sdlEvent.key.keysym.sym == SDLK_q)
+		this->reduceAspect = !reduceAspect;
 }
 
 void Scene::mouseCheck()

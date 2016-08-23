@@ -16,6 +16,7 @@ ResourceLoader::ResourceLoader(std::string fileName)
 	this->vertexInfoArray = nullptr;
 	this->triangleVert = nullptr;
 	this->indexArr = nullptr;
+	loadMesh();
 }
 
 
@@ -32,19 +33,21 @@ ResourceLoader::~ResourceLoader()
 
 	if (this->indexArr != nullptr)
 		delete[] this->indexArr;
+
+	if (this->texture != nullptr)
+		delete texture;
 }
 
-Mesh* ResourceLoader::getMesh()
-{
+void ResourceLoader::loadMesh() {
 	std::string line, mtlFileName, textureFileName;
 	std::ifstream myfile(this->fileName);
-	std::vector<glm::vec3> vertexVector;
 	std::vector<glm::vec2> UVector;
 	std::vector<glm::vec3> normalVector;
 	std::vector<VertexInfo> vertexInfoVector;
-	Texture* texture = nullptr;
+	texture = nullptr;
 
-	int vertexAmount = 0, indexAmount = 0;
+	vertexAmount = 0;
+	indexAmount = 0;
 
 	if (myfile.is_open())
 	{
@@ -52,12 +55,12 @@ Mesh* ResourceLoader::getMesh()
 		{
 
 			if (line.substr(0, 2) == "v ") //vertex
-				this->insertVertex(line,vertexVector); // insert vertex from line into vector
-			
+				this->insertVertex(line, vertexVector); // insert vertex from line into vector
+
 
 			else if (line.substr(0, 2) == "vt") // UV
 				this->insertUV(line, UVector);
-			
+
 
 			else if (line.substr(0, 2) == "vn") // normal
 				this->insertNormal(line, normalVector);
@@ -65,7 +68,7 @@ Mesh* ResourceLoader::getMesh()
 
 			else if (line.substr(0, 2) == "f ") //face
 				this->createVerticesFromLine(line, vertexVector, normalVector, UVector, vertexInfoVector);
-		
+
 			else if (line.substr(0, 2) == "mt") // find MTL filename
 				mtlFileName = this->getSecondWord(line);
 		}
@@ -92,21 +95,34 @@ Mesh* ResourceLoader::getMesh()
 				this->ni = std::stof(this->getSecondWord(line));
 		}
 	}
-	
+
 	if (!textureFileName.empty())
 	{
 		textureFileName = this->OBJ_DIR + textureFileName;
 		texture = new Texture(textureFileName.c_str());
 	}
-	
+
+	if (vertexArray != nullptr) {
+		delete this->vertexArray;
+		delete this->vertexInfoArray;
+		delete this->triangleVert;
+		delete this->indexArr;
+	}
+
 	indexAmount = vertexInfoVector.size();
 	vertexAmount = vertexInfoVector.size();
 	this->indexArr = this->getIndexArr(indexAmount);
+
+
 
 	this->vertexArray = this->createVertices(vertexVector);
 	this->vertexInfoArray = this->VertexInfoVectorToArray(vertexInfoVector);
 
 	this->triangleVert = this->makeStruct(vertexInfoVector);
+}
+
+Mesh* ResourceLoader::getMesh()
+{
 	Mesh* mesh = new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert, texture);
 	mesh->createBoundingBox(getMeshHalfSize(&vertexVector));
 	return mesh;

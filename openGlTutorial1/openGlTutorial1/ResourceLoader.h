@@ -42,6 +42,9 @@ private:
 	glm::vec3 kd, ka, tf;
 	int illum;
 	float ni;
+	int vertexAmount, indexAmount;
+	Texture* texture;
+	std::vector<glm::vec3> vertexVector;
 
 	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
 	Vertex* createVertices(std::vector<glm::vec3> pos);
@@ -65,6 +68,7 @@ public:
 	void printFile();
 	~ResourceLoader();
 	Mesh* getMesh();
+	void loadMesh();
 	
 };
 

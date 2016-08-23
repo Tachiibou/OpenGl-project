@@ -15,6 +15,7 @@ private:
 
 	glm::vec3 direction, right;
 
+	float fov, aspect, zNear, zFar;
 	float verticalAngle, horizontalAngle;
 	float moveSpeed, mouseSpeed;
 
@@ -24,6 +25,7 @@ private:
 	const int CAMERA_HEIGHT = 2;
 	Camera* stableCamera; // stable camera always keep leveled on the Y pos and rotates only in Y
 	bool activeStableCamera;
+	glm::mat4 stableTinyPerspectiveMatrix;
 	
 public:
 	Camera();
@@ -40,7 +42,7 @@ public:
 	glm::mat4 getStablePerspectiveMatrix()const;
 	glm::mat4 &getStableViewPerspectiveMatrix() const;
 	glm::vec3 &getStablePos();
-	glm::mat4 getStableRotatedViewMatrix()const;
+	glm::mat4 getStableTinyPerspectiveMatrix()const;
 
 	void move(glm::vec3 dir);
 	void move(float x, float y, float z, float deltaTime);

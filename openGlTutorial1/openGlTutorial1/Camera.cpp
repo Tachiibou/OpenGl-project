@@ -14,6 +14,10 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 	this->forward = forward;
 	this->viewMatrix = glm::lookAt(pos, pos + forward, up);
 	this->perspectiveMatrix = glm::perspective(fov, aspect, zNear, zFar);
+	this->fov = fov;
+	this->aspect = aspect;
+	this->zNear = zNear;
+	this->zFar = zFar;
 
 
 	if (this->terrain != nullptr && (this->pos.x < this->terrain->getWidth() && this->pos.z < this->terrain->getLength()) && (this->pos.x >= 0 && this->pos.z >= 0)) {
@@ -40,6 +44,7 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 
 	if (this->activeStableCamera) {
 		this->stableCamera = new Camera(pos, up, forward, fov, aspect, zNear, zFar, nullptr, false);
+		stableTinyPerspectiveMatrix = glm::perspective(fov, aspect/3, zNear, zFar);
 	}
 }
 
@@ -102,8 +107,8 @@ glm::mat4 Camera::getStableViewMatrix()const
 	return this->stableCamera->viewMatrix;
 }
 
-glm::mat4 Camera::getStableRotatedViewMatrix()const {
-	return glm::lookAt(this->stableCamera->pos, this->stableCamera->pos + glm::normalize(this->stableCamera->direction + glm::vec3(1.f,0,0)), this->stableCamera->up);
+glm::mat4 Camera::getStableTinyPerspectiveMatrix()const {
+	return stableTinyPerspectiveMatrix;
 }
 
 glm::mat4 Camera::getStablePerspectiveMatrix()const

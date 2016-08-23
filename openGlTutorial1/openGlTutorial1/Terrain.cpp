@@ -41,7 +41,7 @@ void Terrain::Initialize(int width, int length) {
 }
 
 
-void Terrain::loadTerrain(const char*fileName, float maxHeight) {
+void Terrain::loadTerrain(const char*fileName, float terrainScaler) {
 	int t_width, t_height, t_numComponent;
 	unsigned char* height_data = stbi_load(fileName, &t_width, &t_height, &t_numComponent, 0);
 	
@@ -85,7 +85,7 @@ void Terrain::loadTerrain(const char*fileName, float maxHeight) {
 					}
 				}
 
-				setHeightAt(x, y, total);
+				setHeightAt(x, y, total * terrainScaler);
 			}
 		}
 		stbi_image_free(height_data);
