@@ -54,6 +54,8 @@ private:
 
 	void RenderQuad();
 
+	void instantiateQuadTree();
+
 public:
 	Scene();
 	~Scene();

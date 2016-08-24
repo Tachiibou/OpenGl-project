@@ -17,21 +17,13 @@ Scene::Scene()
 	this->lightShader = new Shader("lightPass");
 	this->depthShader = new Shader("depth");
 	this->terrainShader = new Shader("terrain", true);
-	vertices[0] = Vertex(glm::vec3(-.5f, -.5f, 0));
-	vertices[1] = Vertex(glm::vec3(0, 0.5f, 0));
-	vertices[2] = Vertex(glm::vec3(.5f, -0.5f, 0));
-	vertices[3] = Vertex(glm::vec3(1.5f, 0.5f, 0));
 
-	int indices[]{ 0,1,2,
-					1,2,3};
 
-	//this->mesh = new Mesh(vertices, sizeof(vertices) / sizeof(vertices[0]), indices, sizeof(indices) / sizeof(indices[0]));
 	this->terrain = new Terrain();
 	this->terrain->loadTerrain("./res/heightmapClone.png", .4f);
 	
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr,true);
-	//this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, -10, 10, -10, 10, -10, 200);
 	this->lightCamera = new Camera(glm::vec3(0,80,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, -100, 200);
 
 	this->frameBuffer = new FrameBuffer();
@@ -43,14 +35,13 @@ Scene::Scene()
 	this->frameBuffer2->UnbindFrameBuffer();
 	
 	this->filterComputeShader = new FilterComputeShader("derp");
-	//this->filterComputeShader->LoadShader("./res/blur.glsl");
 	this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
 
 	this->moveLight = false;
 
+	
 	ResourceLoader r = ResourceLoader("obj/sphere1.obj");
 
-	
 
 
 	for (size_t i = 0; i < 2; i++)
@@ -62,22 +53,27 @@ Scene::Scene()
 	}
 	
 
+	
+	instantiateQuadTree();
+
+
+	
+}
+
+void Scene::instantiateQuadTree() {
 	this->quadTree = new QuadTree2();
 
+	//Instantiates the quad tree, Position, Size of biggest quad, Depth
 	this->quadTree->createQuadTree(glm::vec3(124, 0, 124), 256, 5);
 
 
 
-
+	//Adds meshes to the quad tree, will add right meach to corresponding quad.
 	for (size_t i = 0; i < meshes.size(); i++)
 	{
 		this->quadTree->addMesh(meshes[i]);
 
 	}
-	
-
-
-	
 }
 
 Scene::~Scene()
@@ -108,14 +104,9 @@ void Scene::Start()
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
 
 	glm::mat4 worldMatrix(1.0f);
-	
-	
-	//glm::vec3 spherePos1(20, 20, 10);
-	//glm::vec3 spherePos2(-10, 20, 10);
-	//glm::vec3 spherePos3 = this->lightCamera->getPos() - glm::vec3(-100, 0, -100);d
-	//glm::vec3 terrainPos(-124, -10, -124);
 
 	std::vector<Mesh*> meshesInQuadTree;
+	//Game loop
 	while (isRunning)
 	{
 		this->lightCamera->setPos(this->camera->getPos() + glm::vec3(0,40,0));
@@ -125,15 +116,6 @@ void Scene::Start()
 
 		std::cout << meshesInQuadTree.size() << std::endl;
 
-		
-		//float x = (glm::inverse(this->camera->getViewMatrix())[3][0]);
-		//float y = (glm::inverse(this->camera->getViewMatrix())[3][1]);
-		//float z = (glm::inverse(this->camera->getViewMatrix())[3][2]);
-		//std::cout <<"x: "<<x<<" y: "<< y<<" z: "<< z << std::endl;
-
-		//list<meshes> quadGetMeshes(Frustum)
-		//draw<listmehse>
-		//std::cout << (this->frustrum.dotInFrustrum(this->mesh->getPos()) ? "INSIDE" : "OUTSIDE") << std::endl;
 		GLfloat lightPos[3] = { this->lightCamera->getPos().x,this->lightCamera->getPos().y,this->lightCamera->getPos().z };
 		GLfloat camPos[3] = { this->camera->getPos().x,this->camera->getPos().y,this->camera->getPos().z };
 
@@ -151,9 +133,7 @@ void Scene::Start()
 
 		for (size_t i = 0; i < meshesInQuadTree.size(); i++)
 		{
-			worldMatrix = meshesInQuadTree[i]->getWorldMatrix();
 			glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &meshesInQuadTree[i]->getWorldMatrix()[0][0]);
-			//if(this->frustrum.dotInFrustrum(spherePos))
 			meshesInQuadTree[i]->Draw();
 		}
 
@@ -170,9 +150,7 @@ void Scene::Start()
 
 		for (size_t i = 0; i < meshesInQuadTree.size(); i++)
 		{
-			worldMatrix = meshesInQuadTree[i]->getWorldMatrix();
 			glUniformMatrix4fv(glGetUniformLocation(this->geoShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &meshesInQuadTree[i]->getWorldMatrix()[0][0]);
-			//if(this->frustrum.dotInFrustrum(spherePos))
 			meshesInQuadTree[i]->Draw();
 		}
 		
