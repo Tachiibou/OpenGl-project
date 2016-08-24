@@ -12,6 +12,7 @@ private:
 		TEXTURE2,
 		TEXTURE3,
 		TEXTURE4,
+		TEXTURE5,
 
 		NUM_TEXTURES
 	};

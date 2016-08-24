@@ -6,7 +6,7 @@ out vec3 fragColor;
 uniform sampler2D positionTexture;
 uniform sampler2D normalTexture;
 uniform sampler2D colorTexture;
-uniform sampler2D renderedTexture4;
+uniform sampler2D specularTexture;
 
 uniform vec3 lightPos;
 uniform vec3 viewPos;
@@ -34,5 +34,5 @@ void main()
 
 	lighting += diffuse + specular;
 	fragColor = lighting;
-	//fragColor = texture2D(renderedTexture4, fragUv).xyz;
+	//fragColor = texture2D(specularTexture, fragUv).xyz;
 }

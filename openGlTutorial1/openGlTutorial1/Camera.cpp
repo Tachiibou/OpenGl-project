@@ -43,7 +43,7 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 	this->activeStableCamera = stableCamera;
 
 	if (this->activeStableCamera) {
-		this->stableCamera = new Camera(pos, up, forward, fov, aspect, zNear, zFar, nullptr, false);
+		this->stableCamera = new Camera(glm::vec3(pos.x, 0, pos.z), up, forward, fov, aspect, zNear, zFar, nullptr, false);
 		stableTinyPerspectiveMatrix = glm::perspective(fov, aspect/3, zNear, zFar);
 	}
 }

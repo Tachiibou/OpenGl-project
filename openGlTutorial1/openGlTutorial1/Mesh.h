@@ -4,6 +4,7 @@
 #include "GL\glew.h"
 #include "glm\gtx\transform.hpp"
 #include "Texture.h"
+#include "Material.h"
 // Vertex class can be used for normals aswell
 class Vertex {
 public:
@@ -30,11 +31,11 @@ struct TriangleVertex
 	float u, v;
 	float xn, yn, zn;
 };
+
 class Mesh
 {
 public:
-	Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int indexSize);
-	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture);
+	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, Material* material);
 	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights);
 	virtual ~Mesh();
 	void Draw();
@@ -47,7 +48,9 @@ public:
 	void createBoundingBox(float halfSize);
 	BoundingBox getBoundingBox();
 private:
+	Material* material;
 	Texture *texture;
+	GLfloat* specular;
 	const char* defaultTexture = "obj/brick_16.jpg";
 	enum {
 		POSITION_VB,
@@ -55,6 +58,7 @@ private:
 		NORMAL_VB,
 		INDEX_VB,
 		HEIGHTS_VB,
+		SPECULAR_VB,
 		NUM_BUFFERS
 	};
 	GLuint m_vertexArrayObject;
@@ -67,6 +71,7 @@ private:
 	glm::vec3 worldPos;
 	glm::mat4 worldMatrix;
 	BoundingBox bbox;
+	Material* getMaterial();
 	
 };
 #endif

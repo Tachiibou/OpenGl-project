@@ -24,10 +24,10 @@ Scene::Scene()
 	
 
 	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr,true);
-	this->lightCamera = new Camera(glm::vec3(0,80,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, -100, 200);
+	this->lightCamera = new Camera(glm::vec3(0,140,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, 0.f, 200);
 
 	this->frameBuffer = new FrameBuffer();
-	this->frameBuffer->CreateFrameBuffer(4,1024,768);
+	this->frameBuffer->CreateFrameBuffer(5,1024,768);
 	this->frameBuffer->UnbindFrameBuffer();
 
 	this->frameBuffer2 = new FrameBuffer();
@@ -55,6 +55,7 @@ Scene::Scene()
 
 	
 	instantiateQuadTree();
+	displayCamera = camera;
 
 
 	
@@ -141,10 +142,12 @@ void Scene::Start()
 		glUniformMatrix4fv(glGetUniformLocation(this->depthShader->getProgram(), "worldMatrix"), 1, GL_FALSE, &worldMatrix[0][0]);
 		this->terrain->getMesh()->Draw();
 		this->frameBuffer2->UnbindFrameBuffer();
+
+
 		this->frameBuffer->BindFrameBuffer();
 		this->geoShader->Bind();
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3);
-		this->geoShader->Update(*this->camera);
+		this->geoShader->Update(*this->displayCamera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
 
@@ -158,7 +161,7 @@ void Scene::Start()
 		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->terrainShader->getProgram(), "depth"), 0, 3);
 		//GLuint DERP = glGetUniformLocation(this->terrainShader->getProgram(), "texture0");
 		//GLuint DERP1 = glGetUniformLocation(this->terrainShader->getProgram(), "texture1");
-		this->terrainShader->Update(*this->camera);
+		this->terrainShader->Update(*this->displayCamera);
 		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "lightViewMatrix"), 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(this->terrainShader->getProgram(), "lightPerspectiveMatrix"), 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
 
@@ -177,6 +180,7 @@ void Scene::Start()
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "positionTexture"), 0);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "normalTexture"), 1);
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "colorTexture"), 2);
+		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "specularTexture"), 3,4);
 		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "lightPos"), 1, lightPos);
 		glUniform3fv(glGetUniformLocation(this->lightShader->getProgram(), "viewPos"), 1, camPos);
 		this->RenderQuad();
@@ -253,8 +257,13 @@ void Scene::keyBoardCheck()
 	if (this->sdlEvent.key.keysym.sym == SDLK_SPACE)
 		this->moveLight = !this->moveLight;
 
-	if (this->sdlEvent.key.keysym.sym == SDLK_q)
-		this->reduceAspect = !reduceAspect;
+	if (this->sdlEvent.key.keysym.sym == SDLK_q) {
+		if (displayCamera == camera)
+			displayCamera = lightCamera;
+		else 
+			displayCamera = camera;
+	}
+		//this->reduceAspect = !reduceAspect;
 }
 
 void Scene::mouseCheck()

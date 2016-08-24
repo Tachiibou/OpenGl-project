@@ -39,7 +39,7 @@ private:
 	TriangleVertex* triangleVert;
 	int* indexArr;
 	const std::string OBJ_DIR = "obj/";
-	glm::vec3 kd, ka, tf;
+	glm::vec3 kd, ka, tf, ks;
 	int illum;
 	float ni;
 	int vertexAmount, indexAmount;

@@ -55,6 +55,9 @@
     <ClCompile Include="QuadTree2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Display.h" />
@@ -72,6 +75,7 @@
     <ClInclude Include="ViewFrustum.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="QuadTree2.h" />
+    <ClInclude Include="Material.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\basicFragment.glsl" />

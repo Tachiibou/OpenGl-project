@@ -16,6 +16,7 @@ ResourceLoader::ResourceLoader(std::string fileName)
 	this->vertexInfoArray = nullptr;
 	this->triangleVert = nullptr;
 	this->indexArr = nullptr;
+	
 	loadMesh();
 }
 
@@ -91,6 +92,8 @@ void ResourceLoader::loadMesh() {
 				this->threeFloatIntoVariable(line, this->ka);
 			if (line.substr(0, 2) == "Tf") // Tf	transmission filter
 				this->threeFloatIntoVariable(line, this->tf);
+			if (line.substr(0, 2) == "Ks") // Ks	Specular reflectivity
+				this->threeFloatIntoVariable(line, this->ks);
 			if (line.substr(0, 2) == "Ni") // Ni optical_density This is also known as index of refraction
 				this->ni = std::stof(this->getSecondWord(line));
 		}
@@ -123,7 +126,7 @@ void ResourceLoader::loadMesh() {
 
 Mesh* ResourceLoader::getMesh()
 {
-	Mesh* mesh = new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert, texture);
+	Mesh* mesh = new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert, texture, new Material(illum, kd, ka, tf, ni, ks));
 	mesh->createBoundingBox(getMeshHalfSize(&vertexVector));
 	return mesh;
 }

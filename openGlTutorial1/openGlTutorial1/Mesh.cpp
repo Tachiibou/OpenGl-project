@@ -1,26 +1,9 @@
 #include "Mesh.h"
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
-Mesh::Mesh(Vertex* vertices, unsigned int numVertices, int indices[], int numIndices)
-{
-	this->usingVertexInfo = false;
-	this->m_drawCount = numVertices;
-	this->indexArraySize = numIndices;
-	glGenVertexArrays(1, &m_vertexArrayObject);
-	glBindVertexArray(m_vertexArrayObject);
-	glGenBuffers(NUM_BUFFERS, m_vertexArrayBuffers);
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[POSITION_VB]);
-	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(vertices[0]), vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexArrayBuffers[INDEX_VB]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(indices[0]), indices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindVertexArray(0);
 
-	this->worldPos = glm::vec3();
-	this->worldMatrix = glm::mat4(1.0f);
-}
-Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture)
+Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, Material* material)
 {
+	this->material = material;
 	this->usingVertexInfo = true;
 	this->m_drawCount = numVertices;
 	this->indexArraySize = numIndices;
@@ -50,9 +33,22 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 5));
 
+	specular = new GLfloat[3];
+	specular[0] = material->getSpecularRef().x;
+	specular[1] = material->getSpecularRef().y;
+	specular[2] = material->getSpecularRef().z;
+	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[HEIGHTS_VB]);
+	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(specular[0])*3 , specular, GL_STATIC_DRAW);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(specular[0]) * 3,0);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[HEIGHTS_VB]);
+	//glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(heights[0]), heights, GL_STATIC_DRAW);
+	//glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float), 0);
+
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 	//glEnableVertexAttribArray(3);
 	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glBindVertexArray(0);
@@ -67,6 +63,7 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 
 //For Terrain
 Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights) {
+	material = nullptr;
 	this->usingVertexInfo = true;
 	this->m_drawCount = numVertices;
 	this->indexArraySize = numIndices;
@@ -121,6 +118,8 @@ Mesh::~Mesh()
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
 
 	delete[]m_vertexArrayBuffers;
+	if(material != nullptr)
+		delete material;
 }
 void Mesh::Draw() {
 	texture->Bind();
@@ -168,4 +167,8 @@ void Mesh::createBoundingBox(float halfSize)
 BoundingBox Mesh::getBoundingBox()
 {
 	return bbox;
+}
+
+Material* Mesh::getMaterial() {
+	return this->material;
 }

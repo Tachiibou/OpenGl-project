@@ -150,6 +150,7 @@
     <ClCompile Include="FilterComputeShader.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="QuadTree2.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Display.h" />
     <ClInclude Include="FilterComputeShader.h" />
     <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="QuadTree2.h" />

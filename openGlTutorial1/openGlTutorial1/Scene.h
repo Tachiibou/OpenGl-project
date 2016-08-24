@@ -26,6 +26,7 @@ private:
 	Display* display;
 	Camera* camera, *lightCamera;
 	Shader* geoShader, *lightShader, *depthShader, *terrainShader;
+	Camera* displayCamera;
 
 	std::vector<Mesh*> meshes;
 	Terrain* terrain;

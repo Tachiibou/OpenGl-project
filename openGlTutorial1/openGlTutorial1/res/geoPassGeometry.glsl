@@ -10,11 +10,13 @@ in vec2 VSuv[];
 in vec3 VSnormal[];
 in vec4 VStransformedPos[];
 in vec3 VLightPos[];
+in vec3 VSpecular[];
 
 out vec3 fragPos;
 out vec2 fragUv;
 out vec3 fragNormal;
 out vec3 fragLightPos;
+out vec3 fragSpecular;
 
 void main()
 {
@@ -35,6 +37,7 @@ void main()
 			fragNormal = VSnormal[i];
 			//fragPos = vec3(VStransformedPos[i]);
 			fragLightPos = VLightPos[i];
+			fragSpecular = VSpecular[i];
 			EmitVertex();
 		}
 		EndPrimitive();
