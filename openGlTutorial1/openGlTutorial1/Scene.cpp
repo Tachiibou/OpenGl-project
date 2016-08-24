@@ -85,6 +85,7 @@ Scene::~Scene()
 	delete this->camera;
 	delete this->display;
 	delete this->terrain;
+	delete this->terrainShader;
 	delete this->frameBuffer;
 	delete this->geoShader;
 	delete this->lightShader;
