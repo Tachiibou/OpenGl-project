@@ -35,7 +35,7 @@ void main()
 	VSpos = vec3(worldMatrix * vec4(position, 1));
 	VSuv = uv;
 	VSnormal = normal;
-	VLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * worldMatrix * vec4(position,1));
+	VLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * worldMatrix * vec4(position,1)); // calculate the position from the lights point of view
 	VStransformedPos = viewMatrix*worldMatrix*vec4(position,1);
 	//fragLightPos = vec3(lightPerspectiveMatrix * lightViewMatrix * vec4(position,1));
 }

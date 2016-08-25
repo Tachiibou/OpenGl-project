@@ -127,9 +127,9 @@ void Scene::Start()
 
 
 
-		this->depthShader->Bind();
-		this->frameBuffer2->BindFrameBuffer();
-		this->depthShader->Update(*this->lightCamera);
+		this->depthShader->Bind(); // The depth shader returns the depth in Z for all fragments
+		this->frameBuffer2->BindFrameBuffer(); // Framebuffer2 will store the depth map the depthshader draws
+		this->depthShader->Update(*this->lightCamera); // We draw the depthmap from the lights perspective
 		
 
 		for (size_t i = 0; i < meshesInQuadTree.size(); i++)
@@ -146,7 +146,7 @@ void Scene::Start()
 
 		this->frameBuffer->BindFrameBuffer();
 		this->geoShader->Bind();
-		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3);
+		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3); // Send depth texture to geoShader to calculate the shadows
 		this->geoShader->Update(*this->displayCamera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
@@ -171,10 +171,11 @@ void Scene::Start()
 		this->frameBuffer->UnbindFrameBuffer();
 
 		this->filterComputeShader->BindShader();
-		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2);
+		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2); // Get the textur to apply the blur to
 		this->filterComputeShader->UniformVec3("colorVector", glm::vec3(0.0f, 0.0f, 1.0f));
 		this->filterComputeShader->Uniform1f("number", 1.0f);
-		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1,30);
+		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1,30); // Compute the blur several times for stronger effect
+		// The compute shader directly changes the pixel data, so no need to get any output data
 
 		this->lightShader->Bind();
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "positionTexture"), 0);

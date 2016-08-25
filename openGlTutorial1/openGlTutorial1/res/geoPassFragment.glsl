@@ -18,7 +18,7 @@ void main()
 {
 	float bias = 0.005;
 	float visibility = 1.0;
-	if(texture2D(depth, fragLightPos.xy).z < fragLightPos.z - bias)
+	if(texture2D(depth, fragLightPos.xy).z < fragLightPos.z - bias) // Compare our calculated value to the stored depth map to see if we should apply shadow
 		visibility = 0.5;
 	// Line 20
 	gPos = fragPos;
