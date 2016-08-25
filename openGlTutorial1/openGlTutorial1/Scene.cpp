@@ -8,7 +8,6 @@ Scene::Scene()
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 
 	
-	this->mouseWarp = false;
 	this->deltaTime = 0.0f;
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
@@ -57,8 +56,8 @@ Scene::Scene()
 	instantiateQuadTree();
 	displayCamera = camera;
 
-
-	
+	SDL_SetRelativeMouseMode(SDL_TRUE); // lock mouse
+	this->mouseLocked = true;
 }
 
 void Scene::instantiateQuadTree() {
@@ -203,10 +202,8 @@ void Scene::eventHandler()
 		{
 			if (this->sdlEvent.type == SDL_KEYDOWN)
 				this->keyBoardCheck();
-			else if (this->sdlEvent.type == SDL_MOUSEMOTION && !this->ignoreMouseMotion)
+			else if (this->sdlEvent.type == SDL_MOUSEMOTION)
 				this->mouseCheck();
-			else if (this->ignoreMouseMotion)
-				this->ignoreMouseMotion = false;
 		}
 	}
 	if (this->cameraMove != glm::vec3())
@@ -246,14 +243,17 @@ void Scene::keyBoardCheck()
 	else if (this->sdlEvent.key.keysym.sym == SDLK_DOWN)
 		this->cameraMove.y = -1.0f;
 
-	//Lock cursor
-	if (this->sdlEvent.key.keysym.sym == SDLK_l && !this->mouseWarp)
+	//Lock cursor for reals
+	if (this->sdlEvent.key.keysym.sym == SDLK_ESCAPE)
 	{
-		this->mouseWarp = true;
-		this->ignoreMouseMotion = false;
+		if(this->mouseLocked)
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+		else
+			SDL_SetRelativeMouseMode(SDL_TRUE);
+		this->mouseLocked = !this->mouseLocked;
 	}
-	else if (this->sdlEvent.key.keysym.sym == SDLK_l && this->mouseWarp)
-		this->mouseWarp = false;
+		
+
 
 	if (this->sdlEvent.key.keysym.sym == SDLK_SPACE)
 		this->moveLight = !this->moveLight;
@@ -269,14 +269,9 @@ void Scene::keyBoardCheck()
 
 void Scene::mouseCheck()
 {
-	std::cout << "x: " << this->sdlEvent.motion.xrel << " y: " << this->sdlEvent.motion.yrel << '\n';
+	//std::cout << "x: " << this->sdlEvent.motion.xrel << " y: " << this->sdlEvent.motion.yrel << '\n';
 
 	this->camera->look(this->sdlEvent.motion.xrel, this->sdlEvent.motion.yrel, this->deltaTime);
-	if (this->mouseWarp)
-	{
-		SDL_WarpMouseInWindow(NULL, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-		this->ignoreMouseMotion = true;
-	}
 }
 
 // renders a quad with uv coordinates

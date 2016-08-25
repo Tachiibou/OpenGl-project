@@ -34,8 +34,7 @@ private:
 	QuadTree2* quadTree;
 
 	glm::vec3 cameraMove;
-	bool mouseWarp;
-	bool ignoreMouseMotion;
+	bool mouseLocked;
 	float deltaTime;
 	Uint32 currentTime, lastTime;
 	float moveSpeed;
