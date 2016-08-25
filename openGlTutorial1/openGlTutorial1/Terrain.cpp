@@ -23,6 +23,8 @@ Terrain::~Terrain()
 	delete mesh;
 }
 
+//After reading the width and height of the heightmap, this function will be called
+//Initializing all the necisary values (allocating memory)
 void Terrain::Initialize(int width, int length) {
 	position = glm::vec3(0);
 	this->length = length;
@@ -40,17 +42,17 @@ void Terrain::Initialize(int width, int length) {
 	}
 }
 
-
+//This will load the terrain, call initializon
 void Terrain::loadTerrain(const char*fileName, float terrainScaler) {
 	int t_width, t_height, t_numComponent;
 	unsigned char* height_data = stbi_load(fileName, &t_width, &t_height, &t_numComponent, 0);
 	
 	if (height_data == NULL) {
-		int k = 0;
-		//ERROR!!!
+		std::cout << "Couldnt load terrain";
 	}
 	else {
 		Initialize(t_width, t_height);
+		//this will loop every pixel in the heightmap
 		for (int y = 0; y < t_height; y++) {
 			for (int x = 0; x < t_width; x++) {
 				//Takes the Blue Color (R, G, (B))
@@ -60,8 +62,9 @@ void Terrain::loadTerrain(const char*fileName, float terrainScaler) {
 				for (int yt = -2; yt < 3; yt++) {
 					for (int xt = -2; xt < 3; xt++) {   
 
-
+						//this will check weither we're reading inside the texture( example, we cant read -1x)
 						if ((yt + y >= 0 && xt + x>=0) && (yt + y < t_height && xt + x < t_width)) {
+							//makes the terrain from 2d -> 1d
 							int index = 3 * (yt + y * t_width + x + xt);
 							total += (unsigned char)height_data[index];
 							nrAdded++;
@@ -69,62 +72,23 @@ void Terrain::loadTerrain(const char*fileName, float terrainScaler) {
 
 					}
 				}
-
+				//This will get the average height of all 9 squares checked
 				total /= nrAdded;
-
-				//int index = 3 * (y * t_width + x);
-				//
-				//unsigned char pixel_color = (unsigned char)height_data[index];
-				//if (x==100 && y == 200)
-				//	int k = 0;
-				//float h = (pixel_color);
-
-				if (y == t_height - 1) {
-					if (x > t_width - 10) {
-						int k = 0;
-					}
-				}
 
 				setHeightAt(x, y, total * terrainScaler);
 			}
 		}
 		stbi_image_free(height_data);
 		
+		//Calculates the normals for the terrain
 		setNormals();
+
 		calculateVertexInfo();
-		//smoothTerrain();
 	}
 
 
 }
 
-void Terrain::smoothTerrain() {
-	const float ratio = .5f;
-	for (int x = 0; x < this->width; x++) {
-		for (int z = 0; z < this->length; z++) {
-			glm::vec3 n_total = this->normals[x][z];
-
-			if (x > 0) {
-				n_total += this->normals[z][x - 1] * ratio;
-			}
-			if (x < this->width - 1) {
-				n_total += this->normals[z][x + 1] * ratio;
-			}
-			if (z > 0) {
-				n_total += this->normals[z - 1][x] * ratio;
-			}
-			if (z < this->length - 1) {
-				n_total += this->normals[z + 1][x];
-			}
-
-			if (n_total.length() == 0) {
-				n_total= glm::vec3(0.0f, 1.0f, 0.0f);
-			}
-			normals[z][x] = n_total;
-
-		}
-	}
-}
 
 void Terrain::setHeightAt(int x, int z, float y) {
 	this->heights[x][z] = 50 * (y/255);
@@ -138,37 +102,38 @@ glm::vec3 Terrain::getNormalAt(int x, int z) {
 	return this->normals[x][z];
 }
 
+//Set all the normals for the terrain
 void Terrain::setNormals(){
 	
 
 	//Making a line between the current point and the points that's adjecent. When there's a potential 4 lines, we cross product
-	//Between thoose circular like a triangle.
+	//Between thoose circular like a triangle. Then we will take the average normal of up to four lines.
+	//          |
+	//          |
+	//     -----.-----
+	//			|
+	//			|
 	glm::vec3 tempZOut, tempZIn, tempXLeft, tempXRight, tempNormalSum;
 	glm::vec3 currentPos;
 	for (int x = 0; x < this->width; x++) {
 		
 		for (int z = 0; z < this->length; z++) {
-
+			//the position of the current vertex we're checking for
 			currentPos = glm::vec3(x, getHeightAt(x, z), z);
 
-			int k = getHeightAt(x, z);
 			tempNormalSum = glm::vec3();
 
 			if (z > 0)
 				tempZOut = glm::vec3(x, getHeightAt(x,z-1), z-1) -currentPos;
-				//tempZOut = glm::vec3(0.f, this->heights[x][z - 1] - this->heights[x][z], -1.f);
 
 			if (z < this->length - 1)
 				tempZIn = glm::vec3(x, getHeightAt(x, z + 1), z + 1) - currentPos;
-				//tempZIn = glm::vec3(0.f, this->heights[x][z + 1] - this->heights[x][z], 1.f);
 
 			if (x < this->width-1)
 				tempXRight =glm::vec3(x+1, getHeightAt(x+1, z), z) - currentPos;
-				//tempXRight = glm::vec3(1.f, this->heights[x+1][z] - this->heights[x][z], 0.f);
 
 			if (x > 0)
 				tempXLeft = glm::vec3(x-1, getHeightAt(x-1, z),z) - currentPos;
-				//tempXLeft = glm::vec3(-1.f, this->heights[x-1][z] - this->heights[x][z], 0.f);
 
 			if (z > 0 && x > 0) {
 				tempNormalSum += glm::normalize(glm::cross(tempZOut, tempXLeft));
@@ -185,11 +150,7 @@ void Terrain::setNormals(){
 			if (x < this->width - 1 && z > 0) {
 				tempNormalSum += glm::normalize(glm::cross(tempXRight, tempZOut));
 			}
-
-
-			//int k = getHeightAt(x, z);
 			normals[x][z] = glm::normalize(tempNormalSum);
-			//std::cout<<"Height: " << k << " | X: " << this->normals[x][z].x << " | Y: " << this->normals[x][z].y << " | Z: " << this->normals[x][z].z << std::endl;
 
 		}
 	}
@@ -198,6 +159,8 @@ void Terrain::setNormals(){
 
 }
 
+//This will create a mesh
+//Meaning that it will load textures, calculate indices(For it to be a square at a time
 void Terrain::calculateVertexInfo() {
 	TriangleVertex* tempTriangleVertex = new TriangleVertex[this->width*this->length];
 	
@@ -213,25 +176,20 @@ void Terrain::calculateVertexInfo() {
 		for (int z = 0; z < this->length; z++) {
 			cIndex = x* this->length + z;
 			if (x + 1 != this->width && z + 1 != this->length) {
+				//the down right corner of the square (Triangle)
 				indices.push_back(x* this->length + z);
 				indices.push_back(x*  this->length + z + 1);
 				indices.push_back((x + 1)*  this->length + z);
-
+				//the upper left corner of the square (Triangle)
 				indices.push_back((x + 1)*  this->length + z);
 				indices.push_back(x*  this->length + z + 1);
 				indices.push_back((x + 1) *  this->length + z + 1);
 
 				
 			}
-			else {
-				int k = 0;
-			}
 
 			tempNormal = this->getNormalAt(x, z);
 
-
-			//u = x;// x / (float)this->width;
-			//v = z;// 1- (z / (float)this->length);
 			u = (x / (float)this->width) * 2;
 			v = (1 - (z / (float)this->length)) * 2;
 
@@ -244,16 +202,17 @@ void Terrain::calculateVertexInfo() {
 				u,v,
 				tempNormal.x, tempNormal.y, tempNormal.z };
 			
+			//this will make sure we will know the highest point of the terrain
+			//Which is necisarry for the blendmapping to know
 			if (maxHeight < cHeight)
 				maxHeight = cHeight;
 
 			heights[cIndex] = cHeight;
 
-			//printToScreen(tempVertexInfo[cIndex]);
-			//std::cout << cIndex << std::endl;
 		}
 	}
 
+	//Makes the heights a percentage value between 0 -> 1
 	for (unsigned int i = 0; i < this->width*this->length; i++) {
 		heights[i] = heights[i] / maxHeight;
 	}
@@ -268,8 +227,6 @@ void Terrain::calculateVertexInfo() {
 	terrainTexture->addTexture("./obj/brick_16.jpg");
 	terrainTexture->addTexture("./obj/Snow.jpg");
 
-	//terrainTexture->addTexture("./obj/Stone.jpg");
-	//terrainTexture->addTexture("./obj/Snow.jpg");
 	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, terrainTexture, heights);
 	delete[]tempTriangleVertex;
 	delete[] tempArr;

@@ -23,7 +23,6 @@ private:
 	void calculateVertexInfo();
 	Mesh* mesh;
 
-	void smoothTerrain();
 	void setNormals();
 
 	glm::vec3 position;

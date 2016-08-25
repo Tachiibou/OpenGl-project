@@ -152,7 +152,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="QuadTree2.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -170,7 +169,6 @@
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="QuadTree2.h" />
     <ClInclude Include="ResourceLoader.h" />
     <ClInclude Include="Scene.h" />
