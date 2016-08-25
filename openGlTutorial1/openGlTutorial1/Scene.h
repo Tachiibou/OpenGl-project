@@ -11,7 +11,6 @@
 #include "FrameBuffer.h"
 #include "FilterComputeShader.h"
 #include "ViewFrustum.h"
-#include "QuadTree.h"
 #include "QuadTree2.h"
 
 using namespace constVar;
@@ -30,7 +29,6 @@ private:
 
 	std::vector<Mesh*> meshes;
 	Terrain* terrain;
-	Vertex vertices[4];
 	GLuint quadVAO = 0;
 	GLuint quadVBO;
 	QuadTree2* quadTree;
@@ -45,7 +43,6 @@ private:
 	FilterComputeShader* filterComputeShader;
 
 	bool moveLight;
-	QuadTree* qt;
 
 	void eventHandler();
 	void Update();

@@ -5,20 +5,6 @@
 #include "glm\gtx\transform.hpp"
 #include "Texture.h"
 #include "Material.h"
-// Vertex class can be used for normals aswell
-class Vertex {
-public:
-	Vertex(const glm::vec3&pos) {
-		this->pos = pos;
-	}
-	Vertex() {
-		this->pos = glm::vec3(0, 0, 0);
-	}
-protected:
-private:
-	glm::vec3 pos;
-
-};
 
 struct BoundingBox {
 	float halfSize;
