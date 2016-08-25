@@ -189,12 +189,11 @@ void Camera::move(float x, float y, float z, float deltaTime)
 
 void Camera::look(float x, float y, float deltaTime)
 {
-
+	float smoothing = 0.4f;
 	
-	if (x < 10)
-		this->horizontalAngle -= this->mouseSpeed * deltaTime * x;
-	if (y < 10)
-		this->verticalAngle -= this->mouseSpeed * deltaTime * y;
+		this->horizontalAngle -= this->mouseSpeed * deltaTime * x * smoothing;
+
+		this->verticalAngle -= this->mouseSpeed * deltaTime * y * smoothing;
 
 	this->direction = glm::vec3(
 		cos(this->verticalAngle) * sin(this->horizontalAngle),
