@@ -34,20 +34,16 @@ class ResourceLoader
 {
 private:
 	std::string fileName;
-	Vertex* vertexArray;
-	VertexInfo* vertexInfoArray;
 	TriangleVertex* triangleVert;
 	int* indexArr;
 	const std::string OBJ_DIR = "obj/";
-	glm::vec3 kd, ka, tf, ks;
-	int illum;
-	float ni;
+	glm::vec3 kd, ka, tf, ks;	// Material values
+	int illum;					// Material values
+	float ni;					// Material values
 	int vertexAmount, indexAmount;
 	Texture* texture;
 	std::vector<glm::vec3> vertexVector;
 
-	VertexInfo* VertexInfoVectorToArray(std::vector<VertexInfo>& vertexInfo);
-	Vertex* createVertices(std::vector<glm::vec3> pos);
 
 	void createVerticesFromLine(std::string& line, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& UVs, std::vector<VertexInfo>& vertexInfoVector);
 	int* getIndexArr(int amount);
@@ -55,7 +51,7 @@ private:
 	void insertVertex(std::string line, std::vector<glm::vec3>& vertexVector);
 	void insertUV(std::string line, std::vector<glm::vec2>& UVector);
 	void insertNormal(std::string line, std::vector<glm::vec3>& normalVector);
-	void threeFloatIntoVariable(std::string line, glm::vec3& variable);
+	void stringIntoVec3(std::string line, glm::vec3& variable);
 	std::string getSecondWord(std::string line);
 
 	TriangleVertex* makeStruct(std::vector<VertexInfo> vertexInfo);

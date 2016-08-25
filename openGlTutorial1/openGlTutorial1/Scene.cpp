@@ -8,7 +8,6 @@ Scene::Scene()
 	this->display = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME);
 
 	
-	this->mouseWarp = false;
 	this->deltaTime = 0.0f;
 	this->currentTime = 0.0f;
 	this->lastTime = 0.0f;
@@ -57,8 +56,8 @@ Scene::Scene()
 	instantiateQuadTree();
 	displayCamera = camera;
 
-
-	
+	SDL_SetRelativeMouseMode(SDL_TRUE); // lock mouse
+	this->mouseLocked = true;
 }
 
 void Scene::instantiateQuadTree() {
@@ -127,9 +126,9 @@ void Scene::Start()
 
 
 
-		this->depthShader->Bind();
-		this->frameBuffer2->BindFrameBuffer();
-		this->depthShader->Update(*this->lightCamera);
+		this->depthShader->Bind(); // The depth shader returns the depth in Z for all fragments
+		this->frameBuffer2->BindFrameBuffer(); // Framebuffer2 will store the depth map the depthshader draws
+		this->depthShader->Update(*this->lightCamera); // We draw the depthmap from the lights perspective
 		
 
 		for (size_t i = 0; i < meshesInQuadTree.size(); i++)
@@ -146,7 +145,7 @@ void Scene::Start()
 
 		this->frameBuffer->BindFrameBuffer();
 		this->geoShader->Bind();
-		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3);
+		this->frameBuffer2->BindTexturesToProgram(glGetUniformLocation(this->geoShader->getProgram(), "depth"), 0,3); // Send depth texture to geoShader to calculate the shadows
 		this->geoShader->Update(*this->displayCamera);
 		glUniformMatrix4fv(viewUniform, 1, GL_FALSE, &this->lightCamera->getViewMatrix()[0][0]);
 		glUniformMatrix4fv(projectionUniform, 1, GL_FALSE, &this->lightCamera->getPerspectiveMatrix()[0][0]);
@@ -171,10 +170,11 @@ void Scene::Start()
 		this->frameBuffer->UnbindFrameBuffer();
 
 		this->filterComputeShader->BindShader();
-		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2);
+		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2); // Get the textur to apply the blur to
 		this->filterComputeShader->UniformVec3("colorVector", glm::vec3(0.0f, 0.0f, 1.0f));
 		this->filterComputeShader->Uniform1f("number", 1.0f);
-		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1,30);
+		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1,30); // Compute the blur several times for stronger effect
+		// The compute shader directly changes the pixel data, so no need to get any output data
 
 		this->lightShader->Bind();
 		this->frameBuffer->BindTexturesToProgram(glGetUniformLocation(this->lightShader->getProgram(), "positionTexture"), 0);
@@ -202,10 +202,8 @@ void Scene::eventHandler()
 		{
 			if (this->sdlEvent.type == SDL_KEYDOWN)
 				this->keyBoardCheck();
-			else if (this->sdlEvent.type == SDL_MOUSEMOTION && !this->ignoreMouseMotion)
+			else if (this->sdlEvent.type == SDL_MOUSEMOTION)
 				this->mouseCheck();
-			else if (this->ignoreMouseMotion)
-				this->ignoreMouseMotion = false;
 		}
 	}
 	if (this->cameraMove != glm::vec3())
@@ -245,14 +243,17 @@ void Scene::keyBoardCheck()
 	else if (this->sdlEvent.key.keysym.sym == SDLK_DOWN)
 		this->cameraMove.y = -1.0f;
 
-	//Lock cursor
-	if (this->sdlEvent.key.keysym.sym == SDLK_l && !this->mouseWarp)
+	//Lock cursor for reals
+	if (this->sdlEvent.key.keysym.sym == SDLK_ESCAPE)
 	{
-		this->mouseWarp = true;
-		this->ignoreMouseMotion = false;
+		if(this->mouseLocked)
+			SDL_SetRelativeMouseMode(SDL_FALSE);
+		else
+			SDL_SetRelativeMouseMode(SDL_TRUE);
+		this->mouseLocked = !this->mouseLocked;
 	}
-	else if (this->sdlEvent.key.keysym.sym == SDLK_l && this->mouseWarp)
-		this->mouseWarp = false;
+		
+
 
 	if (this->sdlEvent.key.keysym.sym == SDLK_SPACE)
 		this->moveLight = !this->moveLight;
@@ -269,12 +270,8 @@ void Scene::keyBoardCheck()
 void Scene::mouseCheck()
 {
 	//std::cout << "x: " << this->sdlEvent.motion.xrel << " y: " << this->sdlEvent.motion.yrel << '\n';
+
 	this->camera->look(this->sdlEvent.motion.xrel, this->sdlEvent.motion.yrel, this->deltaTime);
-	if (this->mouseWarp)
-	{
-		SDL_WarpMouseInWindow(NULL, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-		this->ignoreMouseMotion = true;
-	}
 }
 
 // renders a quad with uv coordinates

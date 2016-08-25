@@ -2,9 +2,7 @@
 
 ResourceLoader::ResourceLoader()
 {
-	this->fileName = this->OBJ_DIR + "box.obj";
-	this->vertexArray = nullptr;
-	this->vertexInfoArray = nullptr;
+	this->fileName = this->OBJ_DIR + "box.obj"; // default load the box
 	this->triangleVert = nullptr;
 	this->indexArr = nullptr;
 }
@@ -12,8 +10,6 @@ ResourceLoader::ResourceLoader()
 ResourceLoader::ResourceLoader(std::string fileName)
 {
 	this->fileName = fileName;
-	this->vertexArray = nullptr;
-	this->vertexInfoArray = nullptr;
 	this->triangleVert = nullptr;
 	this->indexArr = nullptr;
 	
@@ -23,12 +19,6 @@ ResourceLoader::ResourceLoader(std::string fileName)
 
 ResourceLoader::~ResourceLoader()
 {
-	if(this->vertexArray != nullptr)
-		delete[] this->vertexArray;
-
-	if (this->vertexInfoArray != nullptr)
-		delete[] this->vertexInfoArray;
-
 	if (this->triangleVert != nullptr)
 		delete[] this->triangleVert;
 
@@ -39,7 +29,9 @@ ResourceLoader::~ResourceLoader()
 		delete texture;
 }
 
+// Loads all the values to create a Mesh, then the getMesh is called to get the mesh
 void ResourceLoader::loadMesh() {
+
 	std::string line, mtlFileName, textureFileName;
 	std::ifstream myfile(this->fileName);
 	std::vector<glm::vec2> UVector;
@@ -87,13 +79,13 @@ void ResourceLoader::loadMesh() {
 			if (line.substr(0, 2) == "il") // illum
 				illum = std::stoi(this->getSecondWord(line));
 			if (line.substr(0, 2) == "Kd") // Kd	diffuse reflectance
-				this->threeFloatIntoVariable(line, this->kd);
+				this->stringIntoVec3(line, this->kd);
 			if (line.substr(0, 2) == "Ka") // Ka	ambient reflectance
-				this->threeFloatIntoVariable(line, this->ka);
+				this->stringIntoVec3(line, this->ka);
 			if (line.substr(0, 2) == "Tf") // Tf	transmission filter
-				this->threeFloatIntoVariable(line, this->tf);
+				this->stringIntoVec3(line, this->tf);
 			if (line.substr(0, 2) == "Ks") // Ks	Specular reflectivity
-				this->threeFloatIntoVariable(line, this->ks);
+				this->stringIntoVec3(line, this->ks);
 			if (line.substr(0, 2) == "Ni") // Ni optical_density This is also known as index of refraction
 				this->ni = std::stof(this->getSecondWord(line));
 		}
@@ -105,25 +97,19 @@ void ResourceLoader::loadMesh() {
 		texture = new Texture(textureFileName.c_str());
 	}
 
-	if (vertexArray != nullptr) {
-		delete this->vertexArray;
-		delete this->vertexInfoArray;
+	if (this->triangleVert != nullptr) {
 		delete this->triangleVert;
 		delete this->indexArr;
 	}
 
 	indexAmount = vertexInfoVector.size();
 	vertexAmount = vertexInfoVector.size();
-	this->indexArr = this->getIndexArr(indexAmount);
+	this->indexArr = this->getIndexArr(indexAmount); // The index array is in order from 0 to amount. ex: 0,1,2,3
 
-
-
-	this->vertexArray = this->createVertices(vertexVector);
-	this->vertexInfoArray = this->VertexInfoVectorToArray(vertexInfoVector);
-
-	this->triangleVert = this->makeStruct(vertexInfoVector);
+	this->triangleVert = this->makeStruct(vertexInfoVector); // convert vector that holds pos,uv,normals into an array of struct, this is done because we had problems buffering the data from this format
 }
 
+// Returns the mesh with the current data this class holds
 Mesh* ResourceLoader::getMesh()
 {
 	Mesh* mesh = new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert, texture, new Material(illum, kd, ka, tf, ni, ks));
@@ -131,6 +117,7 @@ Mesh* ResourceLoader::getMesh()
 	return mesh;
 }
 
+// Gets the furthest distance between x,y,z and returns half this distance, this can then be used for the hitbox
 float ResourceLoader::getMeshHalfSize(std::vector<glm::vec3> *vertexVector) {
 	float maxX = FLT_MIN;
 	float minX = FLT_MAX;
@@ -161,6 +148,7 @@ float ResourceLoader::getMeshHalfSize(std::vector<glm::vec3> *vertexVector) {
 
 }
 
+// Simply prints all lines in the file to console
 void ResourceLoader::printFile()
 {
 	std::string line;
@@ -174,32 +162,6 @@ void ResourceLoader::printFile()
 		}
 		myfile.close();
 	}
-}
-
-// convert VertexInfoVector into a pointer array
-VertexInfo* ResourceLoader::VertexInfoVectorToArray(std::vector<VertexInfo>& vertecies)
-{
-	int size = vertecies.size();
-	VertexInfo* vertexInfoArray = new VertexInfo[size];
-
-	for (int i = 0; i < size; i++)
-	{
-		vertexInfoArray[i] = vertecies.at(i);
-	}
-	return vertexInfoArray;
-}
-
-//convert vector of vec3 into Vertex array
-Vertex * ResourceLoader::createVertices(std::vector<glm::vec3> pos)
-{
-	int size = pos.size();
-	Vertex* vertices = new Vertex[size];
-
-	for (int i = 0; i < size; i++)
-	{
-		vertices[i] = Vertex(pos.at(i));
-	}
-	return vertices;
 }
 
 // Read line, create vertexInfo, insert into vertexInfoVector
@@ -297,7 +259,7 @@ void ResourceLoader::insertNormal(std::string line, std::vector<glm::vec3>& norm
 }
 
 // Removes first value and inserts the three following into the vec3 variable
-void ResourceLoader::threeFloatIntoVariable(std::string line, glm::vec3& variable)
+void ResourceLoader::stringIntoVec3(std::string line, glm::vec3& variable)
 {
 	std::istringstream inputString;
 	std::string scrap; // scrap will contain the first word

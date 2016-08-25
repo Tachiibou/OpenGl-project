@@ -29,14 +29,12 @@ private:
 
 	std::vector<Mesh*> meshes;
 	Terrain* terrain;
-	Vertex vertices[4];
 	GLuint quadVAO = 0;
 	GLuint quadVBO;
 	QuadTree2* quadTree;
 
 	glm::vec3 cameraMove;
-	bool mouseWarp;
-	bool ignoreMouseMotion;
+	bool mouseLocked;
 	float deltaTime;
 	Uint32 currentTime, lastTime;
 	float moveSpeed;

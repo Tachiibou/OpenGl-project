@@ -5,7 +5,7 @@ uniform float number;
 uniform vec3 colorVector;
 
 void main() {
-	ivec2 storePos = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 storePos = ivec2(gl_GlobalInvocationID.xy); // The pixel position this compute shader works with
 
 		vec4 color1;
 		vec4 color2;
@@ -35,7 +35,7 @@ void main() {
 		final = clamp(color2 + color3 + color5 + color6 + color8 + color9,0.0,1.0);
 	}
 
-	else if(storePos.y == 0) // bottom of the screen
+	else if(storePos.y == 0) // bottom of the screen, ignore pixels outside of screen
 	{
 		//color1 = imageLoad(destTex,storePos + ivec2(-1,-1)) / 16;
 		//color2 = imageLoad(destTex,storePos + ivec2(0,-1)) / 8;
@@ -49,7 +49,8 @@ void main() {
 
 		final = clamp(color4 + color5 + color6 + color7 + color8 + color9,0.0,1.0);
 	}
-	else
+
+	else // If we are not in any corner dont ignore any pixel
 	{
 		color1 = imageLoad(destTex,storePos + ivec2(-1,-1)) / 16;
 		color2 = imageLoad(destTex,storePos + ivec2(0,-1)) / 8;
@@ -68,7 +69,7 @@ void main() {
 	
 
 
-	//memoryBarrier(); // wait for all to read texture before overwriting the texture
+	memoryBarrier(); // wait for all to read texture before overwriting the texture
 	
 	imageStore(destTex, storePos,  final );
 	
