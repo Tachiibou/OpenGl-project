@@ -117,7 +117,7 @@ Mesh* ResourceLoader::getMesh()
 	return mesh;
 }
 
-// Gets the furthest distance between x,y,z and returns half this distance, this can then be used for hitbox
+// Gets the furthest distance between x,y,z and returns half this distance, this can then be used for the hitbox
 float ResourceLoader::getMeshHalfSize(std::vector<glm::vec3> *vertexVector) {
 	float maxX = FLT_MIN;
 	float minX = FLT_MAX;
