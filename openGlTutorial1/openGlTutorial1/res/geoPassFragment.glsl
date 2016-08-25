@@ -25,6 +25,6 @@ void main()
 	gNormal = normalize(fragNormal);
 	//gColor = clamp(vec3(texture2D(texture, fragUv)) + vec3(texture2D(depth, fragLightPos.xy)),0.0,1.0);
 	//gColor = gNormal;
-	gColor = fragSpecular;//vec3(texture2D(texture, fragUv)) * visibility;
+	gColor = vec3(texture2D(texture, fragUv)) * visibility;
 	gSpecular = fragSpecular;
 }

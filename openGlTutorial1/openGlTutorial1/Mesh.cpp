@@ -33,10 +33,20 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 5));
 
-	specular = new GLfloat[3];
-	specular[0] = material->getSpecularRef().x;
-	specular[1] = material->getSpecularRef().y;
-	specular[2] = material->getSpecularRef().z;
+	specular = new GLfloat[3 * numVertices];
+
+	for (int i = 0; i < numVertices;i++) {
+		specular[0 + i*3] = material->getSpecularRef().x;
+		specular[1 + i*3] = material->getSpecularRef().y;
+		specular[2 + i*3] = material->getSpecularRef().z;
+	}
+
+	//specular = new GLfloat[3 ];
+	//	specular[0 ] = material->getSpecularRef().x;
+	//	specular[1] = material->getSpecularRef().y;
+	//	specular[2] = material->getSpecularRef().z;
+
+
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[HEIGHTS_VB]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(specular[0])*3 , specular, GL_STATIC_DRAW);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(specular[0]) * 3,0);
@@ -63,6 +73,7 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 
 //For Terrain
 Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights) {
+	specular = nullptr;
 	material = nullptr;
 	this->usingVertexInfo = true;
 	this->m_drawCount = numVertices;
@@ -120,6 +131,8 @@ Mesh::~Mesh()
 	delete[]m_vertexArrayBuffers;
 	if(material != nullptr)
 		delete material;
+
+	delete[] specular;
 }
 void Mesh::Draw() {
 	texture->Bind();

@@ -27,10 +27,11 @@ void main()
 	vec3 diffuse = max(dot(fragNormal, lightDir), 0.0) * fragDiff * lightColor;
 	
 	//Specular
-	float specStr = 0.5; //Hardcoded specular
+	//float specStr = 0.5; //Hardcoded specular
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	float spec = pow(max(dot(fragNormal, halfwayDir), 0.0), 16.0);
-	vec3 specular = lightColor * spec * specStr;
+	vec3 testSpec = vec3(0,0,0);
+	vec3 specular = lightColor * spec * texture2D(specularTexture, fragUv).xyz;
 
 	lighting += diffuse + specular;
 	fragColor = lighting;

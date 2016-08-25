@@ -3,6 +3,7 @@
 layout(location = 0) out vec3 gPos;
 layout(location = 1) out vec3 gNormal;
 layout(location = 2) out vec3 gColor;
+layout(location = 3) out vec3 gSpecular;
 
 in vec3 fragPos;
 in vec2 fragUv;
@@ -38,7 +39,7 @@ void main()
 	//gColor = clamp(vec3(texture2D(texture, fragUv)) + vec3(texture2D(depth, fragLightPos.xy)),0.0,1.0);
 	//gColor = gNormal;
 
-
+	gSpecular = vec3(0,0,0);
 	gColor = calulateBlend()* visibility; //Final Color
 	//gColor = clamp(mix(vec3(texture2D(texture0, fragUv)), vec3(texture2D(texture1, fragUv)),fragmentHeightPercentage - (1-highMax))  * visibility, 0.0,1.0);
 }
