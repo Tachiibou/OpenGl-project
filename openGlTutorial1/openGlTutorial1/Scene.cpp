@@ -101,17 +101,14 @@ void Scene::Start()
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
 
 	glm::mat4 worldMatrix(1.0f);
-	//this->mouseCheck();
 	std::vector<Mesh*> meshesInQuadTree;
 	//Game loop
 	while (isRunning)
 	{
-		//this->lightCamera->setPos(this->camera->getPos() + glm::vec3(0,40,0));
 		this->frustrum.updateFrustrum(this->camera->getStableViewMatrix(),(reduceAspect? this->camera->getStableTinyPerspectiveMatrix() : this->camera->getStablePerspectiveMatrix()));
 
 		meshesInQuadTree = quadTree->getMeshes(&this->frustrum);
 
-		std::cout <<glm::to_string(camera->getPos())<< std::endl;
 
 		GLfloat lightPos[3] = { this->lightCamera->getPos().x,this->lightCamera->getPos().y,this->lightCamera->getPos().z };
 		GLfloat camPos[3] = { this->camera->getPos().x,this->camera->getPos().y,this->camera->getPos().z };
