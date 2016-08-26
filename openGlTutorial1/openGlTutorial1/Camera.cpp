@@ -24,7 +24,7 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 		this->pos.y = terrain->getHeightAt(this->pos.x, this->pos.z) + CAMERA_HEIGHT;
 	}
 
-	this->horizontalAngle = 3.14f;
+	this->horizontalAngle = 0.f;
 	this->verticalAngle = 0.0f;
 	this->mouseSpeed = 1.0f;
 	this->moveSpeed = 60.0f;
@@ -46,6 +46,9 @@ Camera::Camera(glm::vec3  pos, glm::vec3 up, glm::vec3 forward, float fov, float
 		this->stableCamera = new Camera(glm::vec3(pos.x, 0, pos.z), up, forward, fov, aspect, zNear, zFar, nullptr, false);
 		stableTinyPerspectiveMatrix = glm::perspective(fov, aspect/3, zNear, zFar);
 	}
+
+	look(0, 0, 0);
+	verticleRotationEnabled = true;
 }
 
 Camera::Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float right, float bottom, float top, float zNear, float zFar) {
@@ -73,6 +76,7 @@ Camera::Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float
 		);
 
 	activeStableCamera = false;
+	verticleRotationEnabled = true;
 
 }
 
@@ -193,7 +197,8 @@ void Camera::look(float x, float y, float deltaTime)
 	
 		this->horizontalAngle -= this->mouseSpeed * deltaTime * x * smoothing;
 
-		this->verticalAngle -= this->mouseSpeed * deltaTime * y * smoothing;
+		if(this->verticleRotationEnabled)
+			this->verticalAngle -= this->mouseSpeed * deltaTime * y * smoothing;
 
 	this->direction = glm::vec3(
 		cos(this->verticalAngle) * sin(this->horizontalAngle),
@@ -225,4 +230,8 @@ void Camera::setPos(glm::vec3 pos)
 {
 	this->viewMatrix = glm::lookAt(pos, pos + forward, up);
 	this->pos = pos;
+}
+
+void Camera::setVerticleRotationEnabled(bool val) {
+	this->verticleRotationEnabled = val;
 }

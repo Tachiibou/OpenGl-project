@@ -26,13 +26,14 @@ private:
 	Camera* stableCamera; // stable camera always keep leveled on the Y pos and rotates only in Y
 	bool activeStableCamera;
 	glm::mat4 stableTinyPerspectiveMatrix;
+	bool verticleRotationEnabled;
 	
 public:
 	Camera();
 	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float fov, float aspect, float zNear, float zFar, Terrain* terrain, bool stableCamera );
 	Camera(glm::vec3 pos, glm::vec3 up, glm::vec3 forward, float left, float right, float bottom, float top, float zNear, float zFar);
 	~Camera();
-	
+
 	glm::mat4 getViewMatrix()const;
 	glm::mat4 getPerspectiveMatrix()const;
 	glm::mat4 &getViewPerspectiveMatrix() const;
@@ -49,6 +50,8 @@ public:
 	void look(float x, float y, float deltaTime);
 
 	void setPos(glm::vec3 pos);
+	void setVerticleRotationEnabled(bool val);
+
 
 };
 

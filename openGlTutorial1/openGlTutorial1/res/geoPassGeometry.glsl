@@ -8,7 +8,6 @@ uniform vec3 viewPos;
 in vec3 VSpos[];
 in vec2 VSuv[];
 in vec3 VSnormal[];
-in vec4 VStransformedPos[];
 in vec3 VLightPos[];
 in vec3 VSpecular[];
 

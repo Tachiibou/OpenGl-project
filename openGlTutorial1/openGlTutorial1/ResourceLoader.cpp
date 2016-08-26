@@ -102,6 +102,7 @@ void ResourceLoader::loadMesh() {
 		delete this->indexArr;
 	}
 
+	
 	indexAmount = vertexInfoVector.size();
 	vertexAmount = vertexInfoVector.size();
 	this->indexArr = this->getIndexArr(indexAmount); // The index array is in order from 0 to amount. ex: 0,1,2,3

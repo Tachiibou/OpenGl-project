@@ -122,6 +122,7 @@ void Terrain::setNormals(){
 			currentPos = glm::vec3(x, getHeightAt(x, z), z);
 
 			tempNormalSum = glm::vec3();
+			
 
 			if (z > 0)
 				tempZOut = glm::vec3(x, getHeightAt(x,z-1), z-1) -currentPos;

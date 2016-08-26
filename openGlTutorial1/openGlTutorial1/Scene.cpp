@@ -20,34 +20,31 @@ Scene::Scene()
 
 	this->terrain = new Terrain();
 	this->terrain->loadTerrain("./res/heightmapClone.png", .4f);
-	
 
-	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, nullptr,true);
-	this->lightCamera = new Camera(glm::vec3(0,140,0), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, 0.f, 200);
+	this->camera = new Camera(CAM_POS, CAM_UP, CAM_FORWARD, CAM_FOV, CAM_ASPECT, CAM_ZNEAR, CAM_ZFAR, terrain,true);
+	this->lightCamera = new Camera(glm::vec3(124,70,124), glm::vec3(1,0,0), glm::vec3(0,-1,0),-100,100,-100,100, 0.f, 200);
 
 	this->frameBuffer = new FrameBuffer();
-	this->frameBuffer->CreateFrameBuffer(5,1024,768);
+	this->frameBuffer->CreateFrameBuffer(4,WINDOW_WIDTH, WINDOW_HEIGHT);
 	this->frameBuffer->UnbindFrameBuffer();
 
 	this->frameBuffer2 = new FrameBuffer();
-	this->frameBuffer2->CreateFrameBuffer(1, 1024, 768);
+	this->frameBuffer2->CreateFrameBuffer(1, WINDOW_WIDTH, WINDOW_HEIGHT);
 	this->frameBuffer2->UnbindFrameBuffer();
 	
 	this->filterComputeShader = new FilterComputeShader("derp");
 	this->filterComputeShader->CreateShader(filterComputeShader->LoadShader("./res/blur.glsl"));
 
-	this->moveLight = false;
-
 	
 	ResourceLoader r = ResourceLoader("obj/sphere1.obj");
 
 
-
-	for (size_t i = 0; i < 2; i++)
+	int totalMeshes = 5;
+	for (size_t i = 0; i < totalMeshes; i++)
 	{
 		meshes.push_back(r.getMesh());
 
-		meshes.back()->setPos(glm::vec3(124 + (i % 2 != 0 ? i * 3 : 0), 20, 124+(i%2==0? i*3:0)));
+		meshes.back()->setPos(glm::vec3((124 - totalMeshes * 2.5f) + i*5, 10, 124));
 		//meshes.back()->setPos(glm::vec3(124 , 20-i*5, 124));
 	}
 	
@@ -64,7 +61,7 @@ void Scene::instantiateQuadTree() {
 	this->quadTree = new QuadTree2();
 
 	//Instantiates the quad tree, Position, Size of biggest quad, Depth
-	this->quadTree->createQuadTree(glm::vec3(124, 0, 124), 256, 5);
+	this->quadTree->createQuadTree(glm::vec3(124, 0, 124), 256, 7);
 
 
 
@@ -104,17 +101,17 @@ void Scene::Start()
 	GLint projectionUniform = glGetUniformLocation(this->geoShader->getProgram(), "lightPerspectiveMatrix");
 
 	glm::mat4 worldMatrix(1.0f);
-
+	//this->mouseCheck();
 	std::vector<Mesh*> meshesInQuadTree;
 	//Game loop
 	while (isRunning)
 	{
-		this->lightCamera->setPos(this->camera->getPos() + glm::vec3(0,40,0));
+		//this->lightCamera->setPos(this->camera->getPos() + glm::vec3(0,40,0));
 		this->frustrum.updateFrustrum(this->camera->getStableViewMatrix(),(reduceAspect? this->camera->getStableTinyPerspectiveMatrix() : this->camera->getStablePerspectiveMatrix()));
 
 		meshesInQuadTree = quadTree->getMeshes(&this->frustrum);
 
-		std::cout << meshesInQuadTree.size() << std::endl;
+		std::cout <<glm::to_string(camera->getPos())<< std::endl;
 
 		GLfloat lightPos[3] = { this->lightCamera->getPos().x,this->lightCamera->getPos().y,this->lightCamera->getPos().z };
 		GLfloat camPos[3] = { this->camera->getPos().x,this->camera->getPos().y,this->camera->getPos().z };
@@ -208,10 +205,7 @@ void Scene::eventHandler()
 	}
 	if (this->cameraMove != glm::vec3())
 	{
-		if(!this->moveLight)
-			this->camera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
-		else
-			this->lightCamera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
+		this->camera->move(this->cameraMove.x, this->cameraMove.y, this->cameraMove.z, this->deltaTime);
 	}
 		
 }
@@ -253,16 +247,17 @@ void Scene::keyBoardCheck()
 		this->mouseLocked = !this->mouseLocked;
 	}
 		
-
-
-	if (this->sdlEvent.key.keysym.sym == SDLK_SPACE)
-		this->moveLight = !this->moveLight;
-
 	if (this->sdlEvent.key.keysym.sym == SDLK_q) {
-		if (displayCamera == camera)
+		if (displayCamera == camera) {
 			displayCamera = lightCamera;
-		else 
+			camera->setVerticleRotationEnabled(false);
+		}
+			
+		else {
 			displayCamera = camera;
+			camera->setVerticleRotationEnabled(true);
+		}
+			
 	}
 		//this->reduceAspect = !reduceAspect;
 }
