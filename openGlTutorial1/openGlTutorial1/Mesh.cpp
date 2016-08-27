@@ -1,7 +1,7 @@
 #include "Mesh.h"
 #define BUFFER_OFFSET(i) ((char *)nullptr + (i))
 
-Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, Material* material)
+Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, VertexInfoStruct* tv, Texture* texture, Material* material)
 {
 	this->material = material;
 	this->usingVertexInfo = true;
@@ -19,7 +19,7 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
 	//glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[POSITION_VB]);
 	//glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(vertexInfo->pos), vertexInfo, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(0));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfoStruct), BUFFER_OFFSET(0));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexArrayBuffers[INDEX_VB]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(indices[0]), indices, GL_STATIC_DRAW);
@@ -27,11 +27,11 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[UV_VB]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfoStruct), BUFFER_OFFSET(sizeof(float) * 3));
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[NORMAL_VB]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 5));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfoStruct), BUFFER_OFFSET(sizeof(float) * 5));
 
 	specular = new GLfloat[3 * numVertices];
 
@@ -72,7 +72,7 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 }
 
 //For Terrain
-Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights) {
+Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, VertexInfoStruct* tv, Texture* texture, float* heights) {
 	specular = nullptr;
 	material = nullptr;
 	this->usingVertexInfo = true;
@@ -90,7 +90,7 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
 	//glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[POSITION_VB]);
 	//glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(vertexInfo->pos), vertexInfo, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(0));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfoStruct), BUFFER_OFFSET(0));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vertexArrayBuffers[INDEX_VB]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(indices[0]), indices, GL_STATIC_DRAW);
@@ -98,11 +98,11 @@ Mesh::Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVert
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[UV_VB]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexInfoStruct), BUFFER_OFFSET(sizeof(float) * 3));
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[NORMAL_VB]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(tv[0]), tv, GL_STATIC_DRAW);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(TriangleVertex), BUFFER_OFFSET(sizeof(float) * 5));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexInfoStruct), BUFFER_OFFSET(sizeof(float) * 5));
 
 	glBindBuffer(GL_ARRAY_BUFFER, m_vertexArrayBuffers[HEIGHTS_VB]);
 	glBufferData(GL_ARRAY_BUFFER, numVertices*sizeof(heights[0]), heights, GL_STATIC_DRAW);

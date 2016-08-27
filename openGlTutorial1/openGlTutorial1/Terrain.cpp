@@ -163,7 +163,7 @@ void Terrain::setNormals(){
 //This will create a mesh
 //Meaning that it will load textures, calculate indices(For it to be a square at a time
 void Terrain::calculateVertexInfo() {
-	TriangleVertex* tempTriangleVertex = new TriangleVertex[this->width*this->length];
+	VertexInfoStruct* tempVertexInfoStruct = new VertexInfoStruct[this->width*this->length];
 	
 	glm::vec3 tempNormal;
 	int cIndex;
@@ -199,7 +199,7 @@ void Terrain::calculateVertexInfo() {
 
 			float cHeight = this->heights[x][z];
 
-			tempTriangleVertex[cIndex] = { positionX, cHeight,positionZ,
+			tempVertexInfoStruct[cIndex] = { positionX, cHeight,positionZ,
 				u,v,
 				tempNormal.x, tempNormal.y, tempNormal.z };
 			
@@ -228,8 +228,8 @@ void Terrain::calculateVertexInfo() {
 	terrainTexture->addTexture("./obj/brick_16.jpg");
 	terrainTexture->addTexture("./obj/Snow.jpg");
 
-	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempTriangleVertex, terrainTexture, heights);
-	delete[]tempTriangleVertex;
+	this->mesh = new Mesh(this->width*this->length, tempArr, indices.size(), tempVertexInfoStruct, terrainTexture, heights);
+	delete[]tempVertexInfoStruct;
 	delete[] tempArr;
 	delete[] heights;
 }

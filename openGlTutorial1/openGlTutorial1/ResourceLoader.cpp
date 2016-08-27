@@ -282,10 +282,10 @@ std::string ResourceLoader::getSecondWord(std::string line)
 	return returnString;
 }
 
-// Convert vector of VertexInfo into a TriangleVertex* struct
-TriangleVertex * ResourceLoader::makeStruct(std::vector<VertexInfo> vertexInfo)
+// Convert vector of VertexInfo into a VertexInfoStruct* struct
+VertexInfoStruct * ResourceLoader::makeStruct(std::vector<VertexInfo> vertexInfo)
 {
-	TriangleVertex* tv = new TriangleVertex[vertexInfo.size()];
+	VertexInfoStruct* tv = new VertexInfoStruct[vertexInfo.size()];
 	for (int i = 0; i < vertexInfo.size(); i++)
 	{
 		tv[i] = { vertexInfo.at(i).pos.x,vertexInfo.at(i).pos.y,vertexInfo.at(i).pos.z,

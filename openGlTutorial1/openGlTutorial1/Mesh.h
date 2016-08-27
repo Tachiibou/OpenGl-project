@@ -11,7 +11,7 @@ struct BoundingBox {
 	glm::vec3 pos;
 };
 // Struct used for sending data to GPU
-struct TriangleVertex
+struct VertexInfoStruct
 {
 	float x, y, z;
 	float u, v;
@@ -21,8 +21,8 @@ struct TriangleVertex
 class Mesh
 {
 public:
-	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, Material* material);
-	Mesh(unsigned int numVertices, int indices[], int numIndices, TriangleVertex* tv, Texture* texture, float* heights);
+	Mesh(unsigned int numVertices, int indices[], int numIndices, VertexInfoStruct* tv, Texture* texture, Material* material);
+	Mesh(unsigned int numVertices, int indices[], int numIndices, VertexInfoStruct* tv, Texture* texture, float* heights);
 	virtual ~Mesh();
 	void Draw();
 	

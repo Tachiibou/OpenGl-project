@@ -34,7 +34,7 @@ class ResourceLoader
 {
 private:
 	std::string fileName;
-	TriangleVertex* triangleVert;
+	VertexInfoStruct* triangleVert;
 	int* indexArr;
 	const std::string OBJ_DIR = "obj/";
 	glm::vec3 kd, ka, tf, ks;	// Material values
@@ -54,7 +54,7 @@ private:
 	void stringIntoVec3(std::string line, glm::vec3& variable);
 	std::string getSecondWord(std::string line);
 
-	TriangleVertex* makeStruct(std::vector<VertexInfo> vertexInfo);
+	VertexInfoStruct* makeStruct(std::vector<VertexInfo> vertexInfo);
 
 	float getMeshHalfSize(std::vector<glm::vec3> *vertexVector);
 
