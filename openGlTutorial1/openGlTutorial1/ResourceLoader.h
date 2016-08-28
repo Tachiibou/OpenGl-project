@@ -43,6 +43,7 @@ private:
 	int vertexAmount, indexAmount;
 	Texture* texture;
 	std::vector<glm::vec3> vertexVector;
+	float halfSize; // used for bounding box
 
 
 	void createVerticesFromLine(std::string& line, std::vector<glm::vec3>& vertices, std::vector<glm::vec3>& normals, std::vector<glm::vec2>& UVs, std::vector<VertexInfo>& vertexInfoVector);

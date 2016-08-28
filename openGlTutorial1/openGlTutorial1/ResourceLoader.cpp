@@ -108,13 +108,14 @@ void ResourceLoader::loadMesh() {
 	this->indexArr = this->getIndexArr(indexAmount); // The index array is in order from 0 to amount. ex: 0,1,2,3
 
 	this->triangleVert = this->makeStruct(vertexInfoVector); // convert vector that holds pos,uv,normals into an array of struct, this is done because we had problems buffering the data from this format
+	this->halfSize = getMeshHalfSize(&vertexVector);
 }
 
 // Returns the mesh with the current data this class holds
 Mesh* ResourceLoader::getMesh()
 {
 	Mesh* mesh = new Mesh(vertexAmount, indexArr, indexAmount, this->triangleVert, texture, new Material(illum, kd, ka, tf, ni, ks));
-	mesh->createBoundingBox(getMeshHalfSize(&vertexVector));
+	mesh->createBoundingBox(this->halfSize);
 	return mesh;
 }
 
