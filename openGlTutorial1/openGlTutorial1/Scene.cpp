@@ -165,8 +165,6 @@ void Scene::Start()
 
 		this->filterComputeShader->BindShader();
 		this->frameBuffer->BindImageTexturesToProgram(this->filterComputeShader->GetUniformLocation("destTex"), 2); // Get the textur to apply the blur to
-		this->filterComputeShader->UniformVec3("colorVector", glm::vec3(0.0f, 0.0f, 1.0f));
-		this->filterComputeShader->Uniform1f("number", 1.0f);
 		this->filterComputeShader->DispatchCompute(1024 / 32, 768 / 32, 1,30); // Compute the blur several times for stronger effect
 		// The compute shader directly changes the pixel data, so no need to get any output data
 
