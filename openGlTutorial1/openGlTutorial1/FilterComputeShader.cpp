@@ -15,6 +15,7 @@ FilterComputeShader::~FilterComputeShader()
 	
 }
 
+// return all text from the file
 std::string FilterComputeShader::LoadShader(const std::string & fileName)
 {
 	std::ifstream shaderFile;
@@ -26,6 +27,7 @@ std::string FilterComputeShader::LoadShader(const std::string & fileName)
 	return shaderText;
 }
 
+// create a shader using the code sent in as a string
 void FilterComputeShader::CreateShader(const std::string & text)
 {
 	// Creating the compute shader, and the program object containing the shader
