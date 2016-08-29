@@ -139,11 +139,6 @@ void Camera::move(glm::vec3 dir)
 void Camera::move(float x, float y, float z, float deltaTime)
 {
 
-	
-
-	//if (y == 0)
-	//	this->direction = glm::vec3(this->direction.x, 0,  this->direction.z);
-
 	if (z > 0)
 		this->pos += this->direction * deltaTime * this->moveSpeed;
 	else if (z < 0)
@@ -154,21 +149,6 @@ void Camera::move(float x, float y, float z, float deltaTime)
 	else if (x < 0)
 		this->pos += this->right * deltaTime * this->moveSpeed;
 
-
-	//int nrAdded = 0;
-	//unsigned int total = 0;
-	//for (int yt = -1; yt < 2; yt++) {
-	//	for (int xt = -1; xt < 2; xt++) {
-	//		if ((yt + y >= 0 && xt + x >= 0) && (yt + y <= terrain->getLength() && xt + x <= terrain->getWidth())) {
-	//			int index = 3 * (yt + y * terrain->getWidth() + x + xt);
-	//			total += terrain->getHeightAt(x + xt, z + yt);
-	//			nrAdded++;
-	//		}
-
-	//	}
-	//}
-
-	//total /= nrAdded;
 
 	if (this->terrain != nullptr && (this->pos.x < this->terrain->getWidth() && this->pos.z < this->terrain->getLength()) && (this->pos.x>=0 && this->pos.z>=0)) {
 		this->pos.y = terrain->getHeightAt(this->pos.x, this->pos.z) + CAMERA_HEIGHT;
@@ -181,11 +161,7 @@ void Camera::move(float x, float y, float z, float deltaTime)
 	if (activeStableCamera) {
 		stableCamera->pos = glm::vec3(pos.x, 0, pos.z);
 		stableCamera->viewMatrix = glm::lookAt(this->stableCamera->pos, this->stableCamera->pos + this->stableCamera->direction, this->stableCamera->up);
-		//std::cout << "STABLE: " << glm::to_string(stableCamera->pos) << glm::to_string(stableCamera->direction) << std::endl;
-		//std::cout << "main: " << glm::to_string(pos) << glm::to_string(direction) << std::endl;
 
-
-		//stableCamera->move(x, 0, z, deltaTime);
 	}
 
 	

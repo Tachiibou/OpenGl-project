@@ -18,7 +18,7 @@ void main()
 	vec3 fragNormal = texture2D(normalTexture, fragUv).xyz;
 	vec3 fragDiff = texture2D(colorTexture, fragUv).xyz;
 
-	vec3 lighting = fragDiff * 0.1; //Hardcoded ambient
+	vec3 ambient = fragDiff * 0.1; //Hardcoded ambient
 	vec3 viewDir = normalize(viewPos - fragPos);
 	vec3 lightDir = normalize(lightPos - fragPos);
 	vec3 lightColor = vec3(1, 1, 1);
@@ -33,7 +33,6 @@ void main()
 	vec3 testSpec = vec3(0,0,0);
 	vec3 specular = lightColor * spec * texture2D(specularTexture, fragUv).xyz;
 
-	lighting += diffuse + specular;
-	fragColor = lighting;
+	fragColor = ambient + diffuse + specular;
 	//fragColor = texture2D(specularTexture, fragUv).xyz;
 }
